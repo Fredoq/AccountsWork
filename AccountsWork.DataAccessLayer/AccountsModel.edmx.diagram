@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fffcac561ce94773b296910b6ad4883c" Name="Diagram1">
+        <EntityTypeShape EntityType="AccountsModel.AccountsBudgetDetailsSet" Width="1.5" PointX="3" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.AccountsCapexInfoSet" Width="1.5" PointX="6" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.AccountsCompaniesSet" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.AccountsExpenseSet" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.AccountsMainSet" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.AccountsStatusDetailsSet" Width="1.5" PointX="3" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.AccountsStoreDetailsSet" Width="1.5" PointX="6" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.BudgetSet" Width="1.5" PointX="0.75" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.CapexSet" Width="1.5" PointX="3.75" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.ServiceZipDetailsSet" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.StoreProvenWorkSet" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.StoresSet" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.TypeSet" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AccountsModel.ZipSet" Width="1.5" PointX="3.75" PointY="1.5" IsExpanded="true" />
+        <AssociationConnector Association="AccountsModel.FK_AccountsBudgetDetailsSet_StoresSet" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_AccountsMainAccountsEquipmentDetails" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_BudgetAccountsBudgetDetails" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_AccountsMainAccountsCapexInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_CapexAccountsCapexInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_AccountsMainAccountsStatusDetails" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_AccountsMainAccountsStoreDetails" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_AccountsMainStoreProvenWork" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_StoresAccountsStoreDetails" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_ServiceZipDetailsSet_StoresSet" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_ServiceZipDetailsSet_ZipSet" ManuallyRouted="false" />
+        <AssociationConnector Association="AccountsModel.FK_StoresStoreProvenWork" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

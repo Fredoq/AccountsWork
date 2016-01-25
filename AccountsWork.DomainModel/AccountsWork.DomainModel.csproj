@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CC40C518-CB1E-439A-B3FA-F85F62C0671B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccountsWork.DomainModel</RootNamespace>
+    <AssemblyName>AccountsWork.DomainModel</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountsBudgetDetailsSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AccountsCapexInfoSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AccountsCompaniesSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AccountsExpenseSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AccountsMainSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AccountsModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AccountsStatusDetailsSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AccountsStoreDetailsSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BudgetSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CapexSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceZipDetailsSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StoreProvenWorkSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StoresSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TypeSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ZipSet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AccountsModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AccountsModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

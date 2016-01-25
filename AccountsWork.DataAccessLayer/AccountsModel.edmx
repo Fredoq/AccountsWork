@@ -1,0 +1,909 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище AccountsModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AccountsBudgetDetailsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountsMainId" Type="int" Nullable="false" />
+          <Property Name="AccountEquipmentName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AccountEquipmentQuantity" Type="int" Nullable="false" />
+          <Property Name="AccountEquipmentPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BudgetId" Type="int" Nullable="false" />
+          <Property Name="AccountStoreNumber" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountsCapexInfoSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountsMainId" Type="int" Nullable="false" />
+          <Property Name="AccountCapexName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AccountCapexAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="AccountExpense" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CapexId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountsCompaniesSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Company" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountsExpenseSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Expense" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountsMainSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountNumber" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AccountCompany" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AccountDate" Type="date" Nullable="false" />
+          <Property Name="AccountAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="AccountDescription" Type="nvarchar(max)" />
+          <Property Name="AccountMcdType" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AccountYear" Type="int" />
+          <Property Name="AccountType" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="AccountsStatusDetailsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountMainId" Type="int" Nullable="false" />
+          <Property Name="AccountStatus" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AccountStatusDate" Type="date" Nullable="false" />
+          <Property Name="Commentary" Type="nvarchar(max)" />
+          <Property Name="AccountPayNumber" Type="int" />
+        </EntityType>
+        <EntityType Name="AccountsStoreDetailsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountsMainId" Type="int" Nullable="false" />
+          <Property Name="AccountStore" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BudgetSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BudgetEquipmentName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="BudgetQuantity" Type="int" Nullable="false" />
+          <Property Name="BudgetPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BudgetYear" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CapexSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CapexName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CapexYear" Type="int" Nullable="false" />
+          <Property Name="CapexAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServiceZipDetailsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ZipName" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="ServiceMonth" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="WorkDate" Type="date" Nullable="false" />
+          <Property Name="BlankNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ZipQuantity" Type="int" />
+          <Property Name="StoreNumber" Type="int" Nullable="false" />
+          <Property Name="ZipPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Company" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="StoreProvenWorkSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StoreNumber" Type="int" Nullable="false" />
+          <Property Name="StoreDateOfConfirm" Type="date" Nullable="false" />
+          <Property Name="StoreWork" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="MainAccountId" Type="int" />
+          <Property Name="IsDone" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StoresSet">
+          <Key>
+            <PropertyRef Name="StoreNumber" />
+          </Key>
+          <Property Name="StoreNumber" Type="int" Nullable="false" />
+          <Property Name="StoreName" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TypeSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ZipSet">
+          <Key>
+            <PropertyRef Name="ZipName" />
+          </Key>
+          <Property Name="ZipName" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="MainZipName" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_AccountsBudgetDetailsSet_StoresSet">
+          <End Role="StoresSet" Type="Self.StoresSet" Multiplicity="1" />
+          <End Role="AccountsBudgetDetailsSet" Type="Self.AccountsBudgetDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StoresSet">
+              <PropertyRef Name="StoreNumber" />
+            </Principal>
+            <Dependent Role="AccountsBudgetDetailsSet">
+              <PropertyRef Name="AccountStoreNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainAccountsCapexInfo">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1" />
+          <End Role="AccountsCapexInfoSet" Type="Self.AccountsCapexInfoSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsCapexInfoSet">
+              <PropertyRef Name="AccountsMainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainAccountsEquipmentDetails">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1" />
+          <End Role="AccountsBudgetDetailsSet" Type="Self.AccountsBudgetDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsBudgetDetailsSet">
+              <PropertyRef Name="AccountsMainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainAccountsStatusDetails">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AccountsStatusDetailsSet" Type="Self.AccountsStatusDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsStatusDetailsSet">
+              <PropertyRef Name="AccountMainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainAccountsStoreDetails">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AccountsStoreDetailsSet" Type="Self.AccountsStoreDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsStoreDetailsSet">
+              <PropertyRef Name="AccountsMainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainStoreProvenWork">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="0..1" />
+          <End Role="StoreProvenWorkSet" Type="Self.StoreProvenWorkSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StoreProvenWorkSet">
+              <PropertyRef Name="MainAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BudgetAccountsBudgetDetails">
+          <End Role="BudgetSet" Type="Self.BudgetSet" Multiplicity="1" />
+          <End Role="AccountsBudgetDetailsSet" Type="Self.AccountsBudgetDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BudgetSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsBudgetDetailsSet">
+              <PropertyRef Name="BudgetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CapexAccountsCapexInfo">
+          <End Role="CapexSet" Type="Self.CapexSet" Multiplicity="1" />
+          <End Role="AccountsCapexInfoSet" Type="Self.AccountsCapexInfoSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CapexSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsCapexInfoSet">
+              <PropertyRef Name="CapexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceZipDetailsSet_StoresSet">
+          <End Role="StoresSet" Type="Self.StoresSet" Multiplicity="1" />
+          <End Role="ServiceZipDetailsSet" Type="Self.ServiceZipDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StoresSet">
+              <PropertyRef Name="StoreNumber" />
+            </Principal>
+            <Dependent Role="ServiceZipDetailsSet">
+              <PropertyRef Name="StoreNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceZipDetailsSet_ZipSet">
+          <End Role="ZipSet" Type="Self.ZipSet" Multiplicity="1" />
+          <End Role="ServiceZipDetailsSet" Type="Self.ServiceZipDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ZipSet">
+              <PropertyRef Name="ZipName" />
+            </Principal>
+            <Dependent Role="ServiceZipDetailsSet">
+              <PropertyRef Name="ZipName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StoresAccountsStoreDetails">
+          <End Role="StoresSet" Type="Self.StoresSet" Multiplicity="1" />
+          <End Role="AccountsStoreDetailsSet" Type="Self.AccountsStoreDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StoresSet">
+              <PropertyRef Name="StoreNumber" />
+            </Principal>
+            <Dependent Role="AccountsStoreDetailsSet">
+              <PropertyRef Name="AccountStore" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StoresStoreProvenWork">
+          <End Role="StoresSet" Type="Self.StoresSet" Multiplicity="1" />
+          <End Role="StoreProvenWorkSet" Type="Self.StoreProvenWorkSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StoresSet">
+              <PropertyRef Name="StoreNumber" />
+            </Principal>
+            <Dependent Role="StoreProvenWorkSet">
+              <PropertyRef Name="StoreNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище AccountsModelContainer">
+          <EntitySet Name="AccountsBudgetDetailsSet" EntityType="Self.AccountsBudgetDetailsSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountsCapexInfoSet" EntityType="Self.AccountsCapexInfoSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountsCompaniesSet" EntityType="Self.AccountsCompaniesSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountsExpenseSet" EntityType="Self.AccountsExpenseSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountsMainSet" EntityType="Self.AccountsMainSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountsStatusDetailsSet" EntityType="Self.AccountsStatusDetailsSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountsStoreDetailsSet" EntityType="Self.AccountsStoreDetailsSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BudgetSet" EntityType="Self.BudgetSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CapexSet" EntityType="Self.CapexSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceZipDetailsSet" EntityType="Self.ServiceZipDetailsSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StoreProvenWorkSet" EntityType="Self.StoreProvenWorkSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StoresSet" EntityType="Self.StoresSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TypeSet" EntityType="Self.TypeSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ZipSet" EntityType="Self.ZipSet" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AccountsBudgetDetailsSet_StoresSet" Association="Self.FK_AccountsBudgetDetailsSet_StoresSet">
+            <End Role="StoresSet" EntitySet="StoresSet" />
+            <End Role="AccountsBudgetDetailsSet" EntitySet="AccountsBudgetDetailsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainAccountsCapexInfo" Association="Self.FK_AccountsMainAccountsCapexInfo">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSet" />
+            <End Role="AccountsCapexInfoSet" EntitySet="AccountsCapexInfoSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainAccountsEquipmentDetails" Association="Self.FK_AccountsMainAccountsEquipmentDetails">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSet" />
+            <End Role="AccountsBudgetDetailsSet" EntitySet="AccountsBudgetDetailsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainAccountsStatusDetails" Association="Self.FK_AccountsMainAccountsStatusDetails">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSet" />
+            <End Role="AccountsStatusDetailsSet" EntitySet="AccountsStatusDetailsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainAccountsStoreDetails" Association="Self.FK_AccountsMainAccountsStoreDetails">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSet" />
+            <End Role="AccountsStoreDetailsSet" EntitySet="AccountsStoreDetailsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainStoreProvenWork" Association="Self.FK_AccountsMainStoreProvenWork">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSet" />
+            <End Role="StoreProvenWorkSet" EntitySet="StoreProvenWorkSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BudgetAccountsBudgetDetails" Association="Self.FK_BudgetAccountsBudgetDetails">
+            <End Role="BudgetSet" EntitySet="BudgetSet" />
+            <End Role="AccountsBudgetDetailsSet" EntitySet="AccountsBudgetDetailsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CapexAccountsCapexInfo" Association="Self.FK_CapexAccountsCapexInfo">
+            <End Role="CapexSet" EntitySet="CapexSet" />
+            <End Role="AccountsCapexInfoSet" EntitySet="AccountsCapexInfoSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceZipDetailsSet_StoresSet" Association="Self.FK_ServiceZipDetailsSet_StoresSet">
+            <End Role="StoresSet" EntitySet="StoresSet" />
+            <End Role="ServiceZipDetailsSet" EntitySet="ServiceZipDetailsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceZipDetailsSet_ZipSet" Association="Self.FK_ServiceZipDetailsSet_ZipSet">
+            <End Role="ZipSet" EntitySet="ZipSet" />
+            <End Role="ServiceZipDetailsSet" EntitySet="ServiceZipDetailsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StoresAccountsStoreDetails" Association="Self.FK_StoresAccountsStoreDetails">
+            <End Role="StoresSet" EntitySet="StoresSet" />
+            <End Role="AccountsStoreDetailsSet" EntitySet="AccountsStoreDetailsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StoresStoreProvenWork" Association="Self.FK_StoresStoreProvenWork">
+            <End Role="StoresSet" EntitySet="StoresSet" />
+            <End Role="StoreProvenWorkSet" EntitySet="StoreProvenWorkSet" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AccountsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AccountsBudgetDetailsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountsMainId" Type="Int32" Nullable="false" />
+          <Property Name="AccountEquipmentName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccountEquipmentQuantity" Type="Int32" Nullable="false" />
+          <Property Name="AccountEquipmentPrice" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BudgetId" Type="Int32" Nullable="false" />
+          <Property Name="AccountStoreNumber" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="StoresSet" Relationship="Self.FK_AccountsBudgetDetailsSet_StoresSet" FromRole="AccountsBudgetDetailsSet" ToRole="StoresSet" />
+          <NavigationProperty Name="AccountsMainSet" Relationship="Self.FK_AccountsMainAccountsEquipmentDetails" FromRole="AccountsBudgetDetailsSet" ToRole="AccountsMainSet" />
+          <NavigationProperty Name="BudgetSet" Relationship="Self.FK_BudgetAccountsBudgetDetails" FromRole="AccountsBudgetDetailsSet" ToRole="BudgetSet" />
+        </EntityType>
+        <EntityType Name="AccountsCapexInfoSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountsMainId" Type="Int32" Nullable="false" />
+          <Property Name="AccountCapexName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccountCapexAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="AccountExpense" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CapexId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AccountsMainSet" Relationship="Self.FK_AccountsMainAccountsCapexInfo" FromRole="AccountsCapexInfoSet" ToRole="AccountsMainSet" />
+          <NavigationProperty Name="CapexSet" Relationship="Self.FK_CapexAccountsCapexInfo" FromRole="AccountsCapexInfoSet" ToRole="CapexSet" />
+        </EntityType>
+        <EntityType Name="AccountsCompaniesSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Company" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountsExpenseSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Expense" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountsMainSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccountCompany" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccountDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="AccountAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="AccountDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountMcdType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccountYear" Type="Int32" />
+          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AccountsBudgetDetailsSets" Relationship="Self.FK_AccountsMainAccountsEquipmentDetails" FromRole="AccountsMainSet" ToRole="AccountsBudgetDetailsSet" />
+          <NavigationProperty Name="AccountsCapexInfoSets" Relationship="Self.FK_AccountsMainAccountsCapexInfo" FromRole="AccountsMainSet" ToRole="AccountsCapexInfoSet" />
+          <NavigationProperty Name="AccountsStatusDetailsSets" Relationship="Self.FK_AccountsMainAccountsStatusDetails" FromRole="AccountsMainSet" ToRole="AccountsStatusDetailsSet" />
+          <NavigationProperty Name="AccountsStoreDetailsSets" Relationship="Self.FK_AccountsMainAccountsStoreDetails" FromRole="AccountsMainSet" ToRole="AccountsStoreDetailsSet" />
+          <NavigationProperty Name="StoreProvenWorkSets" Relationship="Self.FK_AccountsMainStoreProvenWork" FromRole="AccountsMainSet" ToRole="StoreProvenWorkSet" />
+        </EntityType>
+        <EntityType Name="AccountsStatusDetailsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountMainId" Type="Int32" Nullable="false" />
+          <Property Name="AccountStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccountStatusDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Commentary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountPayNumber" Type="Int32" />
+          <NavigationProperty Name="AccountsMainSet" Relationship="Self.FK_AccountsMainAccountsStatusDetails" FromRole="AccountsStatusDetailsSet" ToRole="AccountsMainSet" />
+        </EntityType>
+        <EntityType Name="AccountsStoreDetailsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountsMainId" Type="Int32" Nullable="false" />
+          <Property Name="AccountStore" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AccountsMainSet" Relationship="Self.FK_AccountsMainAccountsStoreDetails" FromRole="AccountsStoreDetailsSet" ToRole="AccountsMainSet" />
+          <NavigationProperty Name="StoresSet" Relationship="Self.FK_StoresAccountsStoreDetails" FromRole="AccountsStoreDetailsSet" ToRole="StoresSet" />
+        </EntityType>
+        <EntityType Name="BudgetSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BudgetEquipmentName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BudgetQuantity" Type="Int32" Nullable="false" />
+          <Property Name="BudgetPrice" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BudgetYear" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AccountsBudgetDetailsSets" Relationship="Self.FK_BudgetAccountsBudgetDetails" FromRole="BudgetSet" ToRole="AccountsBudgetDetailsSet" />
+        </EntityType>
+        <EntityType Name="CapexSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CapexName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CapexYear" Type="Int32" Nullable="false" />
+          <Property Name="CapexAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="AccountsCapexInfoSets" Relationship="Self.FK_CapexAccountsCapexInfo" FromRole="CapexSet" ToRole="AccountsCapexInfoSet" />
+        </EntityType>
+        <EntityType Name="ServiceZipDetailsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ZipName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ServiceMonth" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="WorkDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="BlankNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ZipQuantity" Type="Int32" />
+          <Property Name="StoreNumber" Type="Int32" Nullable="false" />
+          <Property Name="ZipPrice" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Company" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="StoresSet" Relationship="Self.FK_ServiceZipDetailsSet_StoresSet" FromRole="ServiceZipDetailsSet" ToRole="StoresSet" />
+          <NavigationProperty Name="ZipSet" Relationship="Self.FK_ServiceZipDetailsSet_ZipSet" FromRole="ServiceZipDetailsSet" ToRole="ZipSet" />
+        </EntityType>
+        <EntityType Name="StoreProvenWorkSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StoreNumber" Type="Int32" Nullable="false" />
+          <Property Name="StoreDateOfConfirm" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="StoreWork" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MainAccountId" Type="Int32" />
+          <Property Name="IsDone" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="AccountsMainSet" Relationship="Self.FK_AccountsMainStoreProvenWork" FromRole="StoreProvenWorkSet" ToRole="AccountsMainSet" />
+          <NavigationProperty Name="StoresSet" Relationship="Self.FK_StoresStoreProvenWork" FromRole="StoreProvenWorkSet" ToRole="StoresSet" />
+        </EntityType>
+        <EntityType Name="StoresSet">
+          <Key>
+            <PropertyRef Name="StoreNumber" />
+          </Key>
+          <Property Name="StoreNumber" Type="Int32" Nullable="false" />
+          <Property Name="StoreName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AccountsBudgetDetailsSets" Relationship="Self.FK_AccountsBudgetDetailsSet_StoresSet" FromRole="StoresSet" ToRole="AccountsBudgetDetailsSet" />
+          <NavigationProperty Name="AccountsStoreDetailsSets" Relationship="Self.FK_StoresAccountsStoreDetails" FromRole="StoresSet" ToRole="AccountsStoreDetailsSet" />
+          <NavigationProperty Name="ServiceZipDetailsSets" Relationship="Self.FK_ServiceZipDetailsSet_StoresSet" FromRole="StoresSet" ToRole="ServiceZipDetailsSet" />
+          <NavigationProperty Name="StoreProvenWorkSets" Relationship="Self.FK_StoresStoreProvenWork" FromRole="StoresSet" ToRole="StoreProvenWorkSet" />
+        </EntityType>
+        <EntityType Name="TypeSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ZipSet">
+          <Key>
+            <PropertyRef Name="ZipName" />
+          </Key>
+          <Property Name="ZipName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MainZipName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ServiceZipDetailsSets" Relationship="Self.FK_ServiceZipDetailsSet_ZipSet" FromRole="ZipSet" ToRole="ServiceZipDetailsSet" />
+        </EntityType>
+        <Association Name="FK_AccountsBudgetDetailsSet_StoresSet">
+          <End Role="StoresSet" Type="Self.StoresSet" Multiplicity="1" />
+          <End Role="AccountsBudgetDetailsSet" Type="Self.AccountsBudgetDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StoresSet">
+              <PropertyRef Name="StoreNumber" />
+            </Principal>
+            <Dependent Role="AccountsBudgetDetailsSet">
+              <PropertyRef Name="AccountStoreNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainAccountsEquipmentDetails">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1" />
+          <End Role="AccountsBudgetDetailsSet" Type="Self.AccountsBudgetDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsBudgetDetailsSet">
+              <PropertyRef Name="AccountsMainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BudgetAccountsBudgetDetails">
+          <End Role="BudgetSet" Type="Self.BudgetSet" Multiplicity="1" />
+          <End Role="AccountsBudgetDetailsSet" Type="Self.AccountsBudgetDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BudgetSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsBudgetDetailsSet">
+              <PropertyRef Name="BudgetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainAccountsCapexInfo">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1" />
+          <End Role="AccountsCapexInfoSet" Type="Self.AccountsCapexInfoSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsCapexInfoSet">
+              <PropertyRef Name="AccountsMainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CapexAccountsCapexInfo">
+          <End Role="CapexSet" Type="Self.CapexSet" Multiplicity="1" />
+          <End Role="AccountsCapexInfoSet" Type="Self.AccountsCapexInfoSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CapexSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsCapexInfoSet">
+              <PropertyRef Name="CapexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainAccountsStatusDetails">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AccountsStatusDetailsSet" Type="Self.AccountsStatusDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsStatusDetailsSet">
+              <PropertyRef Name="AccountMainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainAccountsStoreDetails">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AccountsStoreDetailsSet" Type="Self.AccountsStoreDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountsStoreDetailsSet">
+              <PropertyRef Name="AccountsMainId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountsMainStoreProvenWork">
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="0..1" />
+          <End Role="StoreProvenWorkSet" Type="Self.StoreProvenWorkSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsMainSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StoreProvenWorkSet">
+              <PropertyRef Name="MainAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StoresAccountsStoreDetails">
+          <End Role="StoresSet" Type="Self.StoresSet" Multiplicity="1" />
+          <End Role="AccountsStoreDetailsSet" Type="Self.AccountsStoreDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StoresSet">
+              <PropertyRef Name="StoreNumber" />
+            </Principal>
+            <Dependent Role="AccountsStoreDetailsSet">
+              <PropertyRef Name="AccountStore" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceZipDetailsSet_StoresSet">
+          <End Role="StoresSet" Type="Self.StoresSet" Multiplicity="1" />
+          <End Role="ServiceZipDetailsSet" Type="Self.ServiceZipDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StoresSet">
+              <PropertyRef Name="StoreNumber" />
+            </Principal>
+            <Dependent Role="ServiceZipDetailsSet">
+              <PropertyRef Name="StoreNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceZipDetailsSet_ZipSet">
+          <End Role="ZipSet" Type="Self.ZipSet" Multiplicity="1" />
+          <End Role="ServiceZipDetailsSet" Type="Self.ServiceZipDetailsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ZipSet">
+              <PropertyRef Name="ZipName" />
+            </Principal>
+            <Dependent Role="ServiceZipDetailsSet">
+              <PropertyRef Name="ZipName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StoresStoreProvenWork">
+          <End Role="StoresSet" Type="Self.StoresSet" Multiplicity="1" />
+          <End Role="StoreProvenWorkSet" Type="Self.StoreProvenWorkSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StoresSet">
+              <PropertyRef Name="StoreNumber" />
+            </Principal>
+            <Dependent Role="StoreProvenWorkSet">
+              <PropertyRef Name="StoreNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AccountsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AccountsBudgetDetailsSets" EntityType="Self.AccountsBudgetDetailsSet" />
+          <EntitySet Name="AccountsCapexInfoSets" EntityType="Self.AccountsCapexInfoSet" />
+          <EntitySet Name="AccountsCompaniesSets" EntityType="Self.AccountsCompaniesSet" />
+          <EntitySet Name="AccountsExpenseSets" EntityType="Self.AccountsExpenseSet" />
+          <EntitySet Name="AccountsMainSets" EntityType="Self.AccountsMainSet" />
+          <EntitySet Name="AccountsStatusDetailsSets" EntityType="Self.AccountsStatusDetailsSet" />
+          <EntitySet Name="AccountsStoreDetailsSets" EntityType="Self.AccountsStoreDetailsSet" />
+          <EntitySet Name="BudgetSets" EntityType="Self.BudgetSet" />
+          <EntitySet Name="CapexSets" EntityType="Self.CapexSet" />
+          <EntitySet Name="ServiceZipDetailsSets" EntityType="Self.ServiceZipDetailsSet" />
+          <EntitySet Name="StoreProvenWorkSets" EntityType="Self.StoreProvenWorkSet" />
+          <EntitySet Name="StoresSets" EntityType="Self.StoresSet" />
+          <EntitySet Name="TypeSets" EntityType="Self.TypeSet" />
+          <EntitySet Name="ZipSets" EntityType="Self.ZipSet" />
+          <AssociationSet Name="FK_AccountsBudgetDetailsSet_StoresSet" Association="Self.FK_AccountsBudgetDetailsSet_StoresSet">
+            <End Role="StoresSet" EntitySet="StoresSets" />
+            <End Role="AccountsBudgetDetailsSet" EntitySet="AccountsBudgetDetailsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainAccountsEquipmentDetails" Association="Self.FK_AccountsMainAccountsEquipmentDetails">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSets" />
+            <End Role="AccountsBudgetDetailsSet" EntitySet="AccountsBudgetDetailsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BudgetAccountsBudgetDetails" Association="Self.FK_BudgetAccountsBudgetDetails">
+            <End Role="BudgetSet" EntitySet="BudgetSets" />
+            <End Role="AccountsBudgetDetailsSet" EntitySet="AccountsBudgetDetailsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainAccountsCapexInfo" Association="Self.FK_AccountsMainAccountsCapexInfo">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSets" />
+            <End Role="AccountsCapexInfoSet" EntitySet="AccountsCapexInfoSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CapexAccountsCapexInfo" Association="Self.FK_CapexAccountsCapexInfo">
+            <End Role="CapexSet" EntitySet="CapexSets" />
+            <End Role="AccountsCapexInfoSet" EntitySet="AccountsCapexInfoSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainAccountsStatusDetails" Association="Self.FK_AccountsMainAccountsStatusDetails">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSets" />
+            <End Role="AccountsStatusDetailsSet" EntitySet="AccountsStatusDetailsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainAccountsStoreDetails" Association="Self.FK_AccountsMainAccountsStoreDetails">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSets" />
+            <End Role="AccountsStoreDetailsSet" EntitySet="AccountsStoreDetailsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountsMainStoreProvenWork" Association="Self.FK_AccountsMainStoreProvenWork">
+            <End Role="AccountsMainSet" EntitySet="AccountsMainSets" />
+            <End Role="StoreProvenWorkSet" EntitySet="StoreProvenWorkSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StoresAccountsStoreDetails" Association="Self.FK_StoresAccountsStoreDetails">
+            <End Role="StoresSet" EntitySet="StoresSets" />
+            <End Role="AccountsStoreDetailsSet" EntitySet="AccountsStoreDetailsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceZipDetailsSet_StoresSet" Association="Self.FK_ServiceZipDetailsSet_StoresSet">
+            <End Role="StoresSet" EntitySet="StoresSets" />
+            <End Role="ServiceZipDetailsSet" EntitySet="ServiceZipDetailsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceZipDetailsSet_ZipSet" Association="Self.FK_ServiceZipDetailsSet_ZipSet">
+            <End Role="ZipSet" EntitySet="ZipSets" />
+            <End Role="ServiceZipDetailsSet" EntitySet="ServiceZipDetailsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StoresStoreProvenWork" Association="Self.FK_StoresStoreProvenWork">
+            <End Role="StoresSet" EntitySet="StoresSets" />
+            <End Role="StoreProvenWorkSet" EntitySet="StoreProvenWorkSets" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище AccountsModelContainer" CdmEntityContainer="AccountsEntities">
+          <EntitySetMapping Name="AccountsBudgetDetailsSets">
+            <EntityTypeMapping TypeName="AccountsModel.AccountsBudgetDetailsSet">
+              <MappingFragment StoreEntitySet="AccountsBudgetDetailsSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AccountsMainId" ColumnName="AccountsMainId" />
+                <ScalarProperty Name="AccountEquipmentName" ColumnName="AccountEquipmentName" />
+                <ScalarProperty Name="AccountEquipmentQuantity" ColumnName="AccountEquipmentQuantity" />
+                <ScalarProperty Name="AccountEquipmentPrice" ColumnName="AccountEquipmentPrice" />
+                <ScalarProperty Name="BudgetId" ColumnName="BudgetId" />
+                <ScalarProperty Name="AccountStoreNumber" ColumnName="AccountStoreNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountsCapexInfoSets">
+            <EntityTypeMapping TypeName="AccountsModel.AccountsCapexInfoSet">
+              <MappingFragment StoreEntitySet="AccountsCapexInfoSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AccountsMainId" ColumnName="AccountsMainId" />
+                <ScalarProperty Name="AccountCapexName" ColumnName="AccountCapexName" />
+                <ScalarProperty Name="AccountCapexAmount" ColumnName="AccountCapexAmount" />
+                <ScalarProperty Name="AccountExpense" ColumnName="AccountExpense" />
+                <ScalarProperty Name="CapexId" ColumnName="CapexId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountsCompaniesSets">
+            <EntityTypeMapping TypeName="AccountsModel.AccountsCompaniesSet">
+              <MappingFragment StoreEntitySet="AccountsCompaniesSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountsExpenseSets">
+            <EntityTypeMapping TypeName="AccountsModel.AccountsExpenseSet">
+              <MappingFragment StoreEntitySet="AccountsExpenseSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Expense" ColumnName="Expense" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountsMainSets">
+            <EntityTypeMapping TypeName="AccountsModel.AccountsMainSet">
+              <MappingFragment StoreEntitySet="AccountsMainSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="AccountCompany" ColumnName="AccountCompany" />
+                <ScalarProperty Name="AccountDate" ColumnName="AccountDate" />
+                <ScalarProperty Name="AccountAmount" ColumnName="AccountAmount" />
+                <ScalarProperty Name="AccountDescription" ColumnName="AccountDescription" />
+                <ScalarProperty Name="AccountMcdType" ColumnName="AccountMcdType" />
+                <ScalarProperty Name="AccountYear" ColumnName="AccountYear" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountsStatusDetailsSets">
+            <EntityTypeMapping TypeName="AccountsModel.AccountsStatusDetailsSet">
+              <MappingFragment StoreEntitySet="AccountsStatusDetailsSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AccountMainId" ColumnName="AccountMainId" />
+                <ScalarProperty Name="AccountStatus" ColumnName="AccountStatus" />
+                <ScalarProperty Name="AccountStatusDate" ColumnName="AccountStatusDate" />
+                <ScalarProperty Name="Commentary" ColumnName="Commentary" />
+                <ScalarProperty Name="AccountPayNumber" ColumnName="AccountPayNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountsStoreDetailsSets">
+            <EntityTypeMapping TypeName="AccountsModel.AccountsStoreDetailsSet">
+              <MappingFragment StoreEntitySet="AccountsStoreDetailsSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AccountsMainId" ColumnName="AccountsMainId" />
+                <ScalarProperty Name="AccountStore" ColumnName="AccountStore" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BudgetSets">
+            <EntityTypeMapping TypeName="AccountsModel.BudgetSet">
+              <MappingFragment StoreEntitySet="BudgetSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BudgetEquipmentName" ColumnName="BudgetEquipmentName" />
+                <ScalarProperty Name="BudgetQuantity" ColumnName="BudgetQuantity" />
+                <ScalarProperty Name="BudgetPrice" ColumnName="BudgetPrice" />
+                <ScalarProperty Name="BudgetYear" ColumnName="BudgetYear" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CapexSets">
+            <EntityTypeMapping TypeName="AccountsModel.CapexSet">
+              <MappingFragment StoreEntitySet="CapexSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CapexName" ColumnName="CapexName" />
+                <ScalarProperty Name="CapexYear" ColumnName="CapexYear" />
+                <ScalarProperty Name="CapexAmount" ColumnName="CapexAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceZipDetailsSets">
+            <EntityTypeMapping TypeName="AccountsModel.ServiceZipDetailsSet">
+              <MappingFragment StoreEntitySet="ServiceZipDetailsSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ZipName" ColumnName="ZipName" />
+                <ScalarProperty Name="ServiceMonth" ColumnName="ServiceMonth" />
+                <ScalarProperty Name="WorkDate" ColumnName="WorkDate" />
+                <ScalarProperty Name="BlankNumber" ColumnName="BlankNumber" />
+                <ScalarProperty Name="ZipQuantity" ColumnName="ZipQuantity" />
+                <ScalarProperty Name="StoreNumber" ColumnName="StoreNumber" />
+                <ScalarProperty Name="ZipPrice" ColumnName="ZipPrice" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StoreProvenWorkSets">
+            <EntityTypeMapping TypeName="AccountsModel.StoreProvenWorkSet">
+              <MappingFragment StoreEntitySet="StoreProvenWorkSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StoreNumber" ColumnName="StoreNumber" />
+                <ScalarProperty Name="StoreDateOfConfirm" ColumnName="StoreDateOfConfirm" />
+                <ScalarProperty Name="StoreWork" ColumnName="StoreWork" />
+                <ScalarProperty Name="MainAccountId" ColumnName="MainAccountId" />
+                <ScalarProperty Name="IsDone" ColumnName="IsDone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StoresSets">
+            <EntityTypeMapping TypeName="AccountsModel.StoresSet">
+              <MappingFragment StoreEntitySet="StoresSet">
+                <ScalarProperty Name="StoreNumber" ColumnName="StoreNumber" />
+                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TypeSets">
+            <EntityTypeMapping TypeName="AccountsModel.TypeSet">
+              <MappingFragment StoreEntitySet="TypeSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ZipSets">
+            <EntityTypeMapping TypeName="AccountsModel.ZipSet">
+              <MappingFragment StoreEntitySet="ZipSet">
+                <ScalarProperty Name="ZipName" ColumnName="ZipName" />
+                <ScalarProperty Name="MainZipName" ColumnName="MainZipName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

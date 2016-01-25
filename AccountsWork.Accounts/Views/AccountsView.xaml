@@ -1,0 +1,67 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:prism="http://prismlibrary.com/"
+             x:Class="AccountsWork.Accounts.Views.AccountsView"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal">
+            <ComboBox SelectedValue="{Binding AccountYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedValuePath="Content"
+                      HorizontalAlignment="Left"
+                      MinWidth="50">
+                <ComboBoxItem>2014</ComboBoxItem>
+                <ComboBoxItem>2015</ComboBoxItem>
+                <ComboBoxItem>2016</ComboBoxItem>
+                <ComboBoxItem>2017</ComboBoxItem>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding LoadAccountsForYearCommand}" 
+                                               CommandParameter="{Binding AccountYear}">
+                        </i:InvokeCommandAction>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+        </StackPanel>
+
+        <syncfusion:BusyIndicator IsBusy="{Binding IsBusy}" 
+                                  Grid.Row="1">
+            <syncfusion:SfDataGrid ItemsSource="{Binding AccountsListCollectionView, IsAsync=True}"
+                                   AutoGenerateColumns="False"
+                                   ColumnSizer="Auto"
+                                   AllowGrouping="True"
+                                   ShowGroupDropArea="True"
+                                   AllowFiltering="True"
+                                   NavigationMode="Row">
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn HeaderText="Номер счета" 
+                                               MappingName="AccountNumber" />
+                    <syncfusion:GridTextColumn HeaderText="Компания" 
+                                               MappingName="AccountCompany" />
+                    <syncfusion:GridTextColumn HeaderText="Дата счета" 
+                                               MappingName="AccountDate" />
+                    <syncfusion:GridTextColumn HeaderText="Сумма" 
+                                               MappingName="AccountAmount" />
+                    <syncfusion:GridTextColumn HeaderText="Описание" 
+                                               MappingName="AccountDescription" />
+                    <syncfusion:GridTextColumn HeaderText="ООО/ЗАО" 
+                                               MappingName="AccountMcdType" />
+                    <syncfusion:GridTextColumn HeaderText="Тип счета" 
+                                               MappingName="AccountType" />
+                </syncfusion:SfDataGrid.Columns>
+            </syncfusion:SfDataGrid>
+        </syncfusion:BusyIndicator>
+    </Grid>
+</UserControl>
