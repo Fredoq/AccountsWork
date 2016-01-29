@@ -8,7 +8,8 @@
         <Setter Property="Foreground" Value="#FF0E233E"/>
         <Setter Property="Padding" Value="3"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="FontSize" Value="24"/>
         <Setter Property="BorderBrush" Value="#FF204d89" />
         <Setter Property="Template">
             <Setter.Value>
@@ -51,7 +52,7 @@
                                 <VisualState x:Name="Unchecked"/>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="BaseBackground" BorderBrush="#FFD1E5FF" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                        <Border x:Name="BaseBackground" BorderBrush="#FFD1E5FF" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
                             <Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FFD1E4FF" Offset="0"/>
@@ -61,7 +62,7 @@
                                 </LinearGradientBrush>
                             </Border.Background>
                         </Border>
-                        <Border x:Name="MouseOverBackground" BorderBrush="#FFFFE8A7" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Opacity="0">
+                        <Border x:Name="MouseOverBackground" BorderBrush="#FFFFE8A7" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0">
                             <Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="White" Offset="0"/>
@@ -71,7 +72,7 @@
                                 </LinearGradientBrush>
                             </Border.Background>
                         </Border>
-                        <Border x:Name="PressedBackground" BorderBrush="#FFFFAC42" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Opacity="0">
+                        <Border x:Name="PressedBackground" BorderBrush="#FFFFAC42" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0">
                             <Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FFFFDB69" Offset="0"/>
@@ -81,7 +82,7 @@
                                 </LinearGradientBrush>
                             </Border.Background>
                         </Border>
-                        <Border x:Name="CheckedBackground" BorderBrush="#FFFFBB6E" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Opacity="0">
+                        <Border x:Name="CheckedBackground" BorderBrush="#FFFFBB6E" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0">
                             <Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FFFFD9AA" Offset="0"/>
@@ -98,6 +99,17 @@
                         <Rectangle x:Name="FocusVisualElement" IsHitTestVisible="false" Margin="1" Opacity="0" RadiusY="2" RadiusX="2" Stroke="{x:Null}" StrokeThickness="1" />
                     </Grid>
                 </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        
+    </Style>
+    <Style x:Key="myKey" TargetType="{x:Type ItemsControl}">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                IsItemsHost="True"/>
+                </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
     </Style>

@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using AccountsWork.Infrastructure;
 using Prism.Modularity;
 using Prism.Regions;
+using Syncfusion.Windows.Shared;
 
 namespace AccountsWork
 {
@@ -23,7 +24,7 @@ namespace AccountsWork
     /// Логика взаимодействия для Shell.xaml
     /// </summary>
     [Export]
-    public partial class Shell : Window, IPartImportsSatisfiedNotification
+    public partial class Shell : ChromelessWindow, IPartImportsSatisfiedNotification
     {
         private const string AccountsModuleName = "AccountsModule";
         private static Uri AccountsViewUri = new Uri("/AccountsView", UriKind.Relative);
