@@ -7,26 +7,72 @@
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              x:Class="AccountsWork.Accounts.Views.AccountsView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Header" 
+                    Value="{Binding DataContext.AccountsTabItemHeader}">
+            </Setter>
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <ContentControl VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,0,7,0"
+                                            Content="{Binding}"/>
+                            <Button Grid.Column="1"
+                                    Content="x">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <infrastructure:CloseTabAction/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Rectangle Grid.Column="0"
-                   Grid.Row="0"
-                   Stroke="BlanchedAlmond"
-                   StrokeThickness="2"/>
-            <StackPanel Orientation="Vertical">
+                       Grid.Row="0"
+                       Stroke="BlanchedAlmond"
+                       StrokeThickness="2"/>
+            <StackPanel Grid.Column="0" 
+                        Orientation="Vertical">
+                <Button Content="Общая информация"
+                        Margin="6,10,6,4"
+                        Padding="2"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="InfoView"/>
                 <Button Content="Добавить счет"
-                    Margin="6,10,6,4"
-                    Padding="2"/>
+                        Margin="6,10,6,4"
+                        Padding="2"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="AddAccountView"/>
             </StackPanel>
             <Rectangle Grid.Column="1"
                        Grid.Row="0"
                        Stroke="BlanchedAlmond"
                        StrokeThickness="2"/>
+        <TabControl Grid.Row="0"
+                    Grid.Column="1"
+                    prism:RegionManager.RegionName="AccountsTabRegion">
+            
+        </TabControl>
         </Grid>
 </UserControl>

@@ -7,6 +7,7 @@ using AccountsWork.BusinessLayer;
 using AccountsWork.DomainModel;
 using AccountsWork.Infrastructure;
 using Microsoft.Practices.Prism.Commands;
+using Prism.Regions;
 using Syncfusion.UI.Xaml.Grid;
 
 
@@ -25,10 +26,8 @@ namespace AccountsWork.Accounts.ViewModels
         private string _accountMcdType;
         private string _accountYear;
         private string _accountType;
-        private ObservableCollection<AccountsMainSet> _accountsList;
-        private GridVirtualizingCollectionView _accountsListCollectionView;
-        private bool _isBusy;
         private IAccountsMainService _accountsMainService;
+        private IRegionManager _regionManager;
 
         #region Public Properties
         [Required]
@@ -85,46 +84,17 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _accountType; }
             set { SetProperty(ref _accountType, value); }
         }
-        public ObservableCollection<AccountsMainSet> AccountsList
-        {
-            get { return _accountsList; }
-            set
-            {
-                SetProperty(ref _accountsList, value);
-                
-            }
-        }
-
-        public GridVirtualizingCollectionView AccountsListCollectionView
-        {
-            get { return _accountsListCollectionView; }
-            set { SetProperty(ref _accountsListCollectionView, value); }
-        }
-
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set { SetProperty(ref _isBusy, value); }
-        }
         #endregion Public Properties
 
         #region Commands
-        public DelegateCommand<string> LoadAccountsForYearCommand { get; set; }
+        public DelegateCommand<string> NavigateCommand { get; set; } 
         #endregion Commands
 
         #region Methods
 
-        void LoadAccountsForYear(string year)
+        void Navigate(string navigationProperty)
         {
-            if (string.IsNullOrWhiteSpace(year)) return;
-            AccountsList.Clear();
-            IsBusy = true;
-            foreach (var item in _accountsMainService.GetAccounts().Where(item => item.AccountYear == Convert.ToInt32(year)))
-            {
-                AccountsList.Add(item);
-            }
-            AccountsListCollectionView.Refresh();
-            IsBusy = false;
+            _regionManager.RequestNavigate("AccountsTabRegion", navigationProperty);
         }
         #endregion Methods
 
@@ -139,13 +109,12 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region Constructor
         [ImportingConstructor]
-        public AccountsViewModel(IAccountsMainService accountsMainService)
+        public AccountsViewModel(IAccountsMainService accountsMainService, IRegionManager regionManager)
         //public AccountsViewModel()
         {
             _accountsMainService = accountsMainService;
-            AccountsList = new ObservableCollection<AccountsMainSet>();
-            AccountsListCollectionView = new GridVirtualizingCollectionView(AccountsList);
-            LoadAccountsForYearCommand = new DelegateCommand<string>(LoadAccountsForYear);
+            _regionManager = regionManager;
+            NavigateCommand = new DelegateCommand<string>(Navigate);
         }
         #endregion Constructor
     }
