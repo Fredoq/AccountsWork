@@ -52,7 +52,11 @@
   <ItemGroup>
     <Compile Include="AccountsMainService.cs" />
     <Compile Include="AsyncQuery.cs" />
+    <Compile Include="TypesService.cs" />
+    <Compile Include="CompaniesService.cs" />
     <Compile Include="IAccountsMainService.cs" />
+    <Compile Include="ITypesService.cs" />
+    <Compile Include="ICompaniesService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

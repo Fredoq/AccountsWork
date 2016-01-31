@@ -7,6 +7,113 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            <TextBlock Text="Здесь добавление счета"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="60*"/>
+        </Grid.RowDefinitions>-->
+        <GroupBox Grid.Column="0"
+                  Header="Главная информация">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="60*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label  Content="Номер счета:"/>
+                <TextBox Margin="3,3,10,3" 
+                         Grid.Row="0" 
+                         Grid.Column="1" 
+                         TextWrapping="Wrap" 
+                         HorizontalAlignment="Stretch"
+                         Text="{Binding AccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Компания:" 
+                       Grid.Row="1" 
+                       Grid.Column="0" />
+                <ComboBox Margin="3,3,10,3" 
+                          Grid.Column="1" 
+                          Grid.Row="1"
+                          ItemsSource="{Binding Companies}"
+                          DisplayMemberPath="Company"
+                          SelectedValuePath="Company"
+                          SelectedItem="{Binding AccountCompany}"/>
+                <Label Content="Дата счета:" 
+                       Grid.Row="2" 
+                       Grid.Column="0" />
+                <DatePicker Margin="3,3,10,3" 
+                            Grid.Column="1" 
+                            Grid.Row="2" 
+                            FirstDayOfWeek="Monday"
+                            SelectedDate="{Binding AccountDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Label Content="Сумма счета" 
+                       Grid.Row="3" 
+                       Grid.Column="0" />
+                <TextBox Margin="3,3,10,3" 
+                         Grid.Column="1" 
+                         Grid.Row="3" 
+                         HorizontalAlignment="Stretch" 
+                         SpellCheck.IsEnabled="True"
+                         Text="{Binding AccountAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
+                <Label Content="Тип счета:" 
+                       Grid.Row="4" 
+                       Grid.Column="0"/>
+                <ComboBox Margin="3,3,10,3" 
+                          Grid.Row="4" 
+                          Grid.Column="1"
+                          ItemsSource="{Binding Types}"
+                          DisplayMemberPath="Type"
+                          SelectedValuePath="Type"
+                          SelectedItem="{Binding AccountType}"/>
+                <Label Content="Описание счета" 
+                       Grid.Row="5" 
+                       Grid.Column="0" />
+                <TextBox Margin="3,3,10,3" 
+                         Grid.Column="1" 
+                         Grid.Row="5" 
+                         TextWrapping="Wrap" 
+                         HorizontalAlignment="Stretch" 
+                         SpellCheck.IsEnabled="True"/>
+                <Label Content="Тип MCD" 
+                       Grid.Row="6" 
+                       Grid.Column="0" />
+                <ComboBox Margin="3,3,10,3" 
+                          x:Name="cmbType" 
+                          Grid.Column="1" 
+                          Grid.Row="6" >
+                    <ComboBoxItem>ООО</ComboBoxItem>
+                    <ComboBoxItem>ЗАО</ComboBoxItem>
+                </ComboBox>
+                <Label Content="Год учета:" 
+                       Grid.Row="7"/>
+                <TextBox Margin="3,3,10,3" 
+                         Grid.Row="7" 
+                         Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="0"
+                  Grid.Column="1"
+                  Header="Вспомогательная информация">
+            
+        </GroupBox>
     </Grid>
 </UserControl>
