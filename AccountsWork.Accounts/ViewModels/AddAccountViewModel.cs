@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using AccountsWork.DomainModel;
 using AccountsWork.BusinessLayer;
+using Prism.Regions;
 
 namespace AccountsWork.Accounts.ViewModels
 {
     [Export]
-    public class AddAccountViewModel : ValidatableBindableBase
+    public class AddAccountViewModel : ValidatableBindableBase, IConfirmNavigationRequest
     {
         #region Private Fields
         private string _accountsTabItemHeader;
@@ -122,6 +123,26 @@ namespace AccountsWork.Accounts.ViewModels
                 return new ValidationResult("Указана неверная дата счета");
             return ValidationResult.Success;
         }
+
+        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            continuationCallback(false);
+        }
         #endregion Validation Methods        
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
+        }
     }
 }

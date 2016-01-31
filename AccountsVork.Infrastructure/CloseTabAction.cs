@@ -22,8 +22,38 @@ namespace AccountsWork.Infrastructure
             var region = RegionManager.GetObservableRegion(tabControl).Value;
             if (region == null)
                 return;
-            if (region.Views.Contains(tabItem.Content))
-                region.Remove(tabItem.Content);
+            RemoveItemFromRegion(tabItem.Content, region);
+        }
+
+        void RemoveItemFromRegion(object item, IRegion region)
+        {
+            var navigationContext = new NavigationContext(region.NavigationService, null);
+            if (CanRemove(item, navigationContext))
+            {
+                region.Remove(item);
+            }
+        }
+
+        bool CanRemove(object item, NavigationContext navigationContext)
+        {
+            var canRemove = true;
+            var confirmRequestItem = item as IConfirmNavigationRequest;
+            confirmRequestItem?.ConfirmNavigationRequest(navigationContext, result =>
+            {
+                canRemove = result;
+            });
+
+            var frameworkElement = item as FrameworkElement;
+            if (frameworkElement != null && canRemove)
+            {
+                var confirmRequestDataContext = frameworkElement.DataContext as IConfirmNavigationRequest;
+                confirmRequestDataContext?.ConfirmNavigationRequest(navigationContext, result =>
+                {
+                    canRemove = result;
+                });
+            }
+
+            return canRemove;
         }
 
         static T FindParent<T>(DependencyObject child) where T : DependencyObject
