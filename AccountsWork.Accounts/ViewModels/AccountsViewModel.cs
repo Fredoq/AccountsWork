@@ -14,7 +14,7 @@ using Syncfusion.UI.Xaml.Grid;
 namespace AccountsWork.Accounts.ViewModels
 {
     [Export]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
+    //[PartCreationPolicy(CreationPolicy.NonShared)]
     public class AccountsViewModel : ValidatableBindableBase
     {
         private IAccountsMainService _accountsMainService;

@@ -8,10 +8,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.Practices.Prism.Mvvm;
+using Prism.Regions;
 
 namespace AccountsWork.Infrastructure
 {
-    public class ValidatableBindableBase : BindableBase, INotifyDataErrorInfo
+    public class ValidatableBindableBase : BindableBase, INotifyDataErrorInfo, INavigationAware
     {
         ErrorsContainer<string> _errorsContainer;
 
@@ -121,6 +122,20 @@ namespace AccountsWork.Infrastructure
             }
 
             return isValid;
+        }
+        public virtual bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+
         }
     }
 }

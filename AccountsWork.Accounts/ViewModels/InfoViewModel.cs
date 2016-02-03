@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using AccountsWork.Infrastructure;
+using Prism.Regions;
 
 namespace AccountsWork.Accounts.ViewModels
 {

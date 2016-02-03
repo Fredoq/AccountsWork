@@ -25,13 +25,25 @@ namespace AccountsWork.Infrastructure
             RemoveItemFromRegion(tabItem.Content, region);
         }
 
+        void InvokeOnNavigatedFrom(object item, NavigationContext navigationContext)
+        {
+            var navigationAwareItem = item as INavigationAware;
+            navigationAwareItem?.OnNavigatedFrom(navigationContext);
+            var frameworkElement = item as FrameworkElement;
+            var navigationAwareDataContext = frameworkElement?.DataContext as INavigationAware;
+            navigationAwareDataContext?.OnNavigatedFrom(navigationContext);
+        }
+
         void RemoveItemFromRegion(object item, IRegion region)
         {
             var navigationContext = new NavigationContext(region.NavigationService, null);
             if (CanRemove(item, navigationContext))
             {
+                InvokeOnNavigatedFrom(item, navigationContext);
+                
                 region.Remove(item);
             }
+            
         }
 
         bool CanRemove(object item, NavigationContext navigationContext)
