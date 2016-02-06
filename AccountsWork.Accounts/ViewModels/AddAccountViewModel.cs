@@ -7,18 +7,19 @@ using System.ComponentModel;
 using AccountsWork.DomainModel;
 using AccountsWork.BusinessLayer;
 using Microsoft.Practices.Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Regions;
 
 namespace AccountsWork.Accounts.ViewModels
 {
     [Export]
-    public class AddAccountViewModel : ValidatableBindableBase
+    public class AddAccountViewModel : ValidatableBindableBase, IConfirmNavigationRequest
     {
         #region Private Fields
         private string _accountsTabItemHeader;   
         private IList<AccountsCompaniesSet> _companies;
-        private ICompaniesService _companiesService;
-        private ITypesService _typesService;
+        private readonly ICompaniesService _companiesService;
+        private readonly ITypesService _typesService;
         private IList<TypeSet> _types;
         private readonly BackgroundWorker _worker;
         private AccountsMainSet _account;
@@ -48,7 +49,11 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _types; }
             set { SetProperty(ref _types, value); }
         }
+        public InteractionRequest<IConfirmation> ConfirmationRequest { get; set; } 
+        #region Commands
         public DelegateCommand LoadAllCommand { get; set; }
+        public DelegateCommand RaiseConfirmationCommand { get; set; }
+        #endregion Commands
         #endregion Public Properties
 
         #region Constructors
@@ -56,7 +61,9 @@ namespace AccountsWork.Accounts.ViewModels
         public AddAccountViewModel(ICompaniesService companiesService, ITypesService typesService)
         {
             AccountsTabItemHeader = "Новый счет";
+            Account = new AccountsMainSet();
             _companiesService = companiesService;
+            ConfirmationRequest = new InteractionRequest<IConfirmation>();
             _worker = new BackgroundWorker();
             _worker.DoWork += DoWork;
             LoadAllCommand = new DelegateCommand(() =>
@@ -65,18 +72,33 @@ namespace AccountsWork.Accounts.ViewModels
                     _worker.RunWorkerAsync();
             });
             _typesService = typesService;
-            Account = new AccountsMainSet();
-            //Companies = companiesService.GetCompanies();
-            //Types = typesService.GetTypes();
+            
 
         }
         #endregion Constructors
 
-             
-        //public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
-        //{
-        //    continuationCallback(true);
-        //}
+
+        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            if (navigationContext.Uri == null)
+            {
+                ConfirmationRequest.Raise(
+                    new Confirmation {Content = "Закрыть без сохранения?", Title = "Закрытие вкладки"},
+                    c => { continuationCallback(c.Confirmed); });
+            }
+            else
+            {
+                continuationCallback(true);
+            }
+        }
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+           
+        }
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+
+        }
         #region Methods
 
         void LoadCompaniesAndTypes()

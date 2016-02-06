@@ -16,6 +16,7 @@ namespace AccountsWork.Infrastructure
             var tabItem = FindParent<TabItem>(args.OriginalSource as DependencyObject);
             if (tabItem == null)
                 return;
+            tabItem.IsSelected = true;
             var tabControl = FindParent<TabControl>(tabItem);
             if (tabControl == null)
                 return;
