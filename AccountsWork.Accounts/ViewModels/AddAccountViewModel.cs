@@ -3,29 +3,28 @@ using AccountsWork.Infrastructure;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.ComponentModel;
 using AccountsWork.DomainModel;
 using AccountsWork.BusinessLayer;
+using Prism.Interactivity.InteractionRequest;
+using Prism.Regions;
+using Prism.Commands;
 
 namespace AccountsWork.Accounts.ViewModels
 {
     [Export]
-    public class AddAccountViewModel : ValidatableBindableBase
+    public class AddAccountViewModel : ValidatableBindableBase, IConfirmNavigationRequest
     {
         #region Private Fields
-        private string _accountsTabItemHeader;
-        private int _id;
-        private string _accountNumber;
-        private string _accountCompany;
-        private DateTime? _accountDate;
-        private decimal _accountAmount;
-        private string _accountDescription;
-        private string _accountMcdType;
-        private string _accountYear;
-        private string _accountType;
+        private string _accountsTabItemHeader;   
         private IList<AccountsCompaniesSet> _companies;
-        private ICompaniesService _companiesService;
-        private ITypesService _typesService;
+        private readonly ICompaniesService _companiesService;
+        private readonly ITypesService _typesService;
         private IList<TypeSet> _types;
+        private readonly BackgroundWorker _worker;
+        private AccountsMainSet _account;
+        private IAccountsMainService _accountsService;
+
         #endregion Private Fields
 
         #region Public Properties
@@ -34,61 +33,13 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _accountsTabItemHeader; }
             set { SetProperty(ref _accountsTabItemHeader, value); }
         }
-        [Required]
-        public int Id
+        //http://stackoverflow.com/questions/33313190/observesproperty-method-isnt-observing-models-properties-at-prism-6
+        public AccountsMainSet Account
         {
-            get { return _id; }
-            set { SetProperty(ref _id, value); }
+            get { return _account; }
+            set { SetProperty(ref _account, value); }
         }
 
-        [Required]
-        public string AccountNumber
-        {
-            get { return _accountNumber; }
-            set { SetProperty(ref _accountNumber, value); }
-        }
-        [Required]
-        public string AccountCompany
-        {
-            get { return _accountCompany; }
-            set { SetProperty(ref _accountCompany, value); }
-        }
-        [CustomValidation(typeof(AddAccountViewModel), "CheckDateRange")]
-        public DateTime? AccountDate
-        {
-            get { return _accountDate; }
-            set { SetProperty(ref _accountDate, value); }
-        }
-        [Required]
-        public decimal AccountAmount
-        {
-            get { return _accountAmount; }
-            set { SetProperty(ref _accountAmount, value); }
-        }
-        public string AccountDescription
-        {
-            get { return _accountDescription; }
-            set { SetProperty(ref _accountDescription, value); }
-        }
-        [Required]
-        public string AccountMcdType
-        {
-            get { return _accountMcdType; }
-            set { SetProperty(ref _accountMcdType, value); }
-        }
-        [Required]
-        public string AccountYear
-        {
-            get { return _accountYear; }
-            set { SetProperty(ref _accountYear, value); }
-        }
-        [Required]
-        public string AccountType
-        {
-            get { return _accountType; }
-            set { SetProperty(ref _accountType, value); }
-        }
-        
         public IList<AccountsCompaniesSet> Companies
         {
             get { return _companies; }
@@ -99,29 +50,80 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _types; }
             set { SetProperty(ref _types, value); }
         }
-
+        public InteractionRequest<IConfirmation> ConfirmationRequest { get; set; }
         #endregion Public Properties
+
+        #region Commands
+        public DelegateCommand LoadAllCommand { get; set; }
+        public DelegateCommand SaveAccountCommand { get; set; }
+        #endregion Commands
 
         #region Constructors
         [ImportingConstructor]
-        public AddAccountViewModel(ICompaniesService companiesService, ITypesService typesService)
+        public AddAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService)
         {
             AccountsTabItemHeader = "Новый счет";
+            Account = new AccountsMainSet();
             _companiesService = companiesService;
             _typesService = typesService;
-            Companies = companiesService.GetCompanies();
-            Types = typesService.GetTypes();
-
+            _accountsService = accountsService;
+            ConfirmationRequest = new InteractionRequest<IConfirmation>();
+            _worker = new BackgroundWorker();
+            _worker.DoWork += DoWork;
+            LoadAllCommand = new DelegateCommand(() =>
+            {
+                if (!_worker.IsBusy)
+                    _worker.RunWorkerAsync();
+            });
+            SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave).ObservesProperty(() => Account);            
         }
         #endregion Constructors
 
-        #region Validation Methods
-        public static ValidationResult CheckDateRange(DateTime? date, ValidationContext context)
+
+        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
-            if (date.Value < new DateTime(2013, 1, 1) || date.Value > DateTime.Now)
-                return new ValidationResult("Указана неверная дата счета");
-            return ValidationResult.Success;
+            if (navigationContext.Uri == null)
+            {
+                ConfirmationRequest.Raise(
+                    new Confirmation {Content = "Закрыть без сохранения?", Title = "Закрытие вкладки"},
+                    c => { continuationCallback(c.Confirmed); });
+            }
+            else
+            {
+                continuationCallback(true);
+            }
         }
-        #endregion Validation Methods        
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+           
+        }
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+
+        }
+        #region Methods
+
+        void LoadCompaniesAndTypes()
+        {
+            Companies = _companiesService.GetCompanies();
+            Types = _typesService.GetTypes();
+        }
+        private void DoWork(object sender, DoWorkEventArgs e)
+        {
+            LoadCompaniesAndTypes();
+        }
+        void SaveCommand()
+        {
+            _accountsService.AddAccount(Account);
+        }
+        bool CanSave()
+        {
+            Account.ValidateProperties();
+            if (Account.HasErrors)
+                return false;
+            else
+                return true;
+        }
+        #endregion Methods 
     }
 }
