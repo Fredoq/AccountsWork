@@ -22,5 +22,10 @@ namespace AccountsWork.BusinessLayer
         {
             return _accountsMainRepository.GetAll();
         }
+
+        public void AddAccount(AccountsMainSet account)
+        {
+            _accountsMainRepository.Add(account);
+        }
     }
 }

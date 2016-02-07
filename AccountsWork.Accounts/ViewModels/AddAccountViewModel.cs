@@ -23,7 +23,7 @@ namespace AccountsWork.Accounts.ViewModels
         private IList<TypeSet> _types;
         private readonly BackgroundWorker _worker;
         private AccountsMainSet _account;
-        private IAccountsMainService _accountsService;
+        private readonly IAccountsMainService _accountsService;
 
         #endregion Private Fields
 
@@ -37,8 +37,17 @@ namespace AccountsWork.Accounts.ViewModels
         public AccountsMainSet Account
         {
             get { return _account; }
-            set { SetProperty(ref _account, value); }
+            set
+            {
+                if (_account != null)
+                    Account.PropertyChanged -= AccountPropertyChanged;
+                SetProperty(ref _account, value);
+                if (_account != null)
+                    Account.PropertyChanged += AccountPropertyChanged;
+            }
         }
+
+        
 
         public IList<AccountsCompaniesSet> Companies
         {
@@ -119,10 +128,11 @@ namespace AccountsWork.Accounts.ViewModels
         bool CanSave()
         {
             Account.ValidateProperties();
-            if (Account.HasErrors)
-                return false;
-            else
-                return true;
+            return !Account.HasErrors;
+        }
+        private void AccountPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            SaveAccountCommand.RaiseCanExecuteChanged();
         }
         #endregion Methods 
     }

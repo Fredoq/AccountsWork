@@ -22,17 +22,10 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <!--<Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="60*"/>
-        </Grid.RowDefinitions>-->
+        </Grid.RowDefinitions>
         <GroupBox Grid.Column="0"
                   Header="Главная информация">
             <Grid>
@@ -67,7 +60,7 @@
                           ItemsSource="{Binding Companies}"
                           DisplayMemberPath="Company"
                           SelectedValuePath="Company"
-                          SelectedItem="{Binding Account.AccountCompany}"/>
+                          SelectedItem="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Дата счета:" 
                        Grid.Row="2" 
                        Grid.Column="0" />
@@ -84,7 +77,7 @@
                          Grid.Row="3" 
                          HorizontalAlignment="Stretch" 
                          SpellCheck.IsEnabled="True"
-                         Text="{Binding Account.AccountAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
+                         Text="{Binding Account.AccountAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
                 <Label Content="Тип счета:" 
                        Grid.Row="4" 
                        Grid.Column="0"/>
@@ -94,7 +87,7 @@
                           DisplayMemberPath="Type"
                           SelectedValuePath="Type"
                           ItemsSource="{Binding Types}"
-                          SelectedItem="{Binding Account.AccountType}"/>
+                          SelectedItem="{Binding Account.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Описание счета" 
                        Grid.Row="5" 
                        Grid.Column="0" />
@@ -104,7 +97,7 @@
                          TextWrapping="Wrap" 
                          HorizontalAlignment="Stretch" 
                          SpellCheck.IsEnabled="True"
-                         Text="{Binding Account.AccountDescription}"/>
+                         Text="{Binding Account.AccountDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Тип MCD" 
                        Grid.Row="6" 
                        Grid.Column="0" />
@@ -112,7 +105,8 @@
                           x:Name="cmbType" 
                           Grid.Column="1" 
                           Grid.Row="6" 
-                          SelectedItem="{Binding Account.AccountMcdType}">
+                          SelectedValuePath="Content"
+                          SelectedItem="{Binding Account.AccountMcdType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBoxItem>ООО</ComboBoxItem>
                     <ComboBoxItem>ЗАО</ComboBoxItem>
                 </ComboBox>
@@ -122,7 +116,7 @@
                 <TextBox Margin="3,3,10,3" 
                          Grid.Row="7" 
                          Grid.Column="1"
-                         Text="{Binding Account.AccountYear}"/>
+                         Text="{Binding Account.AccountYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="0"
@@ -130,5 +124,13 @@
                   Header="Вспомогательная информация">
             
         </GroupBox>
+        <StackPanel Grid.ColumnSpan="2"
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    Orientation="Horizontal">
+            <Button Content="Сохранить"
+                    Margin="3,3,10,3"
+                    Command="{Binding SaveAccountCommand}"></Button>
+        </StackPanel>
     </Grid>
 </UserControl>
