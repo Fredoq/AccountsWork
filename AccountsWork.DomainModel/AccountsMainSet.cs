@@ -7,14 +7,29 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+
 namespace AccountsWork.DomainModel
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class AccountsMainSet
+    using Infrastructure;
+
+    public partial class AccountsMainSet : ValidatableBindableBase
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        private int _id;
+        private string _accountNumber;
+        private string _accountCompany;
+        private DateTime _accountDate;
+        private decimal _accountAmount;
+        private string _accountDescription;
+        private string _accountMcdType;
+        private int? _accountYear;
+        private string _accountType;
+
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AccountsMainSet()
         {
             this.AccountsBudgetDetailsSets = new HashSet<AccountsBudgetDetailsSet>();
@@ -23,26 +38,89 @@ namespace AccountsWork.DomainModel
             this.AccountsStoreDetailsSets = new HashSet<AccountsStoreDetailsSet>();
             this.StoreProvenWorkSets = new HashSet<StoreProvenWorkSet>();
         }
+
+        [Required]
+        public int Id
+        {
+            get { return _id; }
+            set { SetProperty(ref _id, value); }
+        }
+
+        [Required]
+        public string AccountNumber
+        {
+            get { return _accountNumber; }
+            set { SetProperty(ref _accountNumber, value); }
+        }
+
+        [Required]
+        public string AccountCompany
+        {
+            get { return _accountCompany; }
+            set { SetProperty(ref _accountCompany, value); }
+        }
+
+        [CustomValidation(typeof (AccountsMainSet), "CheckDateRange")]
+        public DateTime AccountDate
+        {
+            get { return _accountDate; }
+            set { SetProperty(ref _accountDate, value); }
+        }
+
+        [Required]
+        public decimal AccountAmount
+        {
+            get { return _accountAmount; }
+            set { SetProperty(ref _accountAmount, value); }
+        }
+
+        public string AccountDescription
+        {
+            get { return _accountDescription; }
+            set { SetProperty(ref _accountDescription, value); }
+        }
+
+        [Required]
+        public string AccountMcdType
+        {
+            get { return _accountMcdType; }
+            set { SetProperty(ref _accountMcdType, value); }
+        }
+
+        [Required]
+        public Nullable<int> AccountYear
+        {
+            get { return _accountYear; }
+            set { SetProperty(ref _accountYear, value); }
+        }
+
+        [Required]
+        public string AccountType
+        {
+            get { return _accountType; }
+            set { SetProperty(ref _accountType, value); }
+        }
     
-        public int Id { get; set; }
-        public string AccountNumber { get; set; }
-        public string AccountCompany { get; set; }
-        public System.DateTime AccountDate { get; set; }
-        public decimal AccountAmount { get; set; }
-        public string AccountDescription { get; set; }
-        public string AccountMcdType { get; set; }
-        public Nullable<int> AccountYear { get; set; }
-        public string AccountType { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsCapexInfoSet> AccountsCapexInfoSets { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsStatusDetailsSet> AccountsStatusDetailsSets { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsStoreDetailsSet> AccountsStoreDetailsSets { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StoreProvenWorkSet> StoreProvenWorkSets { get; set; }
+
+        #region Validation Methods
+
+        public static ValidationResult CheckDateRange(DateTime? date, ValidationContext context)
+        {
+            if (date.Value < new DateTime(2013, 1, 1) || date.Value > DateTime.Now)
+                return new ValidationResult("Указана неверная дата счета");
+            return ValidationResult.Success;
+        }
+
+        #endregion Validation Methods  
     }
 }

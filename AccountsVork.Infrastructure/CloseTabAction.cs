@@ -16,14 +16,57 @@ namespace AccountsWork.Infrastructure
             var tabItem = FindParent<TabItem>(args.OriginalSource as DependencyObject);
             if (tabItem == null)
                 return;
+            tabItem.IsSelected = true;
             var tabControl = FindParent<TabControl>(tabItem);
             if (tabControl == null)
                 return;
             var region = RegionManager.GetObservableRegion(tabControl).Value;
             if (region == null)
                 return;
-            if (region.Views.Contains(tabItem.Content))
-                region.Remove(tabItem.Content);
+            RemoveItemFromRegion(tabItem.Content, region);
+        }
+
+        void InvokeOnNavigatedFrom(object item, NavigationContext navigationContext)
+        {
+            var navigationAwareItem = item as INavigationAware;
+            navigationAwareItem?.OnNavigatedFrom(navigationContext);
+            var frameworkElement = item as FrameworkElement;
+            var navigationAwareDataContext = frameworkElement?.DataContext as INavigationAware;
+            navigationAwareDataContext?.OnNavigatedFrom(navigationContext);
+        }
+
+        void RemoveItemFromRegion(object item, IRegion region)
+        {
+            var navigationContext = new NavigationContext(region.NavigationService, null);
+            if (CanRemove(item, navigationContext))
+            {
+                InvokeOnNavigatedFrom(item, navigationContext);
+                
+                region.Remove(item);
+            }
+            
+        }
+
+        bool CanRemove(object item, NavigationContext navigationContext)
+        {
+            var canRemove = true;
+            var confirmRequestItem = item as IConfirmNavigationRequest;
+            confirmRequestItem?.ConfirmNavigationRequest(navigationContext, result =>
+            {
+                canRemove = result;
+            });
+
+            var frameworkElement = item as FrameworkElement;
+            if (frameworkElement != null && canRemove)
+            {
+                var confirmRequestDataContext = frameworkElement.DataContext as IConfirmNavigationRequest;
+                confirmRequestDataContext?.ConfirmNavigationRequest(navigationContext, result =>
+                {
+                    canRemove = result;
+                });
+            }
+
+            return canRemove;
         }
 
         static T FindParent<T>(DependencyObject child) where T : DependencyObject

@@ -4,8 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadAllCommand}"></i:InvokeCommandAction>
+        </i:EventTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+            <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -46,7 +57,7 @@
                          Grid.Column="1" 
                          TextWrapping="Wrap" 
                          HorizontalAlignment="Stretch"
-                         Text="{Binding AccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Account.AccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Компания:" 
                        Grid.Row="1" 
                        Grid.Column="0" />
@@ -56,7 +67,7 @@
                           ItemsSource="{Binding Companies}"
                           DisplayMemberPath="Company"
                           SelectedValuePath="Company"
-                          SelectedItem="{Binding AccountCompany}"/>
+                          SelectedItem="{Binding Account.AccountCompany}"/>
                 <Label Content="Дата счета:" 
                        Grid.Row="2" 
                        Grid.Column="0" />
@@ -64,7 +75,7 @@
                             Grid.Column="1" 
                             Grid.Row="2" 
                             FirstDayOfWeek="Monday"
-                            SelectedDate="{Binding AccountDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            SelectedDate="{Binding Account.AccountDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 <Label Content="Сумма счета" 
                        Grid.Row="3" 
                        Grid.Column="0" />
@@ -73,17 +84,17 @@
                          Grid.Row="3" 
                          HorizontalAlignment="Stretch" 
                          SpellCheck.IsEnabled="True"
-                         Text="{Binding AccountAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
+                         Text="{Binding Account.AccountAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
                 <Label Content="Тип счета:" 
                        Grid.Row="4" 
                        Grid.Column="0"/>
                 <ComboBox Margin="3,3,10,3" 
                           Grid.Row="4" 
                           Grid.Column="1"
-                          ItemsSource="{Binding Types}"
                           DisplayMemberPath="Type"
                           SelectedValuePath="Type"
-                          SelectedItem="{Binding AccountType}"/>
+                          ItemsSource="{Binding Types}"
+                          SelectedItem="{Binding Account.AccountType}"/>
                 <Label Content="Описание счета" 
                        Grid.Row="5" 
                        Grid.Column="0" />
@@ -92,22 +103,26 @@
                          Grid.Row="5" 
                          TextWrapping="Wrap" 
                          HorizontalAlignment="Stretch" 
-                         SpellCheck.IsEnabled="True"/>
+                         SpellCheck.IsEnabled="True"
+                         Text="{Binding Account.AccountDescription}"/>
                 <Label Content="Тип MCD" 
                        Grid.Row="6" 
                        Grid.Column="0" />
                 <ComboBox Margin="3,3,10,3" 
                           x:Name="cmbType" 
                           Grid.Column="1" 
-                          Grid.Row="6" >
+                          Grid.Row="6" 
+                          SelectedItem="{Binding Account.AccountMcdType}">
                     <ComboBoxItem>ООО</ComboBoxItem>
                     <ComboBoxItem>ЗАО</ComboBoxItem>
                 </ComboBox>
                 <Label Content="Год учета:" 
-                       Grid.Row="7"/>
+                       Grid.Row="7" 
+                       Grid.Column="0" />
                 <TextBox Margin="3,3,10,3" 
                          Grid.Row="7" 
-                         Grid.Column="1"/>
+                         Grid.Column="1"
+                         Text="{Binding Account.AccountYear}"/>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="0"
