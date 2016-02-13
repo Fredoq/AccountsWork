@@ -60,7 +60,7 @@
                           ItemsSource="{Binding Companies}"
                           DisplayMemberPath="Company"
                           SelectedValuePath="Company"
-                          SelectedItem="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                          SelectedValue="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Дата счета:" 
                        Grid.Row="2" 
                        Grid.Column="0" />
@@ -87,7 +87,7 @@
                           DisplayMemberPath="Type"
                           SelectedValuePath="Type"
                           ItemsSource="{Binding Types}"
-                          SelectedItem="{Binding Account.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                          SelectedValue="{Binding Account.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Описание счета" 
                        Grid.Row="5" 
                        Grid.Column="0" />
@@ -102,11 +102,11 @@
                        Grid.Row="6" 
                        Grid.Column="0" />
                 <ComboBox Margin="3,3,10,3" 
-                          x:Name="cmbType" 
+                          x:Name="CmbType" 
                           Grid.Column="1" 
                           Grid.Row="6" 
                           SelectedValuePath="Content"
-                          SelectedItem="{Binding Account.AccountMcdType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                          SelectedValue="{Binding Account.AccountMcdType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBoxItem>ООО</ComboBoxItem>
                     <ComboBoxItem>ЗАО</ComboBoxItem>
                 </ComboBox>

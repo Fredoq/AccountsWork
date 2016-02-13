@@ -26,7 +26,7 @@ namespace AccountsWork.DomainModel
         private decimal _accountAmount;
         private string _accountDescription;
         private string _accountMcdType;
-        private int? _accountYear;
+        private int _accountYear;
         private string _accountType;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -87,8 +87,8 @@ namespace AccountsWork.DomainModel
             set { SetProperty(ref _accountMcdType, value); }
         }
 
-        [Required]
-        public Nullable<int> AccountYear
+        [CustomValidation(typeof(AccountsMainSet), "CheckYearRange")]
+        public int AccountYear
         {
             get { return _accountYear; }
             set { SetProperty(ref _accountYear, value); }
@@ -120,7 +120,12 @@ namespace AccountsWork.DomainModel
                 return new ValidationResult("Указана неверная дата счета");
             return ValidationResult.Success;
         }
-
+        public static ValidationResult CheckYearRange(int year, ValidationContext context)
+        {
+            if (year < DateTime.Now.Year - 1 || year > DateTime.Now.Year + 1)
+                return new ValidationResult("Указана неверная дата счета");
+            return ValidationResult.Success;
+        }
         #endregion Validation Methods  
     }
 }
