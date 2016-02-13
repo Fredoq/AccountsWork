@@ -73,7 +73,7 @@ namespace AccountsWork.Accounts.ViewModels
         {
             AccountsTabItemHeader = "Новый счет";
             Account = new AccountsMainSet();
-            //Account.AccountYear = DateTime.Now.Year;
+            
             _companiesService = companiesService;
             _typesService = typesService;
             _accountsService = accountsService;
@@ -85,8 +85,10 @@ namespace AccountsWork.Accounts.ViewModels
                 if (!_worker.IsBusy)
                     _worker.RunWorkerAsync();
             });
-            SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave).ObservesProperty(() => Account);    
-                    
+            SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave).ObservesProperty(() => Account);
+            Account.AccountYear = DateTime.Now.Year;
+            Account.AccountDate = DateTime.Now;
+
         }
         #endregion Constructors
 
