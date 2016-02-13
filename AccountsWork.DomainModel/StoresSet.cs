@@ -25,6 +25,10 @@ namespace AccountsWork.DomainModel
     
         public int StoreNumber { get; set; }
         public string StoreName { get; set; }
+        public string StoreType { get; set; }
+        public string StoreRegion { get; set; }
+        public string StoreCompany { get; set; }
+        public Nullable<System.DateTime> StoreOpenDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }

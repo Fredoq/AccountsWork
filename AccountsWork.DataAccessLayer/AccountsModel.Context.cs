@@ -19,28 +19,26 @@ namespace AccountsWork.DataAccessLayer
         public AccountsEntities()
             : base("name=AccountsEntities")
         {
-            Configuration.LazyLoadingEnabled = false;
-            Configuration.ProxyCreationEnabled = false;
         }
-
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
-        public DbSet<AccountsCapexInfoSet> AccountsCapexInfoSets { get; set; }
-        public DbSet<AccountsCompaniesSet> AccountsCompaniesSets { get; set; }
-        public DbSet<AccountsExpenseSet> AccountsExpenseSets { get; set; }
-        public DbSet<AccountsMainSet> AccountsMainSets { get; set; }
-        public DbSet<AccountsStatusDetailsSet> AccountsStatusDetailsSets { get; set; }
-        public DbSet<AccountsStoreDetailsSet> AccountsStoreDetailsSets { get; set; }
-        public DbSet<BudgetSet> BudgetSets { get; set; }
-        public DbSet<CapexSet> CapexSets { get; set; }
-        public DbSet<ServiceZipDetailsSet> ServiceZipDetailsSets { get; set; }
-        public DbSet<StoreProvenWorkSet> StoreProvenWorkSets { get; set; }
-        public DbSet<StoresSet> StoresSets { get; set; }
-        public DbSet<TypeSet> TypeSets { get; set; }
-        public DbSet<ZipSet> ZipSets { get; set; }
+        public virtual DbSet<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
+        public virtual DbSet<AccountsCapexInfoSet> AccountsCapexInfoSets { get; set; }
+        public virtual DbSet<AccountsCompaniesSet> AccountsCompaniesSets { get; set; }
+        public virtual DbSet<AccountsExpenseSet> AccountsExpenseSets { get; set; }
+        public virtual DbSet<AccountsMainSet> AccountsMainSets { get; set; }
+        public virtual DbSet<AccountsStatusDetailsSet> AccountsStatusDetailsSets { get; set; }
+        public virtual DbSet<AccountsStoreDetailsSet> AccountsStoreDetailsSets { get; set; }
+        public virtual DbSet<BudgetSet> BudgetSets { get; set; }
+        public virtual DbSet<CapexSet> CapexSets { get; set; }
+        public virtual DbSet<ServiceZipDetailsSet> ServiceZipDetailsSets { get; set; }
+        public virtual DbSet<StoreProvenWorkSet> StoreProvenWorkSets { get; set; }
+        public virtual DbSet<StoresSet> StoresSets { get; set; }
+        public virtual DbSet<TypeSet> TypeSets { get; set; }
+        public virtual DbSet<ZipSet> ZipSets { get; set; }
     }
 }

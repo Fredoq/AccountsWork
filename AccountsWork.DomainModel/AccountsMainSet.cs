@@ -60,7 +60,7 @@ namespace AccountsWork.DomainModel
             set { SetProperty(ref _accountCompany, value); }
         }
 
-        [CustomValidation(typeof (AccountsMainSet), "CheckDateRange")]
+        [CustomValidation(typeof(AccountsMainSet), "CheckDateRange")]
         public DateTime AccountDate
         {
             get { return _accountDate; }
@@ -100,7 +100,7 @@ namespace AccountsWork.DomainModel
             get { return _accountType; }
             set { SetProperty(ref _accountType, value); }
         }
-    
+
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
