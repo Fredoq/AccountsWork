@@ -28,7 +28,9 @@
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0"
                   Header="Главная информация">
+            <AdornerDecorator>
             <Grid>
+                
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -118,6 +120,7 @@
                          Grid.Column="1"
                          Text="{Binding Account.AccountYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
+            </AdornerDecorator>
         </GroupBox>
         <GroupBox Grid.Row="0"
                   Grid.Column="1"
