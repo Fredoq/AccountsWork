@@ -113,4 +113,67 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="TextBoxWithErrorStyle"
+           TargetType="{x:Type TextBox}">
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="True">
+                        <TextBlock DockPanel.Dock="Right"
+                                       Foreground="Red"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       ToolTip="{Binding ElementName=adornerPlaceholder, Path=AdornedElement.(Validation.Errors).CurrentItem.ErrorContent}">*</TextBlock>
+                        <Border BorderBrush="OrangeRed"
+                                    BorderThickness="1">
+                            <AdornedElementPlaceholder Name="adornerPlaceholder"></AdornedElementPlaceholder>
+                        </Border>
+                    </DockPanel>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="DatePickerWithErrorStyle"
+           TargetType="{x:Type DatePicker}">
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="True">
+                        <TextBlock DockPanel.Dock="Right"
+                                       Foreground="Red"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       ToolTip="{Binding ElementName=adornerPlaceholder, Path=AdornedElement.(Validation.Errors).CurrentItem.ErrorContent}">*</TextBlock>
+                        <Border BorderBrush="OrangeRed"
+                                    BorderThickness="1">
+                            <AdornedElementPlaceholder Name="adornerPlaceholder"></AdornedElementPlaceholder>
+                        </Border>
+                    </DockPanel>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ComboBoxWithErrorStyle"
+           TargetType="{x:Type ComboBox}">
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="True">
+                        <TextBlock DockPanel.Dock="Right"
+                                       Foreground="Red"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       ToolTip="{Binding ElementName=adornerPlaceholder, Path=AdornedElement.(Validation.Errors).CurrentItem.ErrorContent}">*</TextBlock>
+                        <Border BorderBrush="OrangeRed"
+                                    BorderThickness="1">
+                            <AdornedElementPlaceholder Name="adornerPlaceholder"></AdornedElementPlaceholder>
+                        </Border>
+                    </DockPanel>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

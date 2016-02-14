@@ -17,31 +17,6 @@
             <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
-    <UserControl.Resources>
-        <Style x:Key="textBoxWithErrorStyle"
-               TargetType="{x:Type TextBox}">
-            <Setter Property="Validation.ErrorTemplate">
-                <Setter.Value>
-                    <ControlTemplate>
-                        
-                        <DockPanel LastChildFill="True">
-                            <TextBlock DockPanel.Dock="Right"
-                                       Foreground="Red"
-                                       FontSize="14"
-                                       FontWeight="Bold"
-                                       ToolTip="{Binding ElementName=adornerPlaceholder, Path=AdornedElement.(Validation.Errors).CurrentItem.ErrorContent}">*</TextBlock>
-                            <Border BorderBrush="OrangeRed"
-                                    BorderThickness="1">
-                                <AdornedElementPlaceholder Name="adornerPlaceholder"></AdornedElementPlaceholder>
-                            </Border>
-                        </DockPanel>
-                        
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
-    <AdornerDecorator>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -51,10 +26,10 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <GroupBox Grid.Column="0"
                   Header="Главная информация">
-            
+            <AdornerDecorator>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -77,7 +52,7 @@
                          Grid.Column="1" 
                          TextWrapping="Wrap" 
                          HorizontalAlignment="Stretch"
-                         Style="{StaticResource textBoxWithErrorStyle}"
+                         Style="{StaticResource TextBoxWithErrorStyle}"
                          Text="{Binding Account.AccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
                     <Label Content="Компания:" 
                        Grid.Row="1" 
@@ -85,9 +60,10 @@
                     <ComboBox Margin="3,0,10,3" 
                           Grid.Column="1" 
                           Grid.Row="1"
+                          Style="{StaticResource ComboBoxWithErrorStyle}"
                           ItemsSource="{Binding Companies}"
                           DisplayMemberPath="Company"
-                          SelectedValuePath="Company"
+                          SelectedValuePath="Company"                             
                           SelectedValue="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" VerticalAlignment="Bottom"/>
                     <Label Content="Дата счета:" 
                        Grid.Row="2" 
@@ -96,60 +72,66 @@
                             Grid.Column="1" 
                             Grid.Row="2" 
                             FirstDayOfWeek="Monday"
+                            Style="{StaticResource DatePickerWithErrorStyle}"
                             SelectedDate="{Binding Account.AccountDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                     <Label Content="Сумма счета" 
                        Grid.Row="3" 
                        Grid.Column="0" />
                     <TextBox Margin="3,3,10,3" 
-                         Grid.Column="1" 
-                         Grid.Row="3" 
-                         HorizontalAlignment="Stretch" 
-                         SpellCheck.IsEnabled="True"
-                         Text="{Binding Account.AccountAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
+                             Grid.Column="1" 
+                             Grid.Row="3" 
+                             HorizontalAlignment="Stretch" 
+                             SpellCheck.IsEnabled="True"
+                             Style="{StaticResource TextBoxWithErrorStyle}"
+                             Text="{Binding Account.AccountAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
                     <Label Content="Тип счета:" 
-                       Grid.Row="4" 
-                       Grid.Column="0"/>
+                           Grid.Row="4" 
+                           Grid.Column="0"/>
                     <ComboBox Margin="3,3,10,3" 
-                          Grid.Row="4" 
-                          Grid.Column="1"
-                          DisplayMemberPath="Type"
-                          SelectedValuePath="Type"
-                          ItemsSource="{Binding Types}"
-                          SelectedValue="{Binding Account.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                              Grid.Row="4" 
+                              Grid.Column="1"
+                              Style="{StaticResource ComboBoxWithErrorStyle}"
+                              DisplayMemberPath="Type"
+                              SelectedValuePath="Type"
+                              ItemsSource="{Binding Types}"
+                              SelectedValue="{Binding Account.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Label Content="Описание счета" 
-                       Grid.Row="5" 
-                       Grid.Column="0" />
+                           Grid.Row="5" 
+                           Grid.Column="0" />
                     <TextBox Margin="3,3,10,3" 
-                         Grid.Column="1" 
-                         Grid.Row="5" 
-                         TextWrapping="Wrap" 
-                         HorizontalAlignment="Stretch" 
-                         SpellCheck.IsEnabled="True"
-                         Text="{Binding Account.AccountDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                             Grid.Column="1" 
+                             Grid.Row="5" 
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             MinHeight="100"
+                             HorizontalAlignment="Stretch" 
+                             SpellCheck.IsEnabled="True"
+                             Text="{Binding Account.AccountDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Label Content="Тип MCD" 
-                       Grid.Row="6" 
-                       Grid.Column="0" />
+                           Grid.Row="6" 
+                           Grid.Column="0" />
                     <ComboBox Margin="3,3,10,3" 
-                          x:Name="CmbType" 
-                          Grid.Column="1" 
-                          Grid.Row="6" 
-                          SelectedValuePath="Content"
-                          SelectedValue="{Binding Account.AccountMcdType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                              x:Name="CmbType" 
+                              Grid.Column="1" 
+                              Grid.Row="6" 
+                              Style="{StaticResource ComboBoxWithErrorStyle}"
+                              SelectedValuePath="Content"
+                              SelectedValue="{Binding Account.AccountMcdType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ComboBoxItem>ООО</ComboBoxItem>
                         <ComboBoxItem>ЗАО</ComboBoxItem>
                     </ComboBox>
                     <Label Content="Год учета:" 
-                       Grid.Row="7" 
-                       Grid.Column="0" />
+                           Grid.Row="7" 
+                           Grid.Column="0" />
                     <TextBox Margin="3,3,10,3" 
-                         Grid.Row="7" 
-                         Grid.Column="1"
-                         Style="{StaticResource textBoxWithErrorStyle}"                           
-                         Text="{Binding Account.AccountYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                             Grid.Row="7" 
+                             Grid.Column="1"
+                             Style="{StaticResource TextBoxWithErrorStyle}"                           
+                             Text="{Binding Account.AccountYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
-            
+            </AdornerDecorator>
         </GroupBox>
-        
+
         <GroupBox Grid.Row="0"
                   Grid.Column="1"
                   Header="Вспомогательная информация">
@@ -164,5 +146,4 @@
                     Command="{Binding SaveAccountCommand}"></Button>
         </StackPanel>
     </Grid>
-    </AdornerDecorator>
 </UserControl>

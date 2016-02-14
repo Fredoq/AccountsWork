@@ -46,14 +46,14 @@ namespace AccountsWork.DomainModel
             set { SetProperty(ref _id, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckAccountNumber")]
         public string AccountNumber
         {
             get { return _accountNumber; }
             set { SetProperty(ref _accountNumber, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckAccountCompany")]
         public string AccountCompany
         {
             get { return _accountCompany; }
@@ -80,7 +80,7 @@ namespace AccountsWork.DomainModel
             set { SetProperty(ref _accountDescription, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckAccountMcdType")]
         public string AccountMcdType
         {
             get { return _accountMcdType; }
@@ -94,7 +94,7 @@ namespace AccountsWork.DomainModel
             set { SetProperty(ref _accountYear, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckAccountType")]
         public string AccountType
         {
             get { return _accountType; }
@@ -114,6 +114,30 @@ namespace AccountsWork.DomainModel
 
         #region Validation Methods
 
+        public static ValidationResult CheckAccountNumber(string number, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(number))
+                return new ValidationResult("Не указан номер счета");
+            return ValidationResult.Success;
+        }
+        public static ValidationResult CheckAccountCompany(string company, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(company))
+                return new ValidationResult("Не выбрана компания-поставщик");
+            return ValidationResult.Success;
+        }
+        public static ValidationResult CheckAccountMcdType(string company, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(company))
+                return new ValidationResult("Не выбрана компания-получатель");
+            return ValidationResult.Success;
+        }
+        public static ValidationResult CheckAccountType(string accType, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(accType))
+                return new ValidationResult("Не выбран тип счета");
+            return ValidationResult.Success;
+        }
         public static ValidationResult CheckDateRange(DateTime? date, ValidationContext context)
         {
             if (date.Value < new DateTime(2013, 1, 1) || date.Value > DateTime.Now)
@@ -122,8 +146,8 @@ namespace AccountsWork.DomainModel
         }
         public static ValidationResult CheckYearRange(int year, ValidationContext context)
         {
-            if (year < DateTime.Now.Year - 1 || year > DateTime.Now.Year + 1)
-                return new ValidationResult("Указана неверная дата счета");
+            if (year < DateTime.Now.Year - 1 && DateTime.Now.Month >= 3 || year > DateTime.Now.Year && DateTime.Now.Month <= 9)
+                return new ValidationResult("Внести данные за указынный год бюджета невозможно");
             return ValidationResult.Success;
         }
         #endregion Validation Methods  

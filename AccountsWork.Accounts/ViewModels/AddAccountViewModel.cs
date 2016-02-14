@@ -99,8 +99,13 @@ namespace AccountsWork.Accounts.ViewModels
             {
                 ConfirmationRequest.Raise(
                     new Confirmation {Content = "Закрыть без сохранения?", Title = "Закрытие вкладки"},
-                    c => { Account=new AccountsMainSet();
-                           continuationCallback(c.Confirmed); } );
+                    c => {
+                            Account = new AccountsMainSet
+                            {
+                                AccountYear = DateTime.Now.Year,
+                                AccountDate = DateTime.Now
+                            };
+                            continuationCallback(c.Confirmed); } );
             }
             else
             {
@@ -129,6 +134,11 @@ namespace AccountsWork.Accounts.ViewModels
         void SaveCommand()
         {
             _accountsService.AddAccount(Account);
+            Account = new AccountsMainSet
+            {
+                AccountYear = DateTime.Now.Year,
+                AccountDate = DateTime.Now
+            };
         }
         bool CanSave()
         {
