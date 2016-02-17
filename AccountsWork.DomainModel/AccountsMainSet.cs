@@ -26,7 +26,7 @@ namespace AccountsWork.DomainModel
         private decimal _accountAmount;
         private string _accountDescription;
         private string _accountMcdType;
-        private int? _accountYear;
+        private int _accountYear;
         private string _accountType;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -46,21 +46,21 @@ namespace AccountsWork.DomainModel
             set { SetProperty(ref _id, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckAccountNumber")]
         public string AccountNumber
         {
             get { return _accountNumber; }
             set { SetProperty(ref _accountNumber, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckAccountCompany")]
         public string AccountCompany
         {
             get { return _accountCompany; }
             set { SetProperty(ref _accountCompany, value); }
         }
 
-        [CustomValidation(typeof (AccountsMainSet), "CheckDateRange")]
+        [CustomValidation(typeof(AccountsMainSet), "CheckDateRange")]
         public DateTime AccountDate
         {
             get { return _accountDate; }
@@ -80,7 +80,7 @@ namespace AccountsWork.DomainModel
             set { SetProperty(ref _accountDescription, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckAccountMcdType")]
         public string AccountMcdType
         {
             get { return _accountMcdType; }
@@ -88,19 +88,19 @@ namespace AccountsWork.DomainModel
         }
 
         [CustomValidation(typeof(AccountsMainSet), "CheckYearRange")]
-        public Nullable<int> AccountYear
+        public int AccountYear
         {
             get { return _accountYear; }
             set { SetProperty(ref _accountYear, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckAccountType")]
         public string AccountType
         {
             get { return _accountType; }
             set { SetProperty(ref _accountType, value); }
         }
-    
+
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -114,18 +114,40 @@ namespace AccountsWork.DomainModel
 
         #region Validation Methods
 
+        public static ValidationResult CheckAccountNumber(string number, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(number))
+                return new ValidationResult("Не указан номер счета");
+            return ValidationResult.Success;
+        }
+        public static ValidationResult CheckAccountCompany(string company, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(company))
+                return new ValidationResult("Не выбрана компания-поставщик");
+            return ValidationResult.Success;
+        }
+        public static ValidationResult CheckAccountMcdType(string company, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(company))
+                return new ValidationResult("Не выбрана компания-получатель");
+            return ValidationResult.Success;
+        }
+        public static ValidationResult CheckAccountType(string accType, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(accType))
+                return new ValidationResult("Не выбран тип счета");
+            return ValidationResult.Success;
+        }
         public static ValidationResult CheckDateRange(DateTime? date, ValidationContext context)
         {
             if (date.Value < new DateTime(2013, 1, 1) || date.Value > DateTime.Now)
                 return new ValidationResult("Указана неверная дата счета");
             return ValidationResult.Success;
         }
-        public static ValidationResult CheckYearRange(int? year, ValidationContext context)
+        public static ValidationResult CheckYearRange(int year, ValidationContext context)
         {
-            if (year == null)
-                return new ValidationResult("Год не указан");
-            if (year.Value < 2015 || year.Value > DateTime.Now.Year + 1)
-                return new ValidationResult("Указан неверный год");
+            if (year < DateTime.Now.Year - 1 && DateTime.Now.Month >= 3 || year > DateTime.Now.Year && DateTime.Now.Month <= 9)
+                return new ValidationResult("Внести данные за указынный год бюджета невозможно");
             return ValidationResult.Success;
         }
         #endregion Validation Methods  

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using AccountsWork.Infrastructure;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel;
 using AccountsWork.DomainModel;
@@ -32,6 +33,7 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _accountsTabItemHeader; }
             set { SetProperty(ref _accountsTabItemHeader, value); }
         }
+        //http://stackoverflow.com/questions/33313190/observesproperty-method-isnt-observing-models-properties-at-prism-6
         public AccountsMainSet Account
         {
             get { return _account; }
@@ -70,21 +72,23 @@ namespace AccountsWork.Accounts.ViewModels
         public AddAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService)
         {
             AccountsTabItemHeader = "Новый счет";
-            SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave);
             Account = new AccountsMainSet();
-            Account.AccountYear = DateTime.Now.Year;
+            
             _companiesService = companiesService;
             _typesService = typesService;
             _accountsService = accountsService;
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
             _worker = new BackgroundWorker();
-            _worker.DoWork += DoWork;          
+            _worker.DoWork += DoWork;
             LoadAllCommand = new DelegateCommand(() =>
             {
                 if (!_worker.IsBusy)
                     _worker.RunWorkerAsync();
             });
-                        
+            SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave).ObservesProperty(() => Account);
+            Account.AccountYear = DateTime.Now.Year;
+            Account.AccountDate = DateTime.Now;
+
         }
         #endregion Constructors
 
@@ -95,7 +99,13 @@ namespace AccountsWork.Accounts.ViewModels
             {
                 ConfirmationRequest.Raise(
                     new Confirmation {Content = "Закрыть без сохранения?", Title = "Закрытие вкладки"},
-                    c => { continuationCallback(c.Confirmed); });
+                    c => {
+                            Account = new AccountsMainSet
+                            {
+                                AccountYear = DateTime.Now.Year,
+                                AccountDate = DateTime.Now
+                            };
+                            continuationCallback(c.Confirmed); } );
             }
             else
             {
@@ -124,6 +134,11 @@ namespace AccountsWork.Accounts.ViewModels
         void SaveCommand()
         {
             _accountsService.AddAccount(Account);
+            Account = new AccountsMainSet
+            {
+                AccountYear = DateTime.Now.Year,
+                AccountDate = DateTime.Now
+            };
         }
         bool CanSave()
         {

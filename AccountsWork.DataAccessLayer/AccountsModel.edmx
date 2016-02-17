@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище AccountsModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище AccountsModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AccountsBudgetDetailsSet">
           <Key>
             <PropertyRef Name="Id" />
@@ -125,6 +125,10 @@
           </Key>
           <Property Name="StoreNumber" Type="int" Nullable="false" />
           <Property Name="StoreName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="StoreType" Type="nvarchar" MaxLength="50" />
+          <Property Name="StoreRegion" Type="nvarchar" MaxLength="50" />
+          <Property Name="StoreCompany" Type="nvarchar" MaxLength="50" />
+          <Property Name="StoreOpenDate" Type="date" />
         </EntityType>
         <EntityType Name="TypeSet">
           <Key>
@@ -352,8 +356,7 @@
             <End Role="StoreProvenWorkSet" EntitySet="StoreProvenWorkSet" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="AccountsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -500,6 +503,10 @@
           <NavigationProperty Name="AccountsStoreDetailsSets" Relationship="Self.FK_StoresAccountsStoreDetails" FromRole="StoresSet" ToRole="AccountsStoreDetailsSet" />
           <NavigationProperty Name="ServiceZipDetailsSets" Relationship="Self.FK_ServiceZipDetailsSet_StoresSet" FromRole="StoresSet" ToRole="ServiceZipDetailsSet" />
           <NavigationProperty Name="StoreProvenWorkSets" Relationship="Self.FK_StoresStoreProvenWork" FromRole="StoresSet" ToRole="StoreProvenWorkSet" />
+          <Property Name="StoreType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreRegion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreCompany" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreOpenDate" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="TypeSet">
           <Key>
@@ -862,6 +869,10 @@
           <EntitySetMapping Name="StoresSets">
             <EntityTypeMapping TypeName="AccountsModel.StoresSet">
               <MappingFragment StoreEntitySet="StoresSet">
+                <ScalarProperty Name="StoreOpenDate" ColumnName="StoreOpenDate" />
+                <ScalarProperty Name="StoreCompany" ColumnName="StoreCompany" />
+                <ScalarProperty Name="StoreRegion" ColumnName="StoreRegion" />
+                <ScalarProperty Name="StoreType" ColumnName="StoreType" />
                 <ScalarProperty Name="StoreNumber" ColumnName="StoreNumber" />
                 <ScalarProperty Name="StoreName" ColumnName="StoreName" />
               </MappingFragment>
