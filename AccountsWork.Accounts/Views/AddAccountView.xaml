@@ -135,38 +135,7 @@
         <GroupBox Grid.Row="0"
                   Grid.Column="1"
                   Header="Вспомогательная информация">
-            <AdornerDecorator>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Текущий статус:"/>
-                        <TextBlock Text="В обработке"
-                                   VerticalAlignment="Center"
-                                   Margin="3"
-                                   FontWeight="Bold"/>
-                        <Label Content="Дата:"/>
-                        <TextBlock Text="Дата"
-                                   VerticalAlignment="Center"
-                                   FontWeight="Bold"
-                                   Margin="3"/>
-                        <Label Content="Комментарий:"/>
-                        <TextBlock Text="Комментарий"
-                                   VerticalAlignment="Center"
-                                   TextWrapping="Wrap"
-                                   FontWeight="Bold"
-                                   Margin="3"/>
-                        <Label Content="Номер платежки"/>
-                        <TextBlock Text="1234567"
-                                   VerticalAlignment="Center"
-                                   FontWeight="Bold"
-                                   Margin="3"/>
-                    </StackPanel>
-                </Grid>
-            </AdornerDecorator>
-        </GroupBox>
+            </GroupBox>
         <StackPanel Grid.ColumnSpan="2"
                     Grid.Column="0"
                     Grid.Row="1"

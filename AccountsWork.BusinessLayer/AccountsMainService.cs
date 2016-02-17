@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Xml.Serialization;
 using AccountsWork.DataAccessLayer;
 using AccountsWork.DomainModel;
+using AccountsVork.Infrastructure;
 
 namespace AccountsWork.BusinessLayer
 {
@@ -11,11 +12,13 @@ namespace AccountsWork.BusinessLayer
     public class AccountsMainService : IAccountsMainService
     {
         private readonly IAccountsMainRepository _accountsMainRepository;
+        private readonly IAccountsStatusRepository _accountsStatusRepository;
 
         [ImportingConstructor]
-        public AccountsMainService(IAccountsMainRepository accountsMainRepository)
+        public AccountsMainService(IAccountsMainRepository accountsMainRepository, IAccountsStatusRepository accountsStatusRepository)
         {
             _accountsMainRepository = accountsMainRepository;
+            _accountsStatusRepository = accountsStatusRepository;
         }
 
         public IList<AccountsMainSet> GetAccounts()
@@ -26,6 +29,7 @@ namespace AccountsWork.BusinessLayer
         public void AddAccount(AccountsMainSet account)
         {
             _accountsMainRepository.Add(account);
+            _accountsStatusRepository.Add(new AccountsStatusDetailsSet() { AccountMainId = account.Id, AccountStatus = Statuses.InWork, AccountStatusDate = DateTime.Now });
         }
     }
 }

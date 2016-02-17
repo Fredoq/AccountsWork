@@ -87,6 +87,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AccountsModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="AccountsStatusRepository.cs" />
     <Compile Include="TypesRepository.cs" />
     <Compile Include="CompaniesRepository.cs" />
     <Compile Include="GenericDataRepository.cs" />

@@ -10,5 +10,6 @@ namespace AccountsWork.Infrastructure
     {
         public const string MainContentRegion = "MainContentRegion";
         public const string MainNavigationRegion = "MainNavigationRegion";
+        public const string AddAdditionalInfoRegion = "AddAdditionalInfoRegion";
     }
 }

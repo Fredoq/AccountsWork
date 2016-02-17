@@ -13,6 +13,7 @@ namespace AccountsWork.BusinessLayer.Tests
     {
         private Mock<IAccountsMainRepository> _accountsRepo;
         private AccountsMainService _accountService;
+        private Mock<IAccountsStatusRepository> _accountsStatusRepo;
         private readonly List<AccountsMainSet> _data = new List<AccountsMainSet>
             {
                 new AccountsMainSet
@@ -51,24 +52,41 @@ namespace AccountsWork.BusinessLayer.Tests
                     Id = 5
                 }
             };
+        
 
         [TestInitialize]
         public void SetUp()
         {
             _accountsRepo = new Mock<IAccountsMainRepository>();
-            _accountService = new AccountsMainService(_accountsRepo.Object);
-           
-
-        }
+            _accountsStatusRepo = new Mock<IAccountsStatusRepository>();
+            _accountService = new AccountsMainService(_accountsRepo.Object, _accountsStatusRepo.Object);            
+        } 
 
         [TestMethod]
-        public void GeAccountsByYear()
+        public void Repository_AddAccount_CallsServiceAddAccountAndAddStatus()
         {
-            _accountsRepo.Setup(x => x.GetAll()).
-                Returns(_data);
-            var accounts = _accountService.GetAccounts();
-            Assert.AreEqual(3, accounts.Count);
+            var account = new AccountsMainSet
+            {
+                AccountAmount = 45423.34M,
+                AccountCompany = "Company4",
+                AccountDate = Convert.ToDateTime("2015-12-23"),
+                AccountMcdType = "ООО",
+                AccountNumber = "456",
+                AccountType = "Сервис",
+                AccountYear = 2015,
+                Id = 67
+            };
+            var status = new AccountsStatusDetailsSet
+            {
+                AccountMainId = 67,
+                AccountStatus = "В обработке",
+                Id = 1
+            };
+            _accountService.AddAccount(account);
+            _accountsRepo.Verify(a => a.Add(account), Times.Once());
+            _accountsStatusRepo.Verify(a => a.Add(status), Times.Once());
         }
+              
     }
 
     

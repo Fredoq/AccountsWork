@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="AccountsWork.Accounts.Views.AddAdditionalInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
+             mc:Ignorable="d" 
+             >
+    <Grid>
+        <AdornerDecorator>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Текущий статус:"/>
+                    <TextBlock Text="В обработке"
+                               VerticalAlignment="Center"
+                               Margin="3"
+                               FontWeight="Bold"/>
+                    <Label Content="Дата:"/>
+                    <TextBlock Text="Дата"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               Margin="3"/>
+                    <Label Content="Комментарий:"/>
+                    <TextBlock Text="Комментарий"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontWeight="Bold"
+                               Margin="3"/>
+                    <Label Content="Номер платежки"/>
+                    <TextBlock Text="1234567"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               Margin="3"/>
+                </StackPanel>
+            </Grid>
+        </AdornerDecorator>
+    </Grid>
+</UserControl>
