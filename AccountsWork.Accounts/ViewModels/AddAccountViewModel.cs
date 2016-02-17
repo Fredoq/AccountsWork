@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using AccountsWork.Infrastructure;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel;
 using AccountsWork.DomainModel;
@@ -33,7 +32,6 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _accountsTabItemHeader; }
             set { SetProperty(ref _accountsTabItemHeader, value); }
         }
-        //http://stackoverflow.com/questions/33313190/observesproperty-method-isnt-observing-models-properties-at-prism-6
         public AccountsMainSet Account
         {
             get { return _account; }
@@ -72,19 +70,21 @@ namespace AccountsWork.Accounts.ViewModels
         public AddAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService)
         {
             AccountsTabItemHeader = "Новый счет";
+            SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave);
             Account = new AccountsMainSet();
+            Account.AccountYear = DateTime.Now.Year;
             _companiesService = companiesService;
             _typesService = typesService;
             _accountsService = accountsService;
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
             _worker = new BackgroundWorker();
-            _worker.DoWork += DoWork;
+            _worker.DoWork += DoWork;          
             LoadAllCommand = new DelegateCommand(() =>
             {
                 if (!_worker.IsBusy)
                     _worker.RunWorkerAsync();
             });
-            SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave).ObservesProperty(() => Account);            
+                        
         }
         #endregion Constructors
 

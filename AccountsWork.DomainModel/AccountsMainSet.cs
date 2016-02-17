@@ -87,7 +87,7 @@ namespace AccountsWork.DomainModel
             set { SetProperty(ref _accountMcdType, value); }
         }
 
-        [Required]
+        [CustomValidation(typeof(AccountsMainSet), "CheckYearRange")]
         public Nullable<int> AccountYear
         {
             get { return _accountYear; }
@@ -120,7 +120,14 @@ namespace AccountsWork.DomainModel
                 return new ValidationResult("Указана неверная дата счета");
             return ValidationResult.Success;
         }
-
+        public static ValidationResult CheckYearRange(int? year, ValidationContext context)
+        {
+            if (year == null)
+                return new ValidationResult("Год не указан");
+            if (year.Value < 2015 || year.Value > DateTime.Now.Year + 1)
+                return new ValidationResult("Указан неверный год");
+            return ValidationResult.Success;
+        }
         #endregion Validation Methods  
     }
 }
