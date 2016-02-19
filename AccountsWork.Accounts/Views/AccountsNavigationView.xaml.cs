@@ -14,16 +14,23 @@ namespace AccountsWork.Accounts.Views
     [ViewSortHint("01")]
     public partial class AccountsNavigationView : UserControl, IPartImportsSatisfiedNotification
     {
+        #region Private Fields
         private static Uri accountsViewUri = new Uri("/AccountsView", UriKind.Relative);
+        #endregion Private Fields
 
+        #region Public Fields
         [Import]
         public IRegionManager regionManager;
+        #endregion Public Fields
 
+        #region Constructor
         public AccountsNavigationView()
         {
             InitializeComponent();
         }
+        #endregion Constructor
 
+        #region Methods
         void IPartImportsSatisfiedNotification.OnImportsSatisfied()
         {
             IRegion mainContentRegion = this.regionManager.Regions[RegionNames.MainContentRegion];
@@ -40,10 +47,10 @@ namespace AccountsWork.Accounts.Views
         {
             this.NavigateToAccountsRadioButton.IsChecked = (uri == accountsViewUri);
         }
-
         private void NavigateToAccountsRadioButton_OnClick(object sender, RoutedEventArgs e)
         {
             this.regionManager.RequestNavigate(RegionNames.MainContentRegion, accountsViewUri);
         }
+        #endregion Methods
     }
 }

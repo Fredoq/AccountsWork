@@ -10,14 +10,19 @@ namespace AccountsWork.Accounts.Views
     [Export("AddAccountView")]
     public partial class AddAccountView : UserControl
     {
+        #region Constructor
         public AddAccountView()
         {
             InitializeComponent();
         }
+        #endregion Constructor
+
+        #region Public Properties
         [Import]
         public AddAccountViewModel ViewModel
         {
             set { this.DataContext = value; }
         }
+        #endregion Public Properties
     }
 }

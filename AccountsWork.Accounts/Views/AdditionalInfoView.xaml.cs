@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccountsWork.Accounts.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -19,12 +20,22 @@ namespace AccountsWork.Accounts.Views
     /// <summary>
     /// Interaction logic for AddAdditionalInfoView.xaml
     /// </summary>
-    [Export]
+    [Export("AdditionalInfoView")]
     public partial class AddAdditionalInfoView : UserControl
     {
+        #region Constructor
         public AddAdditionalInfoView()
         {
             InitializeComponent();
         }
+        #endregion Constructor
+
+        #region Public Properties
+        [Import]
+        public AdditionalInfoViewModel ViewModel
+        {
+            set { this.DataContext = value; }
+        }
+        #endregion Public Properties
     }
 }

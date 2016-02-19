@@ -9,28 +9,23 @@ namespace AccountsWork.Accounts.ViewModels
     [Export]
     public class InfoViewModel : ValidatableBindableBase
     {
+        #region Private Fields
         private string _accountsTabItemHeader;
+        #endregion Private Fields 
 
+        #region Public Properties
         public string AccountsTabItemHeader
         {
             get { return _accountsTabItemHeader; }
             set { SetProperty(ref _accountsTabItemHeader, value); }
         }
-        //public InteractionRequest<IConfirmation> ConfirmationRequest { get; set; }
+        #endregion Public Properties
 
+        #region Constructor
         public InfoViewModel()
         {
             AccountsTabItemHeader = "Общая информация";
-            //ConfirmationRequest = new InteractionRequest<IConfirmation>();
         }
-
-        //public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
-        //{
-        //    ConfirmationRequest.Raise(
-        //        new Confirmation { Content = "Закрыть без сохранения?", Title = "Закрытие вкладки" },
-        //          c => { continuationCallback(c.Confirmed); });
-        //    //continuationCallback(true);
-        //}
-
+        #endregion Constructor
     }
 }

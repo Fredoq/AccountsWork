@@ -71,7 +71,7 @@
                        StrokeThickness="2"/>
         <TabControl Grid.Row="0"
                     Grid.Column="1"
-                    prism:RegionManager.RegionName="AccountsTabRegion">
+                    prism:RegionManager.RegionName="{x:Static infrastructure:RegionNames.AccountsTabRegion}">
             
         </TabControl>
         </Grid>

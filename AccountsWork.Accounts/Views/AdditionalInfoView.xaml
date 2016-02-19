@@ -4,37 +4,73 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              >
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+            <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <AdornerDecorator>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                    <Label Content="Номер счета: "/>
+                    <Label Content="{Binding CurrentAccount.AccountNumber}"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="1">
                     <Label Content="Текущий статус:"/>
-                    <TextBlock Text="В обработке"
+                    <TextBlock Text="{Binding AccountStatus.AccountStatus}"
                                VerticalAlignment="Center"
                                Margin="3"
                                FontWeight="Bold"/>
                     <Label Content="Дата:"/>
-                    <TextBlock Text="Дата"
+                    <TextBlock Text="{Binding AccountStatus.AccountStatusDate, StringFormat=d, ConverterCulture=ru-RU}"
                                VerticalAlignment="Center"
                                FontWeight="Bold"
                                Margin="3"/>
-                    <Label Content="Комментарий:"/>
-                    <TextBlock Text="Комментарий"
+                    
+                    <Label Content="Номер платежки"/>
+                    <TextBlock Text="{Binding AccountStatus.AccountPayNumber}"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               Margin="3"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2"
+                            MaxHeight="150"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                    <Label Content="Комментарий:"
+                           VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding AccountStatus.Commentary}"
                                VerticalAlignment="Center"
                                TextWrapping="Wrap"
-                               FontWeight="Bold"
+                               MinHeight="80"
+                               MinWidth="160"                              
                                Margin="3"/>
-                    <Label Content="Номер платежки"/>
-                    <TextBlock Text="1234567"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               Margin="3"/>
+                    <StackPanel Orientation="Vertical"
+                                Margin="3">
+                        <Button Content="Изменить статус"
+                                HorizontalAlignment="Left"
+                                Margin="5"
+                                Command="{Binding ChangeStatusCommand}"/>
+                        <Button Content="Посмотреть историю"
+                                HorizontalAlignment="Left"
+                                Margin="5"
+                                Command="{Binding OpenStatusHistoryCommand}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </AdornerDecorator>

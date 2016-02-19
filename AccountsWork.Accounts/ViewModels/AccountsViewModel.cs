@@ -17,8 +17,10 @@ namespace AccountsWork.Accounts.ViewModels
     //[PartCreationPolicy(CreationPolicy.NonShared)]
     public class AccountsViewModel : ValidatableBindableBase
     {
+        #region Private Fields
         private IAccountsMainService _accountsMainService;
         private IRegionManager _regionManager;
+        #endregion Private Fields
 
         #region Commands
         public DelegateCommand<string> NavigateCommand { get; set; } 
@@ -28,7 +30,7 @@ namespace AccountsWork.Accounts.ViewModels
 
         void Navigate(string navigationProperty)
         {
-            _regionManager.RequestNavigate("AccountsTabRegion", navigationProperty);
+            _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, navigationProperty);
         }
         #endregion Methods        
 

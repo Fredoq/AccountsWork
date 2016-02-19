@@ -26,10 +26,11 @@ namespace AccountsWork.BusinessLayer
             return _accountsMainRepository.GetAll();
         }
 
-        public void AddAccount(AccountsMainSet account)
+        public int AddAccount(AccountsMainSet account)
         {
             _accountsMainRepository.Add(account);
             _accountsStatusRepository.Add(new AccountsStatusDetailsSet() { AccountMainId = account.Id, AccountStatus = Statuses.InWork, AccountStatusDate = DateTime.Now });
+            return account.Id;
         }
     }
 }

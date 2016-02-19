@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountsMainService.cs" />
+    <Compile Include="AccountStatusService.cs" />
     <Compile Include="AsyncQuery.cs" />
     <Compile Include="TypesService.cs" />
     <Compile Include="CompaniesService.cs" />

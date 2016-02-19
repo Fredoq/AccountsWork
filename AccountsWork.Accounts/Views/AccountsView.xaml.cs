@@ -24,14 +24,19 @@ namespace AccountsWork.Accounts.Views
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class AccountsView : UserControl
     {
+        #region Constructor
         public AccountsView()
         {
             InitializeComponent();
         }
+        #endregion Constructor
+
+        #region Public Properties
         [Import]
         public AccountsViewModel ViewModel
         {
             set { this.DataContext = value; }
         }
+        #endregion Public Properties
     }
 }

@@ -10,14 +10,19 @@ namespace AccountsWork.Accounts.Views
     [Export("InfoView")]
     public partial class InfoView : UserControl
     {
+        #region Constructor
         public InfoView()
         {
             InitializeComponent();
         }
+        #endregion Constructor
+
+        #region Public Properties
         [Import]
         public InfoViewModel ViewModel
         {
             set { this.DataContext = value; }
         }
+        #endregion Public Properties
     }
 }

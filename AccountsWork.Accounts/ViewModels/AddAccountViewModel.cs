@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using AccountsWork.Infrastructure;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel;
 using AccountsWork.DomainModel;
@@ -9,6 +8,7 @@ using AccountsWork.BusinessLayer;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Regions;
 using Prism.Commands;
+using System.Linq;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -24,6 +24,9 @@ namespace AccountsWork.Accounts.ViewModels
         private readonly BackgroundWorker _worker;
         private AccountsMainSet _account;
         private readonly IAccountsMainService _accountsService;
+        private IRegionManager _regionManager;
+        private const string AdditionalInfoViewKey = "AdditionalInfoView";
+        private const string AccountKey = "Account";
 
         #endregion Private Fields
 
@@ -33,7 +36,6 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _accountsTabItemHeader; }
             set { SetProperty(ref _accountsTabItemHeader, value); }
         }
-        //http://stackoverflow.com/questions/33313190/observesproperty-method-isnt-observing-models-properties-at-prism-6
         public AccountsMainSet Account
         {
             get { return _account; }
@@ -45,10 +47,7 @@ namespace AccountsWork.Accounts.ViewModels
                 if (_account != null)
                     Account.PropertyChanged += AccountPropertyChanged;
             }
-        }
-
-        
-
+        }      
         public IList<AccountsCompaniesSet> Companies
         {
             get { return _companies; }
@@ -60,6 +59,7 @@ namespace AccountsWork.Accounts.ViewModels
             set { SetProperty(ref _types, value); }
         }
         public InteractionRequest<IConfirmation> ConfirmationRequest { get; set; }
+        public InteractionRequest<IConfirmation> AdditionalInfoConfirmationRequest { get; set; }
         #endregion Public Properties
 
         #region Commands
@@ -69,15 +69,17 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region Constructors
         [ImportingConstructor]
-        public AddAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService)
+        public AddAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService, IRegionManager regionManager)
         {
             AccountsTabItemHeader = "Новый счет";
-            Account = new AccountsMainSet();
             
+            _regionManager = regionManager;
             _companiesService = companiesService;
             _typesService = typesService;
             _accountsService = accountsService;
+
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
+            AdditionalInfoConfirmationRequest = new InteractionRequest<IConfirmation>();
             _worker = new BackgroundWorker();
             _worker.DoWork += DoWork;
             LoadAllCommand = new DelegateCommand(() =>
@@ -86,40 +88,14 @@ namespace AccountsWork.Accounts.ViewModels
                     _worker.RunWorkerAsync();
             });
             SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave).ObservesProperty(() => Account);
+
+            Account = new AccountsMainSet();
             Account.AccountYear = DateTime.Now.Year;
             Account.AccountDate = DateTime.Now;
 
         }
         #endregion Constructors
-
-
-        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
-        {
-            if (navigationContext.Uri == null)
-            {
-                ConfirmationRequest.Raise(
-                    new Confirmation {Content = "Закрыть без сохранения?", Title = "Закрытие вкладки"},
-                    c => {
-                            Account = new AccountsMainSet
-                            {
-                                AccountYear = DateTime.Now.Year,
-                                AccountDate = DateTime.Now
-                            };
-                            continuationCallback(c.Confirmed); } );
-            }
-            else
-            {
-                continuationCallback(true);
-            }
-        }
-        public override void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-           
-        }
-        public override void OnNavigatedTo(NavigationContext navigationContext)
-        {
-
-        }
+             
         #region Methods
 
         void LoadCompaniesAndTypes()
@@ -127,13 +103,27 @@ namespace AccountsWork.Accounts.ViewModels
             Companies = _companiesService.GetCompanies();
             Types = _typesService.GetTypes();
         }
+
         private void DoWork(object sender, DoWorkEventArgs e)
         {
             LoadCompaniesAndTypes();
         }
+
         void SaveCommand()
         {
-            _accountsService.AddAccount(Account);
+            var id = _accountsService.AddAccount(Account);            
+            AdditionalInfoConfirmationRequest.Raise(new Confirmation { Content = "Счет добавлен. Перейти к заполнению доп. информации?", Title = "Добавление счета" },
+                                             c =>
+                                             {
+                                                 if (c.Confirmed)
+                                                 {
+                                                     var singleView = _regionManager.Regions[RegionNames.AccountsTabRegion].ActiveViews.FirstOrDefault();
+                                                     _regionManager.Regions[RegionNames.AccountsTabRegion].Remove(singleView);
+                                                     var parameters = new NavigationParameters();
+                                                     parameters.Add(AccountKey, Account);
+                                                     _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, new Uri(AdditionalInfoViewKey, UriKind.Relative), parameters);
+                                                 }
+                                             });
             Account = new AccountsMainSet
             {
                 AccountYear = DateTime.Now.Year,
@@ -148,6 +138,36 @@ namespace AccountsWork.Accounts.ViewModels
         private void AccountPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             SaveAccountCommand.RaiseCanExecuteChanged();
+        }
+
+        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        {
+            if (navigationContext.Uri == null)
+            {
+                ConfirmationRequest.Raise(
+                    new Confirmation { Content = "Закрыть без сохранения?", Title = "Закрытие вкладки" },
+                    c => {
+                        Account = new AccountsMainSet
+                        {
+                            AccountYear = DateTime.Now.Year,
+                            AccountDate = DateTime.Now
+                        };
+                        continuationCallback(c.Confirmed);
+                    });
+            }
+            else
+            {
+                continuationCallback(true);
+            }
+        }
+        
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+
+        }
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+
         }
         #endregion Methods 
     }
