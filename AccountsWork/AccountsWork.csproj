@@ -45,6 +45,9 @@
     <Reference Include="AccountsWork.DataAccessLayer">
       <HintPath>..\AccountsWork.DataAccessLayer\bin\Debug\AccountsWork.DataAccessLayer.dll</HintPath>
     </Reference>
+    <Reference Include="AccountsWork.Helpers">
+      <HintPath>..\AccountsWork.Helpers\bin\Debug\AccountsWork.Helpers.dll</HintPath>
+    </Reference>
     <Reference Include="AccountsWork.Reports">
       <HintPath>..\AccountsWork.Reports\bin\Debug\AccountsWork.Reports.dll</HintPath>
     </Reference>

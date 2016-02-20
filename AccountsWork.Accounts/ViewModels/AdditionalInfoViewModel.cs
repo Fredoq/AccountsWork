@@ -1,9 +1,12 @@
-﻿using AccountsWork.BusinessLayer;
+﻿using AccountsVork.Infrastructure;
+using AccountsWork.BusinessLayer;
 using AccountsWork.DomainModel;
 using AccountsWork.Infrastructure;
+using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Regions;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 
@@ -19,6 +22,9 @@ namespace AccountsWork.Accounts.ViewModels
         private AccountsStatusDetailsSet _accountStatus;
         private BackgroundWorker _worker;
         private IAccountStatusService _accountStatusService;
+        private bool _isChangeStatusOpen;
+        private List<string> _statusesList;
+        private AccountsStatusDetailsSet _newAccountStatus;
         #endregion Private Fields
 
         #region Public Properties
@@ -27,29 +33,54 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _accountsTabItemHeader; }
             set { SetProperty(ref _accountsTabItemHeader, value); }
         }
+        public bool IsChangeStatusOpen
+        {
+            get { return _isChangeStatusOpen; }
+            set { SetProperty(ref _isChangeStatusOpen, value); }
+        }
         public InteractionRequest<IConfirmation> ConfirmationRequest { get; set; }
         public AccountsMainSet CurrentAccount
         {
             get { return _currentAccount; }
             set { SetProperty(ref _currentAccount, value); }
         }
-        public AccountsStatusDetailsSet AccountStatus
+        public AccountsStatusDetailsSet CurrentAccountStatus
         {
             get { return _accountStatus; }
             set { SetProperty(ref _accountStatus, value); }
         }
+        public AccountsStatusDetailsSet NewAccountStatus
+        {
+            get { return _newAccountStatus; }
+            set { SetProperty(ref _newAccountStatus, value); }
+        }
+        public List<string> StatusesList
+        {
+            get { return _statusesList; }
+            set { SetProperty(ref _statusesList, value); }
+        }
         #endregion Public Properties
+
+        #region Commands
+        public DelegateCommand ChangeStatusCommand { get; set; }
+        public DelegateCommand SaveNewStatusCommand { get; set; }
+        public DelegateCommand CancelNewStatusCommand { get; set; }
+        #endregion Commands
 
         #region Constructor
         [ImportingConstructor]
         public AdditionalInfoViewModel(IAccountStatusService accountStatusService)
         {
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
-
+            IsChangeStatusOpen = false;
+            StatusesList = Statuses.GetStatusesList();
             _accountStatusService = accountStatusService;
 
             _worker = new BackgroundWorker();
             _worker.DoWork += LoadAccountAdditionalInfo;
+
+            ChangeStatusCommand = new DelegateCommand(ChangeStatus);
+            SaveNewStatusCommand = new DelegateCommand(SaveNew, CanSaveNew);
         }
 
         
@@ -93,7 +124,32 @@ namespace AccountsWork.Accounts.ViewModels
         }
         private void LoadAccountLastStatus()
         {
-            AccountStatus = _accountStatusService.GetAccountStatusById(CurrentAccount.Id);
+            CurrentAccountStatus = _accountStatusService.GetAccountStatusById(CurrentAccount.Id);
+        }
+        private void ChangeStatus()
+        {
+            NewAccountStatus = new AccountsStatusDetailsSet();
+            IsChangeStatusOpen = true;
+        }
+        private void SaveNew()
+        {
+            if(NewAccountStatus != null)
+            {
+                NewAccountStatus.AccountMainId = CurrentAccount.Id;
+                _accountStatusService.AddNewStatus(NewAccountStatus);
+                CurrentAccountStatus = NewAccountStatus;
+                IsChangeStatusOpen = false;
+            }
+        }
+        bool CanSaveNew()
+        {
+            if (NewAccountStatus != null)
+            {
+                NewAccountStatus.ValidateProperties();
+                return !NewAccountStatus.HasErrors;
+            }
+            else
+                return true;
         }
         #endregion Methods
     }

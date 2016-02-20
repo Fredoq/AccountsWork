@@ -9,18 +9,57 @@
 
 namespace AccountsWork.DomainModel
 {
+    using Infrastructure;
     using System;
-    using System.Collections.Generic;
-    
-    public partial class AccountsStatusDetailsSet
+    using System.ComponentModel.DataAnnotations;
+    public partial class AccountsStatusDetailsSet : ValidatableBindableBase
     {
-        public int Id { get; set; }
-        public int AccountMainId { get; set; }
-        public string AccountStatus { get; set; }
-        public System.DateTime AccountStatusDate { get; set; }
-        public string Commentary { get; set; }
-        public Nullable<int> AccountPayNumber { get; set; }
-    
+        #region Private Fields
+        private int _id;
+        private int _accountMainId;
+        private string _accountStatus;
+        private DateTime _accountStatusDate;
+        private string _commentary;
+        private int? _accountPayNumber;
+        #endregion Private Fields
+
+        #region Public Properties
+        [Required]
+        public int Id
+        {
+            get { return _id; }
+            set { SetProperty(ref _id, value); }
+        }
+        [Required]
+        public int AccountMainId
+        {
+            get { return _accountMainId; }
+            set { SetProperty(ref _accountMainId, value); }
+        }
+        [Required]
+        public string AccountStatus
+        {
+            get { return _accountStatus; }
+            set { SetProperty(ref _accountStatus, value); }
+        }
+        [Required]
+        public System.DateTime AccountStatusDate
+        {
+            get { return _accountStatusDate; }
+            set { SetProperty(ref _accountStatusDate, value); }
+        }
+        public string Commentary
+        {
+            get { return _commentary; }
+            set { SetProperty(ref _commentary, value); }
+        }
+        public Nullable<int> AccountPayNumber
+        {
+            get { return _accountPayNumber; }
+            set { SetProperty(ref _accountPayNumber, value); }
+        }
+
         public virtual AccountsMainSet AccountsMainSet { get; set; }
+        #endregion Public Properties
     }
 }

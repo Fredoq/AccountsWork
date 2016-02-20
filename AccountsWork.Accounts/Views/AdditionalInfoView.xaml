@@ -7,8 +7,13 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
+             xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              mc:Ignorable="d" 
              >
+    <UserControl.Resources>
+        <helpers:StringToVisibilityConverter x:Key="StringToVisibility"/>
+    </UserControl.Resources>
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
             <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
@@ -32,18 +37,18 @@
                 <StackPanel Orientation="Horizontal"
                             Grid.Row="1">
                     <Label Content="Текущий статус:"/>
-                    <TextBlock Text="{Binding AccountStatus.AccountStatus}"
+                    <TextBlock Text="{Binding CurrentAccountStatus.AccountStatus}"
                                VerticalAlignment="Center"
                                Margin="3"
                                FontWeight="Bold"/>
                     <Label Content="Дата:"/>
-                    <TextBlock Text="{Binding AccountStatus.AccountStatusDate, StringFormat=d, ConverterCulture=ru-RU}"
+                    <TextBlock Text="{Binding CurrentAccountStatus.AccountStatusDate, StringFormat=d, ConverterCulture=ru-RU}"
                                VerticalAlignment="Center"
                                FontWeight="Bold"
                                Margin="3"/>
                     
                     <Label Content="Номер платежки"/>
-                    <TextBlock Text="{Binding AccountStatus.AccountPayNumber}"
+                    <TextBlock Text="{Binding CurrentAccountStatus.AccountPayNumber}"
                                VerticalAlignment="Center"
                                FontWeight="Bold"
                                Margin="3"/>
@@ -51,18 +56,18 @@
                 <StackPanel Grid.Row="2"
                             MaxHeight="150"
                             VerticalAlignment="Top"
-                            Orientation="Horizontal">
+                            Orientation="Vertical">
                     <Label Content="Комментарий:"
                            VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding AccountStatus.Commentary}"
+                    <TextBlock Text="{Binding CurrentAccountStatus.Commentary}"
                                VerticalAlignment="Center"
-                               TextWrapping="Wrap"
-                               MinHeight="80"
-                               MinWidth="160"                              
+                               TextWrapping="Wrap" 
+                               MaxWidth="150"
                                Margin="3"/>
                     <StackPanel Orientation="Vertical"
                                 Margin="3">
                         <Button Content="Изменить статус"
+                                x:Name="changeStatusBtn"
                                 HorizontalAlignment="Left"
                                 Margin="5"
                                 Command="{Binding ChangeStatusCommand}"/>
@@ -71,6 +76,45 @@
                                 Margin="5"
                                 Command="{Binding OpenStatusHistoryCommand}"/>
                     </StackPanel>
+                    <Popup IsOpen="{Binding IsChangeStatusOpen, Mode=TwoWay}"
+                           PlacementTarget="{Binding ElementName=changeStatusBtn}"
+                           Placement="Right" 
+                           HorizontalOffset="100"
+                           VerticalOffset="-100"
+                           AllowsTransparency="True"
+                           PopupAnimation="Fade"
+                           >
+                        <Border Background="AntiqueWhite"
+                                BorderThickness="1">
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="Новый статус:"/>
+                                <ComboBox Style="{StaticResource ComboBoxWithErrorStyle}"
+                                          ItemsSource="{Binding StatusesList}"
+                                          SelectedValue="{Binding NewAccountStatus.AccountStatus, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                          />
+                                <Label Content="Дата статуса:"/>
+                                <DatePicker FirstDayOfWeek="Monday"
+                                            Style="{StaticResource DatePickerWithErrorStyle}"
+                                            SelectedDate="{Binding NewAccountStatus.AccountStatusDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            />
+                                <Label Content="Комментарий:"/>
+                                <TextBox MinHeight="50"
+                                         MinWidth="100"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         Style="{StaticResource TextBoxWithErrorStyle}"
+                                         Text="{Binding NewAccountStatus.Commentary, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <Label Content="Номер платежки:"/>
+                                <TextBox Text="{Binding NewAccountStatus.AccountPayNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Сохранить"
+                                            Command="{Binding SaveNewStatusCommand}"/>
+                                    <Button Content="Отменить"
+                                            Command="{Binding CancelNewStatusCommand}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
                 </StackPanel>
             </Grid>
         </AdornerDecorator>

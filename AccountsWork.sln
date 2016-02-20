@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsWork.Reports", "Acc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{EA047DEA-F32D-4213-9C01-35F5354B8F2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsWork.Helpers", "AccountsWork.Helpers\AccountsWork.Helpers.csproj", "{D88D142D-D0CA-4188-A46F-3CFCF192B57C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{3EBAF39B-9D07-4004-A55B-5E3EEF147468}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EBAF39B-9D07-4004-A55B-5E3EEF147468}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EBAF39B-9D07-4004-A55B-5E3EEF147468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D88D142D-D0CA-4188-A46F-3CFCF192B57C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D88D142D-D0CA-4188-A46F-3CFCF192B57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D88D142D-D0CA-4188-A46F-3CFCF192B57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D88D142D-D0CA-4188-A46F-3CFCF192B57C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

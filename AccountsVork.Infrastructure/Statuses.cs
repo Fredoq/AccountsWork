@@ -14,5 +14,13 @@ namespace AccountsVork.Infrastructure
         public const string InReturn = "Возврат";
         public const string InCancel = "Отмена";
         public const string InPayed = "Оплачен";
+
+        public static List<string> GetStatusesList()
+        {
+            return new List<string>()
+            {
+                InWork, InPO, InAcc, InReturn, InCancel, InPayed
+            };
+        }
     }
 }

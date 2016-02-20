@@ -46,35 +46,35 @@
                     </Grid.ColumnDefinitions>
                     <Label  Content="Номер счета:"/>
                     <TextBox Margin="3,3,10,3" 
-                         Grid.Row="0" 
-                         Grid.Column="1" 
-                         TextWrapping="Wrap" 
-                         HorizontalAlignment="Stretch"
-                         Style="{StaticResource TextBoxWithErrorStyle}"
-                         Text="{Binding Account.AccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
+                             Grid.Row="0" 
+                             Grid.Column="1" 
+                             TextWrapping="Wrap" 
+                             HorizontalAlignment="Stretch"
+                             Style="{StaticResource TextBoxWithErrorStyle}"
+                             Text="{Binding Account.AccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
                     <Label Content="Компания:" 
-                       Grid.Row="1" 
-                       Grid.Column="0" />
+                           Grid.Row="1" 
+                           Grid.Column="0" />
                     <ComboBox Margin="3,0,10,3" 
-                          Grid.Column="1" 
-                          Grid.Row="1"
-                          Style="{StaticResource ComboBoxWithErrorStyle}"
-                          ItemsSource="{Binding Companies}"
-                          DisplayMemberPath="Company"
-                          SelectedValuePath="Company"                             
-                          SelectedValue="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" VerticalAlignment="Bottom"/>
+                              Grid.Column="1" 
+                              Grid.Row="1"
+                              Style="{StaticResource ComboBoxWithErrorStyle}"
+                              ItemsSource="{Binding Companies}"
+                              DisplayMemberPath="Company"
+                              SelectedValuePath="Company"                             
+                              SelectedValue="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" VerticalAlignment="Bottom"/>
                     <Label Content="Дата счета:" 
-                       Grid.Row="2" 
-                       Grid.Column="0" />
+                           Grid.Row="2" 
+                           Grid.Column="0" />
                     <DatePicker Margin="3,3,10,3" 
-                            Grid.Column="1" 
-                            Grid.Row="2" 
-                            FirstDayOfWeek="Monday"
-                            Style="{StaticResource DatePickerWithErrorStyle}"
-                            SelectedDate="{Binding Account.AccountDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                Grid.Column="1" 
+                                Grid.Row="2" 
+                                FirstDayOfWeek="Monday"
+                                Style="{StaticResource DatePickerWithErrorStyle}"
+                                SelectedDate="{Binding Account.AccountDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                     <Label Content="Сумма счета" 
-                       Grid.Row="3" 
-                       Grid.Column="0" />
+                           Grid.Row="3" 
+                           Grid.Column="0" />
                     <TextBox Margin="3,3,10,3" 
                              Grid.Column="1" 
                              Grid.Row="3" 

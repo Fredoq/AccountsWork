@@ -35,9 +35,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\AccountsVork.Infrastructure\bin\Debug\AccountsVork.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="AccountsWork.DataAccessLayer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\AccountsWork.DataAccessLayer.dll</HintPath>
+    <Reference Include="AccountsWork.DataAccessLayer">
+      <HintPath>..\AccountsWork.DataAccessLayer\bin\Debug\AccountsWork.DataAccessLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="AccountsWork.Helpers">
+      <HintPath>..\AccountsWork.Helpers\bin\Debug\AccountsWork.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>

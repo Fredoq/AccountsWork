@@ -12,6 +12,7 @@ namespace AccountsWork.BusinessLayer
     public interface IAccountStatusService
     {
         AccountsStatusDetailsSet GetAccountStatusById(int id);
+        void AddNewStatus(AccountsStatusDetailsSet newAccountStatus);
     }
 
     [Export(typeof(IAccountStatusService))]
@@ -23,6 +24,11 @@ namespace AccountsWork.BusinessLayer
         public AccountStatusService(IAccountsStatusRepository accountsStatusRepository)
         {
             _accountsStatusRepository = accountsStatusRepository;
+        }
+
+        public void AddNewStatus(AccountsStatusDetailsSet newAccountStatus)
+        {
+            _accountsStatusRepository.Add(newAccountStatus);
         }
 
         public AccountsStatusDetailsSet GetAccountStatusById(int id)
