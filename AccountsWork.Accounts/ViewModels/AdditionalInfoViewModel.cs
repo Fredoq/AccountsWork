@@ -28,6 +28,7 @@ namespace AccountsWork.Accounts.ViewModels
         private AccountsStatusDetailsSet _newAccountStatus;
         private bool _isStatusHistoryOpen;
         private ObservableCollection<AccountsStatusDetailsSet> _statusHistoryList;
+        private bool _isEditAccountStoresOpen;
         #endregion Private Fields
 
         #region Public Properties
@@ -45,6 +46,11 @@ namespace AccountsWork.Accounts.ViewModels
         {
             get { return _isStatusHistoryOpen; }
             set { SetProperty(ref _isStatusHistoryOpen, value); }
+        }
+        public bool IsEditAccountStoresOpen
+        {
+            get { return _isEditAccountStoresOpen; }
+            set { SetProperty(ref _isEditAccountStoresOpen, value); }
         }
         public InteractionRequest<IConfirmation> ConfirmationRequest { get; set; }
         public AccountsMainSet CurrentAccount
@@ -86,6 +92,7 @@ namespace AccountsWork.Accounts.ViewModels
         public DelegateCommand SaveNewStatusCommand { get; set; }
         public DelegateCommand CancelNewStatusCommand { get; set; }
         public DelegateCommand OpenStatusHistoryCommand { get; set; }
+        public DelegateCommand EditAccountStoresListCommand { get; set; }
         #endregion Commands
 
         #region Constructor
@@ -95,6 +102,7 @@ namespace AccountsWork.Accounts.ViewModels
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
             IsChangeStatusOpen = false;
             IsStatusHistoryOpen = false;
+            IsEditAccountStoresOpen = false;
             StatusesList = Statuses.GetStatusesList();
             StatusHistoryList = new ObservableCollection<AccountsStatusDetailsSet>();
             _accountStatusService = accountStatusService;
@@ -106,6 +114,7 @@ namespace AccountsWork.Accounts.ViewModels
             SaveNewStatusCommand = new DelegateCommand(SaveNew, CanSaveNew);
             CancelNewStatusCommand = new DelegateCommand(CancelNew);
             OpenStatusHistoryCommand = new DelegateCommand(OpenHistory);
+            EditAccountStoresListCommand = new DelegateCommand(EditAccountStoresList);
         }        
         #endregion Constructor
 
@@ -158,12 +167,19 @@ namespace AccountsWork.Accounts.ViewModels
         }
         private void OpenHistory()
         {
-            IsStatusHistoryOpen = true;
-            IsChangeStatusOpen = false;
-            if (!_worker.IsBusy)
+            if (!IsStatusHistoryOpen)
             {
-                _worker.DoWork += LoadHistoryList;
-                _worker.RunWorkerAsync();
+                IsStatusHistoryOpen = true;
+                IsChangeStatusOpen = false;
+                if (!_worker.IsBusy)
+                {
+                    _worker.DoWork += LoadHistoryList;
+                    _worker.RunWorkerAsync();
+                }
+            }
+            else
+            {
+                IsStatusHistoryOpen = false;
             }
         }
         private void LoadHistoryList(object sender, DoWorkEventArgs e)
@@ -195,6 +211,10 @@ namespace AccountsWork.Accounts.ViewModels
             }
             else
                 return false;
+        }
+        private void EditAccountStoresList()
+        {
+            IsEditAccountStoresOpen = !IsEditAccountStoresOpen;
         }
         private void NewAccountPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

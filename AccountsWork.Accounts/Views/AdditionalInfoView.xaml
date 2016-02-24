@@ -162,6 +162,64 @@
                         </Popup>
                     </AdornerDecorator>
                 </StackPanel>
+
+                <StackPanel Grid.Row="3"
+                            Margin="3"
+                            Orientation="Vertical">
+                    <Button Content="Редактировать"
+                            x:Name="btnEditAccStores"
+                            HorizontalAlignment="Left"
+                            Margin="5"
+                            Command="{Binding EditAccountStoresListCommand}"/>
+                    <Popup IsOpen="{Binding IsEditAccountStoresOpen, Mode=TwoWay}"
+                           PlacementTarget="{Binding ElementName=btnEditAccStores}"
+                           Placement="Right"    
+                           HorizontalOffset="10"
+                           AllowsTransparency="True"
+                           PopupAnimation="Fade">
+                        <Border BorderBrush="AntiqueWhite"
+                                BorderThickness="1"
+                                Margin="5,0,0,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <syncfusion:SfDataGrid AutoGenerateColumns="False"
+                                                       Grid.Row="0"
+                                                       ItemsSource="{Binding AccountStoresList}">
+                                    <syncfusion:SfDataGrid.Columns>
+                                        <syncfusion:GridTextColumn MappingName="AccountStore" 
+                                                                   HeaderText="Номер Ресторана"
+                                                                   ColumnSizer="SizeToHeader"/>
+                                        <syncfusion:GridTextColumn MappingName="StoreName"
+                                                                   HeaderText="Название ресторана"
+                                                                   MaximumWidth="200"
+                                                                   ColumnSizer="SizeToCells"/>
+                                    </syncfusion:SfDataGrid.Columns>
+                                </syncfusion:SfDataGrid>
+                                <TextBox Text="{Binding StoresForLoad, Mode=TwoWay}"
+                                         Grid.Column="1"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         MaxHeight="250"
+                                         MinHeight="100"
+                                         ScrollViewer.CanContentScroll="True"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                                <Button Content="Добавить"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="3"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding AddStoresToAccountCommand}"/>
+                            </Grid>
+                        </Border>
+                    </Popup>
+                </StackPanel>
             </Grid>
         </AdornerDecorator>
     </Grid>
