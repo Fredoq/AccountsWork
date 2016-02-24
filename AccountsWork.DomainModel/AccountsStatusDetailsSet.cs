@@ -18,7 +18,7 @@ namespace AccountsWork.DomainModel
         private int _id;
         private int _accountMainId;
         private string _accountStatus;
-        private DateTime _accountStatusDate;
+        private DateTime? _accountStatusDate;
         private string _commentary;
         private int? _accountPayNumber;
         #endregion Private Fields
@@ -42,8 +42,8 @@ namespace AccountsWork.DomainModel
             get { return _accountStatus; }
             set { SetProperty(ref _accountStatus, value); }
         }
-        [Required]
-        public System.DateTime AccountStatusDate
+        [CustomValidation(typeof(AccountsStatusDetailsSet), "CheckDateRange")]
+        public System.DateTime? AccountStatusDate
         {
             get { return _accountStatusDate; }
             set { SetProperty(ref _accountStatusDate, value); }
@@ -61,5 +61,14 @@ namespace AccountsWork.DomainModel
 
         public virtual AccountsMainSet AccountsMainSet { get; set; }
         #endregion Public Properties
+
+        #region Validation Methods
+        public static ValidationResult CheckDateRange(DateTime? date, ValidationContext context)
+        {
+            if (!date.HasValue || date.Value > DateTime.Now)
+                return new ValidationResult("”казана неверна€ дата счета");
+            return ValidationResult.Success;
+        }
+        #endregion Validation Methods
     }
 }

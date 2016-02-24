@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AccountsWork.Accounts.Views.AddAdditionalInfoView"
+﻿<UserControl xmlns:syncfusion="http://schemas.syncfusion.com/wpf"  x:Class="AccountsWork.Accounts.Views.AddAdditionalInfoView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -25,8 +25,14 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
+                <Border BorderThickness="0,0,0,2"
+                        BorderBrush="AntiqueWhite"/>
+                <Border BorderThickness="0,0,0,2"                       
+                        BorderBrush="AntiqueWhite"
+                        Grid.Row="2"/>
                 <StackPanel Grid.Row="0"
                             HorizontalAlignment="Center"
                             Orientation="Horizontal">
@@ -46,24 +52,31 @@
                                VerticalAlignment="Center"
                                FontWeight="Bold"
                                Margin="3"/>
-                    
                     <Label Content="Номер платежки"/>
                     <TextBlock Text="{Binding CurrentAccountStatus.AccountPayNumber}"
+                               x:Name="txtPayNumber"
                                VerticalAlignment="Center"
                                FontWeight="Bold"
                                Margin="3"/>
                 </StackPanel>
                 <StackPanel Grid.Row="2"
-                            MaxHeight="150"
+                            MaxHeight="200"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
                     <Label Content="Комментарий:"
                            VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding CurrentAccountStatus.Commentary}"
-                               VerticalAlignment="Center"
-                               TextWrapping="Wrap" 
-                               MaxWidth="150"
-                               Margin="3"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  MaxHeight="90"
+                                  HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding CurrentAccountStatus.Commentary}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   TextWrapping="WrapWithOverflow" 
+                                   MaxWidth="200"
+                                   MinWidth="120"
+                                   Margin="6"/>
+                    </ScrollViewer>
                     <StackPanel Orientation="Vertical"
                                 Margin="3">
                         <Button Content="Изменить статус"
@@ -76,11 +89,10 @@
                                 Margin="5"
                                 Command="{Binding OpenStatusHistoryCommand}"/>
                     </StackPanel>
+                    <AdornerDecorator>
                     <Popup IsOpen="{Binding IsChangeStatusOpen, Mode=TwoWay}"
-                           PlacementTarget="{Binding ElementName=changeStatusBtn}"
-                           Placement="Right" 
-                           HorizontalOffset="100"
-                           VerticalOffset="-100"
+                           PlacementTarget="{Binding ElementName=txtPayNumber}"
+                           Placement="Right"                            
                            AllowsTransparency="True"
                            PopupAnimation="Fade"
                            >
@@ -90,10 +102,12 @@
                                 <Label Content="Новый статус:"/>
                                 <ComboBox Style="{StaticResource ComboBoxWithErrorStyle}"
                                           ItemsSource="{Binding StatusesList}"
+                                          Margin="5"
                                           SelectedValue="{Binding NewAccountStatus.AccountStatus, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           />
                                 <Label Content="Дата статуса:"/>
                                 <DatePicker FirstDayOfWeek="Monday"
+                                            Margin="5"
                                             Style="{StaticResource DatePickerWithErrorStyle}"
                                             SelectedDate="{Binding NewAccountStatus.AccountStatusDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                             />
@@ -102,19 +116,51 @@
                                          MinWidth="100"
                                          TextWrapping="Wrap"
                                          AcceptsReturn="True"
+                                         Margin="5"
                                          Style="{StaticResource TextBoxWithErrorStyle}"
                                          Text="{Binding NewAccountStatus.Commentary, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                                 <Label Content="Номер платежки:"/>
-                                <TextBox Text="{Binding NewAccountStatus.AccountPayNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <TextBox Text="{Binding NewAccountStatus.AccountPayNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         Margin="5"/>
                                 <StackPanel Orientation="Horizontal">
                                     <Button Content="Сохранить"
+                                            Margin="3"
                                             Command="{Binding SaveNewStatusCommand}"/>
                                     <Button Content="Отменить"
+                                            Margin="3"
                                             Command="{Binding CancelNewStatusCommand}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
                     </Popup>
+                    </AdornerDecorator>
+                    <AdornerDecorator>
+                        <Popup IsOpen="{Binding IsStatusHistoryOpen, Mode=TwoWay}"
+                               PlacementTarget="{Binding ElementName=txtPayNumber}"
+                               Placement="Right"                            
+                               AllowsTransparency="True"
+                               PopupAnimation="Fade">
+                            <syncfusion:SfDataGrid x:Name="statusHistoryGrid"
+                                                   AutoGenerateColumns="False"
+                                                   ItemsSource="{Binding StatusHistoryList}">
+                                <syncfusion:SfDataGrid.Columns>
+                                    <syncfusion:GridDateTimeColumn MappingName="AccountStatusDate" 
+                                                                   HeaderText="Дата статуса"
+                                                                   ColumnSizer="SizeToHeader"/>
+                                    <syncfusion:GridTextColumn MappingName="AccountStatus" 
+                                                               HeaderText="Статус"
+                                                               ColumnSizer="SizeToCells"/>
+                                    <syncfusion:GridTextColumn MappingName="Commentary" 
+                                                               HeaderText="Комментарий" 
+                                                               ColumnSizer="SizeToCells"
+                                                               TextWrapping="Wrap"/>
+                                    <syncfusion:GridTextColumn MappingName="AccountPayNumber" 
+                                                               HeaderText="Номер платежки"
+                                                               ColumnSizer="SizeToHeader"/>
+                                </syncfusion:SfDataGrid.Columns>
+                            </syncfusion:SfDataGrid>
+                        </Popup>
+                    </AdornerDecorator>
                 </StackPanel>
             </Grid>
         </AdornerDecorator>

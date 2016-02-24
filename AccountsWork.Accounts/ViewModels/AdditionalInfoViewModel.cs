@@ -7,6 +7,7 @@ using Prism.Interactivity.InteractionRequest;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 
@@ -25,6 +26,8 @@ namespace AccountsWork.Accounts.ViewModels
         private bool _isChangeStatusOpen;
         private List<string> _statusesList;
         private AccountsStatusDetailsSet _newAccountStatus;
+        private bool _isStatusHistoryOpen;
+        private ObservableCollection<AccountsStatusDetailsSet> _statusHistoryList;
         #endregion Private Fields
 
         #region Public Properties
@@ -37,6 +40,11 @@ namespace AccountsWork.Accounts.ViewModels
         {
             get { return _isChangeStatusOpen; }
             set { SetProperty(ref _isChangeStatusOpen, value); }
+        }
+        public bool IsStatusHistoryOpen
+        {
+            get { return _isStatusHistoryOpen; }
+            set { SetProperty(ref _isStatusHistoryOpen, value); }
         }
         public InteractionRequest<IConfirmation> ConfirmationRequest { get; set; }
         public AccountsMainSet CurrentAccount
@@ -52,12 +60,24 @@ namespace AccountsWork.Accounts.ViewModels
         public AccountsStatusDetailsSet NewAccountStatus
         {
             get { return _newAccountStatus; }
-            set { SetProperty(ref _newAccountStatus, value); }
-        }
+            set
+            {
+                if (_newAccountStatus != null)
+                    NewAccountStatus.PropertyChanged -= NewAccountPropertyChanged;
+                SetProperty(ref _newAccountStatus, value);
+                if (_newAccountStatus != null)
+                    NewAccountStatus.PropertyChanged += NewAccountPropertyChanged;
+            }
+        }        
         public List<string> StatusesList
         {
             get { return _statusesList; }
             set { SetProperty(ref _statusesList, value); }
+        }
+        public ObservableCollection<AccountsStatusDetailsSet> StatusHistoryList
+        {
+            get { return _statusHistoryList; }
+            set { SetProperty(ref _statusHistoryList, value); }         
         }
         #endregion Public Properties
 
@@ -65,6 +85,7 @@ namespace AccountsWork.Accounts.ViewModels
         public DelegateCommand ChangeStatusCommand { get; set; }
         public DelegateCommand SaveNewStatusCommand { get; set; }
         public DelegateCommand CancelNewStatusCommand { get; set; }
+        public DelegateCommand OpenStatusHistoryCommand { get; set; }
         #endregion Commands
 
         #region Constructor
@@ -73,7 +94,9 @@ namespace AccountsWork.Accounts.ViewModels
         {
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
             IsChangeStatusOpen = false;
+            IsStatusHistoryOpen = false;
             StatusesList = Statuses.GetStatusesList();
+            StatusHistoryList = new ObservableCollection<AccountsStatusDetailsSet>();
             _accountStatusService = accountStatusService;
 
             _worker = new BackgroundWorker();
@@ -81,9 +104,9 @@ namespace AccountsWork.Accounts.ViewModels
 
             ChangeStatusCommand = new DelegateCommand(ChangeStatus);
             SaveNewStatusCommand = new DelegateCommand(SaveNew, CanSaveNew);
-        }
-
-        
+            CancelNewStatusCommand = new DelegateCommand(CancelNew);
+            OpenStatusHistoryCommand = new DelegateCommand(OpenHistory);
+        }        
         #endregion Constructor
 
         #region Methods
@@ -121,6 +144,7 @@ namespace AccountsWork.Accounts.ViewModels
         private void LoadAccountAdditionalInfo(object sender, DoWorkEventArgs e)
         {
             LoadAccountLastStatus();
+            _worker.DoWork -= LoadAccountAdditionalInfo;
         }
         private void LoadAccountLastStatus()
         {
@@ -130,6 +154,23 @@ namespace AccountsWork.Accounts.ViewModels
         {
             NewAccountStatus = new AccountsStatusDetailsSet();
             IsChangeStatusOpen = true;
+            IsStatusHistoryOpen = false;
+        }
+        private void OpenHistory()
+        {
+            IsStatusHistoryOpen = true;
+            IsChangeStatusOpen = false;
+            if (!_worker.IsBusy)
+            {
+                _worker.DoWork += LoadHistoryList;
+                _worker.RunWorkerAsync();
+            }
+        }
+        private void LoadHistoryList(object sender, DoWorkEventArgs e)
+        {
+            StatusHistoryList.Clear();
+            StatusHistoryList = new ObservableCollection<AccountsStatusDetailsSet>(_accountStatusService.GetStatusesById(CurrentAccount.Id));
+            _worker.DoWork -= LoadHistoryList;
         }
         private void SaveNew()
         {
@@ -141,7 +182,11 @@ namespace AccountsWork.Accounts.ViewModels
                 IsChangeStatusOpen = false;
             }
         }
-        bool CanSaveNew()
+        private void CancelNew()
+        {
+            IsChangeStatusOpen = false;
+        }
+        private bool CanSaveNew()
         {
             if (NewAccountStatus != null)
             {
@@ -149,7 +194,11 @@ namespace AccountsWork.Accounts.ViewModels
                 return !NewAccountStatus.HasErrors;
             }
             else
-                return true;
+                return false;
+        }
+        private void NewAccountPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            SaveNewStatusCommand.RaiseCanExecuteChanged();
         }
         #endregion Methods
     }

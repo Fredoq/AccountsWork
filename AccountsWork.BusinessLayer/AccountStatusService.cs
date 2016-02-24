@@ -13,6 +13,7 @@ namespace AccountsWork.BusinessLayer
     {
         AccountsStatusDetailsSet GetAccountStatusById(int id);
         void AddNewStatus(AccountsStatusDetailsSet newAccountStatus);
+        IList<AccountsStatusDetailsSet> GetStatusesById(int id);
     }
 
     [Export(typeof(IAccountStatusService))]
@@ -34,6 +35,11 @@ namespace AccountsWork.BusinessLayer
         public AccountsStatusDetailsSet GetAccountStatusById(int id)
         {
             return _accountsStatusRepository.GetList(s => s.AccountMainId == id).LastOrDefault();
+        }
+
+        public IList<AccountsStatusDetailsSet> GetStatusesById(int id)
+        {
+            return _accountsStatusRepository.GetList(s => s.AccountMainId == id);
         }
     }
 }
