@@ -166,6 +166,12 @@
                 <StackPanel Grid.Row="3"
                             Margin="3"
                             Orientation="Vertical">
+                    <DockPanel>
+                        <Label Content="Кол-во ресторанов: "/>
+                        <Label Content="{Binding StoresCount}"
+                               FontWeight="Bold"
+                               DockPanel.Dock="Right"/>
+                    </DockPanel>
                     <Button Content="Редактировать"
                             x:Name="btnEditAccStores"
                             HorizontalAlignment="Left"
@@ -202,20 +208,27 @@
                                                                    ColumnSizer="SizeToCells"/>
                                     </syncfusion:SfDataGrid.Columns>
                                 </syncfusion:SfDataGrid>
-                                <TextBox Text="{Binding StoresForLoad, Mode=TwoWay}"
-                                         Grid.Column="1"
-                                         TextWrapping="Wrap"
-                                         AcceptsReturn="True"
-                                         MaxHeight="250"
-                                         MinHeight="100"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                                <Button Content="Добавить"
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Margin="3"
-                                        HorizontalAlignment="Center"
-                                        Command="{Binding AddStoresToAccountCommand}"/>
+                                <StackPanel Orientation="Vertical"
+                                            Grid.Column="1">
+                                    <TextBox Text="{Binding StoresForLoad, Mode=TwoWay}"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"
+                                             MaxHeight="250"
+                                             MinHeight="100"
+                                             ScrollViewer.CanContentScroll="True"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                                    <Label Content="Обнаруженные ошибки:"
+                                           Grid.Column="1"/>
+                                    <TextBlock Text="{Binding StoresError}"
+                                               TextWrapping="Wrap"/>
+                                    <Button Content="Добавить"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Margin="3"
+                                            HorizontalAlignment="Center"
+                                            Command="{Binding AddStoresToAccountCommand}"/>
+                                </StackPanel>
+                                
                             </Grid>
                         </Border>
                     </Popup>
