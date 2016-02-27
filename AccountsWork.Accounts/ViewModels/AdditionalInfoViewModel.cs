@@ -133,24 +133,19 @@ namespace AccountsWork.Accounts.ViewModels
         }
         private void SaveNew()
         {
-            if(NewAccountStatus != null)
-            {
-                NewAccountStatus.AccountMainId = CurrentAccount.Id;
-                _accountStatusService.AddNewStatus(NewAccountStatus);
-                CurrentAccountStatus = NewAccountStatus;
-                IsChangeStatusOpen = false;
-            }
+            if (NewAccountStatus == null) return;
+            NewAccountStatus.AccountMainId = CurrentAccount.Id;
+            _accountStatusService.AddNewStatus(NewAccountStatus);
+            CurrentAccountStatus = NewAccountStatus;
+            IsChangeStatusOpen = false;
         }
         bool CanSaveNew()
         {
-            if (NewAccountStatus != null)
-            {
-                NewAccountStatus.ValidateProperties();
-                return !NewAccountStatus.HasErrors;
-            }
-            else
-                return true;
+            if (NewAccountStatus == null) return true;
+            NewAccountStatus.ValidateProperties();
+            return !NewAccountStatus.HasErrors;
         }
+
         #endregion Methods
     }
 }

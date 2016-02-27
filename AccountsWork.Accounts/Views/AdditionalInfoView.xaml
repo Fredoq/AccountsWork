@@ -61,9 +61,11 @@
                            VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding CurrentAccountStatus.Commentary}"
                                VerticalAlignment="Center"
-                               TextWrapping="Wrap" 
+                               HorizontalAlignment="Left"
+                               FontWeight="Medium"
+                               TextWrapping="Wrap"                                
                                MaxWidth="150"
-                               Margin="3"/>
+                               Margin="6,3,3,3"/>
                     <StackPanel Orientation="Vertical"
                                 Margin="3">
                         <Button Content="Изменить статус"
