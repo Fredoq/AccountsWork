@@ -187,43 +187,55 @@
                                 BorderThickness="1"
                                 Margin="5,0,0,0">
                             <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <syncfusion:SfDataGrid AutoGenerateColumns="False"
-                                                       Grid.Row="0"
-                                                       ItemsSource="{Binding AccountStoresList}">
-                                    <syncfusion:SfDataGrid.Columns>
-                                        <syncfusion:GridTextColumn MappingName="AccountStore" 
-                                                                   HeaderText="Номер Ресторана"
-                                                                   ColumnSizer="SizeToHeader"/>
-                                        <syncfusion:GridTextColumn MappingName="StoreName"
-                                                                   HeaderText="Название ресторана"
-                                                                   MaximumWidth="200"
-                                                                   ColumnSizer="SizeToCells"/>
-                                    </syncfusion:SfDataGrid.Columns>
-                                </syncfusion:SfDataGrid>
                                 <StackPanel Orientation="Vertical"
-                                            Grid.Column="1">
-                                    <TextBox Text="{Binding StoresForLoad, Mode=TwoWay}"
+                                            Margin="4">
+                                    <DataGrid AutoGenerateColumns="False"
+                                              MaxHeight="300"
+                                              SelectionUnit="FullRow"
+                                              VerticalAlignment="Stretch"
+                                              IsReadOnly="True"
+                                              MinHeight="200"
+                                              CanUserDeleteRows="True"
+                                              ItemsSource="{Binding AccountStoresList}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Номер ресторана"
+                                                            Binding="{Binding Path=StoreNumber}"/>
+                                            <DataGridTextColumn Header="Название ресторана"
+                                                            MaxWidth="200"
+                                                            Binding="{Binding Path=StoreName}"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Button Content="Удалить"
+                                            Command="{Binding DeleteAccountStoreCommand}"
+                                            HorizontalAlignment="Left"
+                                            Padding="2"
+                                            Margin="2"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical"
+                                            Grid.Column="1"
+                                            Margin="4"
+                                            >
+                                    <TextBox Text="{Binding StoresForLoad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              TextWrapping="Wrap"
                                              AcceptsReturn="True"
                                              MaxHeight="250"
                                              MinHeight="100"
                                              ScrollViewer.CanContentScroll="True"
                                              ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                                    <Label Content="Обнаруженные ошибки:"
-                                           Grid.Column="1"/>
-                                    <TextBlock Text="{Binding StoresError}"
+                                    <Label Content="Обнаруженные ошибки:"/>
+                                    <TextBlock Text="{Binding StoresError, Mode=TwoWay}"
+                                               Foreground="Red"
+                                               FontStyle="Italic"
+                                               FontSize="11"
+                                               MaxHeight="250"
+                                               ScrollViewer.CanContentScroll="True"
+                                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                TextWrapping="Wrap"/>
                                     <Button Content="Добавить"
-                                            Grid.Row="1"
-                                            Grid.Column="1"
                                             Margin="3"
                                             HorizontalAlignment="Center"
                                             Command="{Binding AddStoresToAccountCommand}"/>

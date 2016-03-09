@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -34,6 +35,8 @@ namespace AccountsWork.Accounts.ViewModels
         private string _storesForLoad;
         private string _storesError;
         private List<int> storesNum;
+        private ObservableCollection<StoresSet> _addingStoresList;
+        private IStoresService _storesService;
         #endregion Private Fields
 
         #region Public Properties
@@ -95,6 +98,11 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _accountStoresList; }
             set { SetProperty(ref _accountStoresList, value); }
         }
+        public ObservableCollection<StoresSet> AddingStoresList
+        {
+            get { return _addingStoresList; }
+            set { SetProperty(ref _addingStoresList, value); }
+        }
         public string StoresForLoad
         {
             get { return _storesForLoad; }
@@ -118,7 +126,7 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region Constructor
         [ImportingConstructor]
-        public AdditionalInfoViewModel(IAccountStatusService accountStatusService, IAccountStoresService accountStoresService)
+        public AdditionalInfoViewModel(IAccountStatusService accountStatusService, IAccountStoresService accountStoresService, IStoresService storesService)
         {
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
             IsChangeStatusOpen = false;
@@ -129,6 +137,7 @@ namespace AccountsWork.Accounts.ViewModels
             AccountStoresList = new ObservableCollection<StoresSet>();
             _accountStatusService = accountStatusService;
             _accountStoresService = accountStoresService;
+            _storesService = storesService;
 
             _worker = new BackgroundWorker();
             _worker.DoWork += LoadAccountAdditionalInfo;
@@ -138,7 +147,7 @@ namespace AccountsWork.Accounts.ViewModels
             CancelNewStatusCommand = new DelegateCommand(CancelNew);
             OpenStatusHistoryCommand = new DelegateCommand(OpenHistory);
             EditAccountStoresListCommand = new DelegateCommand(EditAccountStoresList);
-            AddStoresToAccountCommand = new DelegateCommand(AddStoresToAccount);
+            AddStoresToAccountCommand = new DelegateCommand(AddStoresToAccount, CheckStoreErrors).ObservesProperty(() => StoresForLoad);
         }        
         #endregion Constructor
 
@@ -241,6 +250,7 @@ namespace AccountsWork.Accounts.ViewModels
             if (!IsEditAccountStoresOpen)
             {
                 IsEditAccountStoresOpen = true;
+                StoresForLoad = string.Empty;
                 AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(CurrentAccount.Id));
             }
             else
@@ -250,27 +260,60 @@ namespace AccountsWork.Accounts.ViewModels
         }
         private void AddStoresToAccount()
         {
-            
+            if (storesNum.Count > 0)
+            {
+                var storesForAddList = new ObservableCollection<AccountsStoreDetailsSet>();
+                foreach(int storeNumber in storesNum)
+                {
+                    if (AccountStoresList.Where(s => s.StoreNumber == storeNumber).Count() == 0 && storesForAddList.Where(s => s.AccountStore == storeNumber).Count() == 0)
+                    {
+                        storesForAddList.Add(new AccountsStoreDetailsSet { AccountsMainId = CurrentAccount.Id, AccountStore = storeNumber });
+                    }
+                }
+                if (storesForAddList.Count != 0)
+                {
+                    _accountStoresService.AddStoresToAccount(storesForAddList);
+                    AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(CurrentAccount.Id));
+                    StoresForLoad = string.Empty;
+                }
+            }
 
         }
         private bool CheckStoreErrors()
         {
-            var strStores = StoresForLoad.Split('\n');
-            storesNum = new List<int>();
-            var stores = new ObservableCollection<StoresSet>();
-            foreach (var item in strStores)
+            if (!string.IsNullOrWhiteSpace(StoresForLoad))
             {
-                int storeNumber;
+                var strStores = StoresForLoad.Split('\n');
+                storesNum = new List<int>();
                 StoresError = string.Empty;
-                if (!int.TryParse(item, out storeNumber))
+                foreach (var item in strStores)
                 {
-                    StoresError += item + "\n";
-                }               
+                    int storeNumber;
+                    if (string.IsNullOrWhiteSpace(item))
+                        continue;              
+                    if (!int.TryParse(item, out storeNumber))
+                    {
+                        StoresError += item.Trim() + " ошибка\n";
+                    }
+                    else
+                    {
+                        if (_storesService.IsStoreExist(storeNumber))
+                        {
+                            storesNum.Add(storeNumber);
+                        }
+                        else
+                        {
+                            StoresError += storeNumber + " не заведен в базе\n";
+                        }
+                    }
+                }
+                return string.IsNullOrWhiteSpace(StoresError);
             }
-            if (string.IsNullOrWhiteSpace(StoresError))
-                return false;
             else
-                return true;
+            {
+                StoresError = string.Empty;
+                return false;
+            }                           
         }
         private void NewAccountPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
