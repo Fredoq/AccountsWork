@@ -163,7 +163,7 @@
                     </AdornerDecorator>
                 </StackPanel>
                 <DockPanel Grid.Row="3">
-                    <StackPanel Margin="3"
+                    <StackPanel Margin="3,3,450,3"
                                 Orientation="Vertical">
                         <DockPanel>
                             <Label Content="Кол-во ресторанов/участников: "/>
@@ -266,6 +266,8 @@
                                    TextWrapping="Wrap"                               
                                    ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                     </StackPanel>
+                    <Border BorderBrush="BlanchedAlmond"
+                            BorderThickness="2,0,0,0">
                     <StackPanel DockPanel.Dock="Right"
                                 Margin="3"
                                 Orientation="Vertical">
@@ -274,11 +276,17 @@
                             <Label DockPanel.Dock="Right"
                                    Content="{Binding AvailableSum}"/>
                         </DockPanel>
+                        <ListBox HorizontalAlignment="Left"
+                                 Margin="5"
+                                 ItemsSource="{Binding AccountCapexList}">
+                            
+                        </ListBox>
                         <Button Content="Редактировать"
                                 HorizontalAlignment="Left"
                                 Margin="3"
                                 Command="{Binding EditCapexAccountCommand}"/>
                     </StackPanel>
+                    </Border>
                 </DockPanel>
                </Grid>
         </AdornerDecorator>
