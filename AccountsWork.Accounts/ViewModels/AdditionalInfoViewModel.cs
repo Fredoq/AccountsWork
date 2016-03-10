@@ -37,6 +37,10 @@ namespace AccountsWork.Accounts.ViewModels
         private List<int> storesNum;
         private ObservableCollection<StoresSet> _addingStoresList;
         private IStoresService _storesService;
+        private StoresSet _currentAccountStore;
+        private int _storesCount;
+        private string _serchResultStore;
+        private string _serchStoreName;
         #endregion Private Fields
 
         #region Public Properties
@@ -83,6 +87,16 @@ namespace AccountsWork.Accounts.ViewModels
                     NewAccountStatus.PropertyChanged += NewAccountPropertyChanged;
             }
         }        
+        public int StoresCount
+        {
+            get { return _storesCount; }
+            set { SetProperty(ref _storesCount, value); }
+        }
+        public StoresSet CurrentAccountStore
+        {
+            get { return _currentAccountStore; }
+            set { SetProperty(ref _currentAccountStore, value); }
+        }
         public List<string> StatusesList
         {
             get { return _statusesList; }
@@ -96,7 +110,14 @@ namespace AccountsWork.Accounts.ViewModels
         public ObservableCollection<StoresSet> AccountStoresList
         {
             get { return _accountStoresList; }
-            set { SetProperty(ref _accountStoresList, value); }
+            set
+            {
+                SetProperty(ref _accountStoresList, value);
+                if (value != null)
+                    StoresCount = value.Count;
+                else
+                    StoresCount = 0;
+            }
         }
         public ObservableCollection<StoresSet> AddingStoresList
         {
@@ -113,6 +134,16 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _storesError; }
             set { SetProperty(ref _storesError, value); }
         }
+        public string SearchStoreName
+        {
+            get { return _serchStoreName; }
+            set { SetProperty(ref _serchStoreName, value); }
+        }
+        public string SerchResultStores
+        {
+            get { return _serchResultStore; }
+            set { SetProperty(ref _serchResultStore, value); }
+        }
         #endregion Public Properties
 
         #region Commands
@@ -122,6 +153,8 @@ namespace AccountsWork.Accounts.ViewModels
         public DelegateCommand OpenStatusHistoryCommand { get; set; }
         public DelegateCommand EditAccountStoresListCommand { get; set; }
         public DelegateCommand AddStoresToAccountCommand { get; set; }
+        public DelegateCommand DeleteAccountStoreCommand { get; set; }
+        public DelegateCommand SearchStoreNumberByNameCommand { get; set; }
         #endregion Commands
 
         #region Constructor
@@ -148,6 +181,8 @@ namespace AccountsWork.Accounts.ViewModels
             OpenStatusHistoryCommand = new DelegateCommand(OpenHistory);
             EditAccountStoresListCommand = new DelegateCommand(EditAccountStoresList);
             AddStoresToAccountCommand = new DelegateCommand(AddStoresToAccount, CheckStoreErrors).ObservesProperty(() => StoresForLoad);
+            DeleteAccountStoreCommand = new DelegateCommand(DeleteAccountStore);
+            SearchStoreNumberByNameCommand = new DelegateCommand(SearchStoreNumberByName);
         }        
         #endregion Constructor
 
@@ -314,6 +349,27 @@ namespace AccountsWork.Accounts.ViewModels
                 StoresError = string.Empty;
                 return false;
             }                           
+        }
+        private void DeleteAccountStore()
+        {
+            if (CurrentAccountStore != null)
+            {
+                _accountStoresService.DeleteStoreFromAccount(CurrentAccountStore.StoreNumber, CurrentAccount.Id);
+                AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(CurrentAccount.Id));
+            }
+        }
+        private void SearchStoreNumberByName()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchStoreName))
+            {
+                SerchResultStores = string.Empty;
+                foreach (var item in _storesService.SearchStoreNumber(SearchStoreName))
+                {
+                    SerchResultStores += string.Format("{0} {1}\n", item.StoreNumber, item.StoreName);
+                }
+            }
+            else
+                SerchResultStores = string.Empty;
         }
         private void NewAccountPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
