@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="ObjectToVisibilityConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BoolToOpacityConverter.cs" />
     <Compile Include="StringToVisibilityConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,6 +10,7 @@ namespace AccountsWork.BusinessLayer
     {
         bool IsStoreExist(int storeNumber);
         IList<StoresSet> SearchStoreNumber(string searchStoreName);
+        IList<StoresSet> GetStores();
     }
     [Export(typeof(IStoresService))]
     public class StoresService : IStoresService
@@ -20,6 +21,11 @@ namespace AccountsWork.BusinessLayer
         public StoresService(IStoresRepository storesRepository)
         {
             _storesRepository = storesRepository;
+        }
+
+        public IList<StoresSet> GetStores()
+        {
+            return _storesRepository.GetAll();
         }
 
         public bool IsStoreExist(int storeNumber)

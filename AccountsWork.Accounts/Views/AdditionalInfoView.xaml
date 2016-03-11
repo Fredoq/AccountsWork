@@ -7,12 +7,14 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:Notification="clr-namespace:Syncfusion.Windows.Controls.Notification;assembly=Syncfusion.SfBusyIndicator.WPF"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              mc:Ignorable="d" 
              >
     <UserControl.Resources>
         <helpers:StringToVisibilityConverter x:Key="StringToVisibility"/>
+        <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
@@ -163,7 +165,7 @@
                     </AdornerDecorator>
                 </StackPanel>
                 <DockPanel Grid.Row="3">
-                    <StackPanel Margin="3,3,450,3"
+                    <StackPanel Margin="3,3,500,3"
                                 Orientation="Vertical">
                         <DockPanel>
                             <Label Content="Кол-во ресторанов/участников: "/>
@@ -193,23 +195,28 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Orientation="Vertical"
                                                 Margin="4">
-                                        <DataGrid AutoGenerateColumns="False"
-                                                  MaxHeight="300"
-                                                  SelectionUnit="FullRow"
-                                                  VerticalAlignment="Stretch"
-                                                  IsReadOnly="True"
-                                                  MinHeight="200"
-                                                  SelectedItem="{Binding CurrentAccountStore, Mode=TwoWay}"
-                                                  CanUserDeleteRows="True"
-                                                  ItemsSource="{Binding AccountStoresList}">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Header="Номер ресторана"
-                                                                    Binding="{Binding Path=StoreNumber}"/>
-                                                <DataGridTextColumn Header="Название ресторана"
-                                                                    MaxWidth="200"
-                                                                    Binding="{Binding Path=StoreName}"/>
-                                            </DataGrid.Columns>
-                                        </DataGrid>
+                                        <Notification:SfBusyIndicator IsBusy="{Binding IsAddStoreBusy, Mode=TwoWay}"
+                                                                      Header="Идет добавление в базу..."                                                                    
+                                                                      AnimationType="SingleCircle">
+                                            <DataGrid AutoGenerateColumns="False"
+                                                      MaxHeight="300"
+                                                      SelectionUnit="FullRow"
+                                                      VerticalAlignment="Stretch"
+                                                      IsReadOnly="True"
+                                                      MinHeight="200"       
+                                                      Opacity="{Binding IsAddStoreBusy, Converter={StaticResource BoolToOpacity}}"
+                                                      SelectedItem="{Binding CurrentAccountStore, Mode=TwoWay}"
+                                                      CanUserDeleteRows="True"
+                                                      ItemsSource="{Binding AccountStoresList}">
+                                                <DataGrid.Columns>
+                                                        <DataGridTextColumn Header="Номер ресторана"
+                                                                            Binding="{Binding Path=StoreNumber}"/>
+                                                        <DataGridTextColumn Header="Название ресторана"
+                                                                            MaxWidth="200"
+                                                                            Binding="{Binding Path=StoreName}"/>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                        </Notification:SfBusyIndicator>
                                         <Button Content="Удалить"
                                                 Command="{Binding DeleteAccountStoreCommand}"
                                                 HorizontalAlignment="Left"
@@ -279,7 +286,21 @@
                         <ListBox HorizontalAlignment="Left"
                                  Margin="5"
                                  ItemsSource="{Binding AccountCapexList}">
-                            
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="BlanchedAlmond"
+                                                BorderThickness="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Статья: "/>
+                                            <Label Content="{Binding AccountExpense}"/>
+                                            <Label Content=" Capex: "/>
+                                            <Label Content="{Binding AccountCapexName}"/>
+                                            <Label Content=" Сумма: "/>
+                                            <Label Content="{Binding AccountCapexAmount}"/>
+                                        </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
                         </ListBox>
                         <Button Content="Редактировать"
                                 HorizontalAlignment="Left"
