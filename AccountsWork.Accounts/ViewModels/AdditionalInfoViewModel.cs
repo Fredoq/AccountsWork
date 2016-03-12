@@ -21,8 +21,8 @@ namespace AccountsWork.Accounts.ViewModels
         private string AccountKey = "Account";
         private AccountsMainSet _currentAccount;
         private AccountsStatusDetailsSet _accountStatus;
-        private BackgroundWorker _worker;
-        private IAccountStatusService _accountStatusService;
+        private readonly BackgroundWorker _worker;
+        private readonly IAccountStatusService _accountStatusService;
         private bool _isChangeStatusOpen;
         private List<string> _statusesList;
         private AccountsStatusDetailsSet _newAccountStatus;
@@ -30,10 +30,10 @@ namespace AccountsWork.Accounts.ViewModels
         private ObservableCollection<AccountsStatusDetailsSet> _statusHistoryList;
         private bool _isEditAccountStoresOpen;
         private ObservableCollection<StoresSet> _accountStoresList;
-        private IAccountStoresService _accountStoresService;
+        private readonly IAccountStoresService _accountStoresService;
         private string _storesForLoad;
         private string _storesError;
-        private List<int> storesNum;
+        private List<int> _storesNum;
         #endregion Private Fields
 
         #region Public Properties
@@ -228,14 +228,11 @@ namespace AccountsWork.Accounts.ViewModels
         }
         private bool CanSaveNew()
         {
-            if (NewAccountStatus != null)
-            {
-                NewAccountStatus.ValidateProperties();
-                return !NewAccountStatus.HasErrors;
-            }
-            else
-                return false;
+            if (NewAccountStatus == null) return false;
+            NewAccountStatus.ValidateProperties();
+            return !NewAccountStatus.HasErrors;
         }
+
         private void EditAccountStoresList()
         {
             if (!IsEditAccountStoresOpen)
@@ -256,7 +253,7 @@ namespace AccountsWork.Accounts.ViewModels
         private bool CheckStoreErrors()
         {
             var strStores = StoresForLoad.Split('\n');
-            storesNum = new List<int>();
+            _storesNum = new List<int>();
             var stores = new ObservableCollection<StoresSet>();
             foreach (var item in strStores)
             {
@@ -267,10 +264,7 @@ namespace AccountsWork.Accounts.ViewModels
                     StoresError += item + "\n";
                 }               
             }
-            if (string.IsNullOrWhiteSpace(StoresError))
-                return false;
-            else
-                return true;
+            return !string.IsNullOrWhiteSpace(StoresError);
         }
         private void NewAccountPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
