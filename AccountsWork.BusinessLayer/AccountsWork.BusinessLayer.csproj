@@ -75,10 +75,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountCapexesService.cs" />
     <Compile Include="AccountsMainService.cs" />
     <Compile Include="AccountStatusService.cs" />
     <Compile Include="AccountStoresService.cs" />
     <Compile Include="AsyncQuery.cs" />
+    <Compile Include="StoresService.cs" />
     <Compile Include="TypesService.cs" />
     <Compile Include="CompaniesService.cs" />
     <Compile Include="IAccountsMainService.cs" />

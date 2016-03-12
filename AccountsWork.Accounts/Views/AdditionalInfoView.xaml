@@ -7,12 +7,14 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:Notification="clr-namespace:Syncfusion.Windows.Controls.Notification;assembly=Syncfusion.SfBusyIndicator.WPF"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              mc:Ignorable="d" 
              >
     <UserControl.Resources>
         <helpers:StringToVisibilityConverter x:Key="StringToVisibility"/>
+        <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
@@ -162,78 +164,152 @@
                         </Popup>
                     </AdornerDecorator>
                 </StackPanel>
+                <DockPanel Grid.Row="3">
+                    <StackPanel Margin="3,3,500,3"
+                                Orientation="Vertical">
+                        <DockPanel>
+                            <Label Content="Кол-во ресторанов/участников: "/>
+                            <Label Content="{Binding StoresCount}"
+                                   FontWeight="Bold"
+                                   DockPanel.Dock="Right"/>
+                        </DockPanel>
+                        <Button Content="Редактировать"
+                                x:Name="btnEditAccStores"
+                                HorizontalAlignment="Left"
+                                Margin="5"
+                                Command="{Binding EditAccountStoresListCommand}"/>
+                        <Popup IsOpen="{Binding IsEditAccountStoresOpen, Mode=TwoWay}"
+                               PlacementTarget="{Binding ElementName=btnEditAccStores}"
+                               Placement="Right"    
+                               HorizontalOffset="140"
+                               VerticalOffset="-30"
+                               AllowsTransparency="True"
+                               PopupAnimation="Fade">
+                            <Border BorderBrush="AntiqueWhite"
+                                    BorderThickness="1"
+                                    Margin="5,0,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Vertical"
+                                                Margin="4">
+                                        <Notification:SfBusyIndicator IsBusy="{Binding IsAddStoreBusy, Mode=TwoWay}"
+                                                                      Header="Идет добавление в базу..."                                                                    
+                                                                      AnimationType="SingleCircle">
+                                            <DataGrid AutoGenerateColumns="False"
+                                                      MaxHeight="300"
+                                                      SelectionUnit="FullRow"
+                                                      VerticalAlignment="Stretch"
+                                                      IsReadOnly="True"
+                                                      MinHeight="200"       
+                                                      Opacity="{Binding IsAddStoreBusy, Converter={StaticResource BoolToOpacity}}"
+                                                      SelectedItem="{Binding CurrentAccountStore, Mode=TwoWay}"
+                                                      CanUserDeleteRows="True"
+                                                      ItemsSource="{Binding AccountStoresList}">
+                                                <DataGrid.Columns>
+                                                        <DataGridTextColumn Header="Номер ресторана"
+                                                                            Binding="{Binding Path=StoreNumber}"/>
+                                                        <DataGridTextColumn Header="Название ресторана"
+                                                                            MaxWidth="200"
+                                                                            Binding="{Binding Path=StoreName}"/>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                        </Notification:SfBusyIndicator>
+                                        <Button Content="Удалить"
+                                                Command="{Binding DeleteAccountStoreCommand}"
+                                                HorizontalAlignment="Left"
+                                                Padding="2"
+                                                Margin="2"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical"
+                                                Grid.Column="1"
+                                                Margin="4"
+                                            >
+                                        <TextBox Text="{Binding StoresForLoad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                 TextWrapping="Wrap"
+                                                 AcceptsReturn="True"
+                                                 MaxHeight="250"
+                                                 MinHeight="100"
+                                                 ScrollViewer.CanContentScroll="True"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                                        <Label Content="Обнаруженные ошибки:"/>
+                                        <TextBlock Text="{Binding StoresError, Mode=TwoWay}"
+                                                   Foreground="Red"
+                                                   FontStyle="Italic"
+                                                   FontSize="11"
+                                                   MaxHeight="250"                                               
+                                                   ScrollViewer.CanContentScroll="True"
+                                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                   TextWrapping="Wrap"/>
+                                        <Button Content="Добавить"
+                                                Margin="3"
+                                                HorizontalAlignment="Center"
+                                                Command="{Binding AddStoresToAccountCommand}"/>
+                                    </StackPanel>
 
-                <StackPanel Grid.Row="3"
-                            Margin="3"
-                            Orientation="Vertical">
-                    <DockPanel>
-                        <Label Content="Кол-во ресторанов: "/>
-                        <Label Content="{Binding StoresCount}"
-                               FontWeight="Bold"
-                               DockPanel.Dock="Right"/>
-                    </DockPanel>
-                    <Button Content="Редактировать"
-                            x:Name="btnEditAccStores"
-                            HorizontalAlignment="Left"
-                            Margin="5"
-                            Command="{Binding EditAccountStoresListCommand}"/>
-                    <Popup IsOpen="{Binding IsEditAccountStoresOpen, Mode=TwoWay}"
-                           PlacementTarget="{Binding ElementName=btnEditAccStores}"
-                           Placement="Right"    
-                           HorizontalOffset="10"
-                           AllowsTransparency="True"
-                           PopupAnimation="Fade">
-                        <Border BorderBrush="AntiqueWhite"
-                                BorderThickness="1"
-                                Margin="5,0,0,0">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <syncfusion:SfDataGrid AutoGenerateColumns="False"
-                                                       Grid.Row="0"
-                                                       ItemsSource="{Binding AccountStoresList}">
-                                    <syncfusion:SfDataGrid.Columns>
-                                        <syncfusion:GridTextColumn MappingName="AccountStore" 
-                                                                   HeaderText="Номер Ресторана"
-                                                                   ColumnSizer="SizeToHeader"/>
-                                        <syncfusion:GridTextColumn MappingName="StoreName"
-                                                                   HeaderText="Название ресторана"
-                                                                   MaximumWidth="200"
-                                                                   ColumnSizer="SizeToCells"/>
-                                    </syncfusion:SfDataGrid.Columns>
-                                </syncfusion:SfDataGrid>
-                                <StackPanel Orientation="Vertical"
-                                            Grid.Column="1">
-                                    <TextBox Text="{Binding StoresForLoad, Mode=TwoWay}"
-                                             TextWrapping="Wrap"
-                                             AcceptsReturn="True"
-                                             MaxHeight="250"
-                                             MinHeight="100"
-                                             ScrollViewer.CanContentScroll="True"
-                                             ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                                    <Label Content="Обнаруженные ошибки:"
-                                           Grid.Column="1"/>
-                                    <TextBlock Text="{Binding StoresError}"
-                                               TextWrapping="Wrap"/>
-                                    <Button Content="Добавить"
-                                            Grid.Row="1"
-                                            Grid.Column="1"
-                                            Margin="3"
-                                            HorizontalAlignment="Center"
-                                            Command="{Binding AddStoresToAccountCommand}"/>
-                                </StackPanel>
-                                
-                            </Grid>
-                        </Border>
-                    </Popup>
-                </StackPanel>
-            </Grid>
+                                </Grid>
+                            </Border>
+                        </Popup>
+                        <TextBlock Text="Поиск ресторана по названию:"
+                                   Margin="5"/>
+                        <TextBox Text="{Binding SearchStoreName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                 Margin="5"
+                                 MinWidth="200"
+                                 HorizontalAlignment="Left">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TextChanged">
+                                    <i:InvokeCommandAction Command="{Binding SearchStoreNumberByNameCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                        <TextBlock Text="{Binding SerchResultStores}"
+                                   Margin="5"
+                                   MaxHeight="250"     
+                                   FontSize="11"
+                                   FontFamily="Lucida Grande"
+                                   ScrollViewer.CanContentScroll="True"
+                                   TextWrapping="Wrap"                               
+                                   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    </StackPanel>
+                    <Border BorderBrush="BlanchedAlmond"
+                            BorderThickness="2,0,0,0">
+                    <StackPanel DockPanel.Dock="Right"
+                                Margin="3"
+                                Orientation="Vertical">
+                        <DockPanel>
+                            <Label Content="Доступная сумма: "/>
+                            <Label DockPanel.Dock="Right"
+                                   Content="{Binding AvailableSum}"/>
+                        </DockPanel>
+                        <ListBox HorizontalAlignment="Left"
+                                 Margin="5"
+                                 ItemsSource="{Binding AccountCapexList}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="BlanchedAlmond"
+                                                BorderThickness="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Статья: "/>
+                                            <Label Content="{Binding AccountExpense}"/>
+                                            <Label Content=" Capex: "/>
+                                            <Label Content="{Binding AccountCapexName}"/>
+                                            <Label Content=" Сумма: "/>
+                                            <Label Content="{Binding AccountCapexAmount}"/>
+                                        </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button Content="Редактировать"
+                                HorizontalAlignment="Left"
+                                Margin="3"
+                                Command="{Binding EditCapexAccountCommand}"/>
+                    </StackPanel>
+                    </Border>
+                </DockPanel>
+               </Grid>
         </AdornerDecorator>
     </Grid>
 </UserControl>

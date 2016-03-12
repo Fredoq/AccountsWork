@@ -85,6 +85,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Program Files (x86)\Syncfusion\13.3.0.12\Assemblies\4.6\Syncfusion.Data.WPF.dll</HintPath>
     </Reference>
+    <Reference Include="Syncfusion.SfBusyIndicator.WPF, Version=13.3460.0.12, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\Syncfusion\13.3.0.12\Assemblies\4.6\Syncfusion.SfBusyIndicator.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="Syncfusion.SfGrid.WPF, Version=13.3460.0.12, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Program Files (x86)\Syncfusion\13.3.0.12\Assemblies\4.6\Syncfusion.SfGrid.WPF.dll</HintPath>

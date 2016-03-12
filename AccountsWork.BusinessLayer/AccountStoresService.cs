@@ -6,12 +6,15 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace AccountsWork.BusinessLayer
 {
     public interface IAccountStoresService
     {
         IList<StoresSet> GetAccountStoresById(int id);
+        void AddStoresToAccount(ObservableCollection<AccountsStoreDetailsSet> storesForAddList);
+        void DeleteStoreFromAccount(int storeNumber, int id);
     }
 
     [Export(typeof(IAccountStoresService))]
@@ -25,6 +28,20 @@ namespace AccountsWork.BusinessLayer
         {
             _accountStoresRepository = accountStoresRepository;
             _storesRepository = storesRepository;
+        }
+
+        public void AddStoresToAccount(ObservableCollection<AccountsStoreDetailsSet> storesForAddList)
+        {
+            _accountStoresRepository.Add(storesForAddList.ToArray());
+        }
+
+        public void DeleteStoreFromAccount(int storeNumber, int id)
+        {
+            var store = _accountStoresRepository.GetSingle(s => s.AccountStore == storeNumber && s.AccountsMainId == id);
+            if (store != null)
+            {
+                _accountStoresRepository.Remove(store);
+            }
         }
 
         public IList<StoresSet> GetAccountStoresById(int id)
