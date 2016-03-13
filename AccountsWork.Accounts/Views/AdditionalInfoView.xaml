@@ -302,11 +302,17 @@
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                         </ListBox>
-                        <Button Content="Редактировать"
-                                HorizontalAlignment="Left"
-                                Margin="3"
-                                Command="{Binding EditCapexAccountCommand}"/>
-                    </StackPanel>
+                            <DockPanel>
+                                <Button Content="Добавить"
+                                        HorizontalAlignment="Left"
+                                        Margin="3"
+                                        Command="{Binding AddCapexAccountCommand}"/>
+                                <Button Content="Редактировать"
+                                    HorizontalAlignment="Left"
+                                    Margin="3"
+                                    Command="{Binding EditCapexAccountCommand}"/>
+                            </DockPanel>
+                        </StackPanel>
                     </Border>
                 </DockPanel>
                </Grid>
