@@ -2,12 +2,15 @@
 using System.ComponentModel.Composition;
 using AccountsWork.DomainModel;
 using AccountsWork.DataAccessLayer;
+using System;
 
 namespace AccountsWork.BusinessLayer
 {
     public interface IAccountCapexesService
     {
         IList<AccountsCapexInfoSet> GetCapexesById(int id);
+        void AddCapexToAccount(AccountsCapexInfoSet newCapexForAccount);
+        void DeleteCapexFromAccount(AccountsCapexInfoSet currentCapex);
     }
 
     [Export(typeof(IAccountCapexesService))]
@@ -19,6 +22,16 @@ namespace AccountsWork.BusinessLayer
         public AccountCapexesService(IAccountCapexesRepository capexesRepository)
         {
             _capexesRepository = capexesRepository;
+        }
+
+        public void AddCapexToAccount(AccountsCapexInfoSet newCapexForAccount)
+        {
+            _capexesRepository.Add(newCapexForAccount);
+        }
+
+        public void DeleteCapexFromAccount(AccountsCapexInfoSet currentCapex)
+        {
+            _capexesRepository.Remove(currentCapex);
         }
 
         public IList<AccountsCapexInfoSet> GetCapexesById(int id)

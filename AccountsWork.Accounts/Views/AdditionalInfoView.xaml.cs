@@ -22,6 +22,7 @@ namespace AccountsWork.Accounts.Views
     /// Interaction logic for AddAdditionalInfoView.xaml
     /// </summary>
     [Export("AdditionalInfoView")]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class AddAdditionalInfoView : UserControl
     {
         #region Private Fields

@@ -80,6 +80,8 @@
     <Compile Include="AccountStatusService.cs" />
     <Compile Include="AccountStoresService.cs" />
     <Compile Include="AsyncQuery.cs" />
+    <Compile Include="CapexesService.cs" />
+    <Compile Include="ExpensesService.cs" />
     <Compile Include="StoresService.cs" />
     <Compile Include="TypesService.cs" />
     <Compile Include="CompaniesService.cs" />

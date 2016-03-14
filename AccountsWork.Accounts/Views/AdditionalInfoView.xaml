@@ -10,6 +10,7 @@
              xmlns:Notification="clr-namespace:Syncfusion.Windows.Controls.Notification;assembly=Syncfusion.SfBusyIndicator.WPF"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
+             xmlns:editors="clr-namespace:Syncfusion.Windows.Controls.Input;assembly=Syncfusion.SfInput.Wpf"
              mc:Ignorable="d" 
              >
     <UserControl.Resources>
@@ -98,9 +99,11 @@
                            AllowsTransparency="True"
                            PopupAnimation="Fade"
                            >
-                        <Border Background="AntiqueWhite"
-                                BorderThickness="1">
-                            <StackPanel Orientation="Vertical">
+                            <Border BorderBrush="BlanchedAlmond"
+                                    BorderThickness="1" 
+                                    Background="#FFE6E6E6"
+                                    >
+                                <StackPanel Orientation="Vertical">
                                 <Label Content="Новый статус:"/>
                                 <ComboBox Style="{StaticResource ComboBoxWithErrorStyle}"
                                           ItemsSource="{Binding StatusesList}"
@@ -280,12 +283,16 @@
                                 Orientation="Vertical">
                         <DockPanel>
                             <Label Content="Доступная сумма: "/>
-                            <Label DockPanel.Dock="Right"
-                                   Content="{Binding AvailableSum}"/>
-                        </DockPanel>
+                                <TextBlock DockPanel.Dock="Right"
+                                           Margin="3,5,3,3"
+                                           Text="{Binding AvailableSum, StringFormat=C, ConverterCulture=ru-RU}"/>
+
+                            </DockPanel>
+                            <!--Text="{Binding AvailableSum, StringFormat=C, ConverterCulture=ru-RU}"/>-->
                         <ListBox HorizontalAlignment="Left"
                                  Margin="5"
-                                 ItemsSource="{Binding AccountCapexList}">
+                                 ItemsSource="{Binding AccountCapexList}"
+                                 SelectedItem="{Binding CurrentCapex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderBrush="BlanchedAlmond"
@@ -296,7 +303,8 @@
                                             <Label Content=" Capex: "/>
                                             <Label Content="{Binding AccountCapexName}"/>
                                             <Label Content=" Сумма: "/>
-                                            <Label Content="{Binding AccountCapexAmount}"/>
+                                            <TextBlock Text="{Binding AccountCapexAmount, StringFormat=C, ConverterCulture=ru-RU}"
+                                                       Margin="3,5,3,3"/>
                                         </StackPanel>
                                         </Border>
                                     </DataTemplate>
@@ -304,13 +312,56 @@
                         </ListBox>
                             <DockPanel>
                                 <Button Content="Добавить"
+                                        x:Name="btnAddCapex"
                                         HorizontalAlignment="Left"
                                         Margin="3"
-                                        Command="{Binding AddCapexAccountCommand}"/>
-                                <Button Content="Редактировать"
-                                    HorizontalAlignment="Left"
-                                    Margin="3"
-                                    Command="{Binding EditCapexAccountCommand}"/>
+                                        Command="{Binding OpenAddCapexToAccountCommand}"/>
+                                <Button Content="Удалить"
+                                        HorizontalAlignment="Left"
+                                        Margin="3"
+                                        Command="{Binding DeleteCapexAccountCommand}"/>
+                                <Popup IsOpen="{Binding IsAddCapexOpen, Mode=TwoWay}"
+                                       PlacementTarget="{Binding ElementName=btnAddCapex}"
+                                       Placement="Bottom"                                       
+                                       AllowsTransparency="True"
+                                       VerticalOffset="10"
+                                       PopupAnimation="Fade">
+                                    <Border BorderBrush="BlanchedAlmond"
+                                            Background="#FFE6E6E6"
+                                            
+                                            BorderThickness="1">
+                                    <StackPanel Orientation="Vertical"
+                                                >
+                                        <Label Content="Статья счета: "/>
+                                        <ComboBox ItemsSource="{Binding ExpensesList}"
+                                                  SelectedValue="{Binding NewCapexForAccount.AccountExpense, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  SelectedValuePath="Expense"
+                                                  DisplayMemberPath="Expense"
+                                                  Margin="3"/>
+                                        <Label Content="Capex: "/>
+                                        <ComboBox ItemsSource="{Binding CapexesList}"
+                                                  SelectedValue="{Binding NewCapexForAccount.AccountCapexName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  SelectedValuePath="CapexName"
+                                                  DisplayMemberPath="CapexName"
+                                                  Margin="3"/>
+                                        <Label Content="Сумма:"/>
+                                            <DockPanel>
+                                                <editors:SfTextBoxExt Text="{Binding CapexAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=C, ConverterCulture=ru-RU}"
+                                                                      Margin="3"
+                                                                      MinWidth="60"
+                                                                      Watermark="Введите сумму..."/>
+                                                <Button Content="CA"
+                                                        Margin="3"
+                                                        HorizontalAlignment="Left"
+                                                        Command="{Binding CopyAvailableSumCommand}"
+                                                        DockPanel.Dock="Right"/>
+                                            </DockPanel>
+                                            <Button Content="Добавить"
+                                                Margin="3"
+                                                Command="{Binding AddCapexToAccountCommand}"/>
+                                    </StackPanel>
+                                    </Border>
+                                </Popup>
                             </DockPanel>
                         </StackPanel>
                     </Border>
