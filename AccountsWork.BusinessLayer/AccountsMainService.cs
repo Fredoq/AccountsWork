@@ -21,9 +21,9 @@ namespace AccountsWork.BusinessLayer
             _accountsStatusRepository = accountsStatusRepository;
         }
 
-        public IList<AccountsMainSet> GetAccounts()
+        public IList<AccountsMainSet> GetAccountsByNumber(string number)
         {
-            return _accountsMainRepository.GetAll();
+            return _accountsMainRepository.GetList(a => a.AccountNumber.Contains(number));
         }
 
         public int AddAccount(AccountsMainSet account)

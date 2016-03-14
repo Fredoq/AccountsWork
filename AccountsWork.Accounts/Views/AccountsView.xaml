@@ -9,6 +9,8 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              x:Class="AccountsWork.Accounts.Views.AccountsView"
+             xmlns:Notification="clr-namespace:Syncfusion.Windows.Controls.Notification;assembly=Syncfusion.SfBusyIndicator.WPF"
+    xmlns:editors="clr-namespace:Syncfusion.Windows.Controls.Input;assembly=Syncfusion.SfInput.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -64,7 +66,68 @@
                         Padding="2"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="AddAccountView"/>
-            </StackPanel>
+                <editors:SfTextBoxExt Watermark="Введите номер счета..."
+                                      Margin="6,10,6,4"
+                                      x:Name="txtSearchAcc"
+                                      Text="{Binding SearchAccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Content="Найти"
+                        Margin="6,6,6,4"
+                        Padding="2"
+                        Command="{Binding SearchAccountCommand}"/>
+            <Popup IsOpen="{Binding IsSearchAccountOpen, Mode=TwoWay}"
+                   PlacementTarget="{Binding ElementName=txtSearchAcc}"
+                   Placement="Right"                            
+                   AllowsTransparency="True"
+                   PopupAnimation="Fade">
+                <Border BorderThickness="1"
+                        BorderBrush="BlanchedAlmond">
+                    <StackPanel Orientation="Vertical"
+                                >
+                        <Notification:SfBusyIndicator IsBusy="{Binding IsSearchAccBusy, Mode=TwoWay}"
+                                                      Header="Идет поиск..."                                                                    
+                                                      AnimationType="SingleCircle">
+                            <ListBox ItemsSource="{Binding SearchResultList}"
+                                 ScrollViewer.CanContentScroll="True"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 MaxHeight="300"
+                                 MaxWidth="500"
+                                 SelectedItem="{Binding ResultAccount}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="BlanchedAlmond"
+                                            BorderThickness="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Номер: "/>
+                                            <Label Content="{Binding AccountNumber}"/>
+                                            <Label Content=" Компания: "/>
+                                            <Label Content="{Binding AccountCompany}"/>
+                                            <Label Content=" Сумма: "/>
+                                            <TextBlock Text="{Binding AccountAmount, StringFormat=C, ConverterCulture=ru-RU}"
+                                                       Margin="3,5,3,3"/>
+                                            <Label Content=" Год: "/>
+                                            <Label Content="{Binding AccountYear}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        </Notification:SfBusyIndicator>
+                        <DockPanel>
+                            <Button Content="Ред. основную инфо"
+                                    Margin="5"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding EditMainInfoCommand}"/>
+                            <Button DockPanel.Dock="Right"
+                                    Content="Ред. доп. инфо"
+                                    Margin="5"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding EditAddInfoCOmmand}"/>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>                 
+                </Popup>
+        </StackPanel>
             <Rectangle Grid.Column="1"
                        Grid.Row="0"
                        Stroke="BlanchedAlmond"

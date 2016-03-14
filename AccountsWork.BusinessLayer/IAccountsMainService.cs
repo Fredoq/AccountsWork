@@ -5,7 +5,7 @@ namespace AccountsWork.BusinessLayer
 {
     public interface IAccountsMainService
     {
-        IList<AccountsMainSet> GetAccounts();
+        IList<AccountsMainSet> GetAccountsByNumber(string number);
         int AddAccount(AccountsMainSet account);
     }
 }
