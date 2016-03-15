@@ -58,11 +58,11 @@
                     <ComboBox Margin="3,0,10,3" 
                               Grid.Column="1" 
                               Grid.Row="1"
-                              Style="{StaticResource ComboBoxWithErrorStyle}"
-                              ItemsSource="{Binding Companies}"
+                              Style="{StaticResource ComboBoxWithErrorStyle}"                              
                               DisplayMemberPath="Company"
-                              SelectedValuePath="Company"                             
-                              SelectedValue="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" VerticalAlignment="Bottom"/>
+                              SelectedValuePath="Company"  
+                              SelectedValue="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" VerticalAlignment="Bottom"
+                              ItemsSource="{Binding Companies}"/>
                     <Label Content="Дата счета:" 
                            Grid.Row="2" 
                            Grid.Column="0" />
@@ -90,9 +90,10 @@
                               Grid.Column="1"
                               Style="{StaticResource ComboBoxWithErrorStyle}"
                               DisplayMemberPath="Type"
-                              SelectedValuePath="Type"
+                              SelectedValuePath="Type"                       
+                              SelectedValue="{Binding Account.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding Types}"
-                              SelectedValue="{Binding Account.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                              />
                     <Label Content="Описание счета" 
                            Grid.Row="5" 
                            Grid.Column="0" />

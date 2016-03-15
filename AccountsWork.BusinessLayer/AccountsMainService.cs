@@ -26,10 +26,22 @@ namespace AccountsWork.BusinessLayer
             return _accountsMainRepository.GetList(a => a.AccountNumber.Contains(number));
         }
 
-        public int AddAccount(AccountsMainSet account)
+        public void RemoveAccount(AccountsMainSet resultAccount)
         {
-            _accountsMainRepository.Add(account);
-            _accountsStatusRepository.Add(new AccountsStatusDetailsSet() { AccountMainId = account.Id, AccountStatus = Statuses.InWork, AccountStatusDate = DateTime.Now });
+            _accountsMainRepository.Remove(resultAccount);
+        }
+
+        public int SaveAccount(AccountsMainSet account)
+        {
+            if (account.Id == 0)
+            {
+                _accountsMainRepository.Add(account);
+                _accountsStatusRepository.Add(new AccountsStatusDetailsSet() { AccountMainId = account.Id, AccountStatus = Statuses.InWork, AccountStatusDate = DateTime.Now });
+            }
+            else
+            {
+                _accountsMainRepository.Update(account);
+            }
             return account.Id;
         }
     }

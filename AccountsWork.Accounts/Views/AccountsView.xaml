@@ -10,7 +10,8 @@
              xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              x:Class="AccountsWork.Accounts.Views.AccountsView"
              xmlns:Notification="clr-namespace:Syncfusion.Windows.Controls.Notification;assembly=Syncfusion.SfBusyIndicator.WPF"
-    xmlns:editors="clr-namespace:Syncfusion.Windows.Controls.Input;assembly=Syncfusion.SfInput.Wpf"
+             xmlns:editors="clr-namespace:Syncfusion.Windows.Controls.Input;assembly=Syncfusion.SfInput.Wpf"
+             xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -44,7 +45,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding DeleteConfirmationRequest, Mode=OneWay}">
+            <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
     <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -76,10 +83,12 @@
                         Command="{Binding SearchAccountCommand}"/>
             <Popup IsOpen="{Binding IsSearchAccountOpen, Mode=TwoWay}"
                    PlacementTarget="{Binding ElementName=txtSearchAcc}"
-                   Placement="Right"                            
+                   Placement="Right" 
+                   x:Name="popupSearch"
                    AllowsTransparency="True"
                    PopupAnimation="Fade">
                 <Border BorderThickness="1"
+                        Background="#FFE6E6E6"
                         BorderBrush="BlanchedAlmond">
                     <StackPanel Orientation="Vertical"
                                 >
@@ -87,12 +96,13 @@
                                                       Header="Идет поиск..."                                                                    
                                                       AnimationType="SingleCircle">
                             <ListBox ItemsSource="{Binding SearchResultList}"
-                                 ScrollViewer.CanContentScroll="True"
-                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                 MaxHeight="300"
-                                 MaxWidth="500"
-                                 SelectedItem="{Binding ResultAccount}">
+                                     ScrollViewer.CanContentScroll="True"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                     MaxHeight="300"
+                                     MaxWidth="500"
+                                     Opacity="{Binding IsSearchAccBusy, Converter={StaticResource BoolToOpacity}}"
+                                     SelectedItem="{Binding ResultAccount}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderBrush="BlanchedAlmond"
@@ -113,17 +123,26 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                         </Notification:SfBusyIndicator>
-                        <DockPanel>
+                        <StackPanel Orientation="Horizontal">
                             <Button Content="Ред. основную инфо"
                                     Margin="5"
                                     HorizontalAlignment="Left"
-                                    Command="{Binding EditMainInfoCommand}"/>
-                            <Button DockPanel.Dock="Right"
-                                    Content="Ред. доп. инфо"
+                                    Command="{Binding NavigateCommand}"
+                                    CommandParameter="AddAccountView"/>
+                            <Button Content="Ред. доп. инфо"
                                     Margin="5"
                                     HorizontalAlignment="Left"
-                                    Command="{Binding EditAddInfoCOmmand}"/>
-                        </DockPanel>
+                                    Command="{Binding NavigateCommand}"
+                                    CommandParameter="AdditionalInfoView"/>
+                            <Button Content="Удалить"
+                                    Margin="5"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding DeleteAccountCommand}"/>
+                            <Button Content="X"
+                                    Margin="5"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding CloseSearchCommand}"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>                 
                 </Popup>

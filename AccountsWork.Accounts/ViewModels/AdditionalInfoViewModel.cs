@@ -336,6 +336,7 @@ namespace AccountsWork.Accounts.ViewModels
         {
             LoadAccountLastStatus();
             LoadCapexInfo();
+            AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(CurrentAccount.Id));
             _worker.DoWork -= LoadAccountAdditionalInfo;
         }
         private AccountsMainSet GetAccount(NavigationContext navigationContext)

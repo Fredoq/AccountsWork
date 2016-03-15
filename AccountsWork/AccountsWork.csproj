@@ -45,6 +45,10 @@
     <Reference Include="AccountsWork.DataAccessLayer">
       <HintPath>..\AccountsWork.DataAccessLayer\bin\Debug\AccountsWork.DataAccessLayer.dll</HintPath>
     </Reference>
+    <Reference Include="AccountsWork.DomainModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AccountsWork.DomainModel\bin\Release\AccountsWork.DomainModel.dll</HintPath>
+    </Reference>
     <Reference Include="AccountsWork.Helpers">
       <HintPath>..\AccountsWork.Helpers\bin\Debug\AccountsWork.Helpers.dll</HintPath>
     </Reference>
@@ -89,9 +93,25 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ReachFramework" />
+    <Reference Include="Syncfusion.Data.WPF, Version=13.3460.0.12, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\Syncfusion\13.3.0.12\Assemblies\4.6\Syncfusion.Data.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="Syncfusion.SampleLayout, Version=13.3460.0.12, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Program Files (x86)\Syncfusion\13.3.0.12\Assemblies\4.6\Syncfusion.SampleLayout.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfBusyIndicator.WPF, Version=13.3460.0.12, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\Syncfusion\13.3.0.12\Assemblies\4.6\Syncfusion.SfBusyIndicator.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfGrid.WPF, Version=13.3460.0.12, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\Syncfusion\13.3.0.12\Assemblies\4.6\Syncfusion.SfGrid.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfInput.WPF, Version=13.3460.0.12, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\Syncfusion\13.3.0.12\Assemblies\4.6\Syncfusion.SfInput.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Shared.WPF, Version=13.3460.0.7, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -103,6 +123,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />

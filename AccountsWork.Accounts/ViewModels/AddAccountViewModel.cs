@@ -70,9 +70,7 @@ namespace AccountsWork.Accounts.ViewModels
         #region Constructors
         [ImportingConstructor]
         public AddAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService, IRegionManager regionManager)
-        {
-            AccountsTabItemHeader = "Новый счет";
-            
+        {           
             _regionManager = regionManager;
             _companiesService = companiesService;
             _typesService = typesService;
@@ -89,9 +87,9 @@ namespace AccountsWork.Accounts.ViewModels
             });
             SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave).ObservesProperty(() => Account);
 
-            Account = new AccountsMainSet();
-            Account.AccountYear = DateTime.Now.Year;
-            Account.AccountDate = DateTime.Now;
+            //Account = new AccountsMainSet();
+            //Account.AccountYear = DateTime.Now.Year;
+            //Account.AccountDate = DateTime.Now;
 
         }
         #endregion Constructors
@@ -100,8 +98,11 @@ namespace AccountsWork.Accounts.ViewModels
 
         void LoadCompaniesAndTypes()
         {
-            Companies = _companiesService.GetCompanies();
-            Types = _typesService.GetTypes();
+            if (Companies == null || Types == null)
+            {
+                Companies = _companiesService.GetCompanies();
+                Types = _typesService.GetTypes();
+            }
         }
 
         private void DoWork(object sender, DoWorkEventArgs e)
@@ -111,8 +112,8 @@ namespace AccountsWork.Accounts.ViewModels
 
         void SaveCommand()
         {
-            var id = _accountsService.AddAccount(Account);            
-            AdditionalInfoConfirmationRequest.Raise(new Confirmation { Content = "Счет добавлен. Перейти к заполнению доп. информации?", Title = "Добавление счета" },
+            var id = _accountsService.SaveAccount(Account);            
+            AdditionalInfoConfirmationRequest.Raise(new Confirmation { Content = "Счет сохранен. Перейти к редактированию доп. информации?", Title = "Редактирование счета" },
                                              c =>
                                              {
                                                  if (c.Confirmed)
@@ -139,7 +140,14 @@ namespace AccountsWork.Accounts.ViewModels
         {
             SaveAccountCommand.RaiseCanExecuteChanged();
         }
+        private AccountsMainSet GetAccount(NavigationContext navigationContext)
+        {
+            var parameter = navigationContext.Parameters[AccountKey];
+            var account = (AccountsMainSet)parameter;
+            
 
+            return (AccountsMainSet)account;
+        }
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
             if (navigationContext.Uri == null)
@@ -167,7 +175,18 @@ namespace AccountsWork.Accounts.ViewModels
         }
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-
+            Account = GetAccount(navigationContext);
+            if(Account != null)
+            {
+                AccountsTabItemHeader = "Ред. информации по сч. " + Account.AccountNumber;     
+            }
+            else
+            {
+                AccountsTabItemHeader = "Новый счет";
+                Account = new AccountsMainSet();
+                Account.AccountYear = DateTime.Now.Year;
+                Account.AccountDate = DateTime.Now;
+            }
         }
         #endregion Methods 
     }
