@@ -29,6 +29,7 @@ namespace AccountsWork.Accounts.ViewModels
         private AccountsMainSet _resultAccount;
         private const string AdditionalInfoViewKey = "AdditionalInfoView";
         private const string AddAccountViewKey = "AddAccountView";
+        private string _searchStore;
         #endregion Private Fields
 
         #region Public Properties
@@ -38,7 +39,7 @@ namespace AccountsWork.Accounts.ViewModels
         {
             get { return _searchAccountNumber; }
             set { SetProperty(ref _searchAccountNumber, value); }
-        }
+        }        
         public bool IsSearchAccountOpen
         {
             get { return _isSearchAccountOpen; }
@@ -62,6 +63,14 @@ namespace AccountsWork.Accounts.ViewModels
         }
         #endregion search acc
 
+        #region search store
+        public string SearchStore
+        {
+            get { return _searchStore; }
+            set { SetProperty(ref _searchStore, value); }
+        }
+
+        #endregion search store
         #endregion Public Properties
 
         #region Commands
@@ -77,6 +86,9 @@ namespace AccountsWork.Accounts.ViewModels
         public DelegateCommand CloseSearchCommand { get; set; }
         #endregion search acc
 
+        #region search store
+        public DelegateCommand SearchStoreCommand { get; set; }
+        #endregion search store
         #endregion Commands
 
 

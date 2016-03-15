@@ -146,6 +146,32 @@
                     </StackPanel>
                 </Border>                 
                 </Popup>
+            <editors:SfTextBoxExt Watermark="Введите ресторан..."
+                                  Margin="6,10,6,4"
+                                  Text="{Binding SearchStore, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TextChanged">
+                        <i:InvokeCommandAction Command="{Binding SearchStoreCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </editors:SfTextBoxExt>
+            <ListBox ItemsSource="{Binding SearchStoreResultList}"
+                     MaxHeight="200"
+                     ScrollViewer.CanContentScroll="True"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     SelectedItem="{Binding ResultStore, Mode=TwoWay}"
+                     Margin="6,5,6,4">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding StoreNumber}"
+                                   Margin="2"/>
+                            <Label Content="{Binding StoreName}"
+                                   Margin="2"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
             <Rectangle Grid.Column="1"
                        Grid.Row="0"
