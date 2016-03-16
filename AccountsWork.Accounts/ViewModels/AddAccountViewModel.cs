@@ -133,8 +133,12 @@ namespace AccountsWork.Accounts.ViewModels
         }
         bool CanSave()
         {
-            Account.ValidateProperties();
-            return !Account.HasErrors;
+            if (Account != null)
+            {
+                Account.ValidateProperties();
+                return !Account.HasErrors;
+            }
+            return false;
         }
         private void AccountPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

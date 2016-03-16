@@ -29,7 +29,12 @@ namespace AccountsWork.Accounts.ViewModels
         private AccountsMainSet _resultAccount;
         private const string AdditionalInfoViewKey = "AdditionalInfoView";
         private const string AddAccountViewKey = "AddAccountView";
+        private const string StoreAccountsViewKey = "StoreAccountsView";
         private string _searchStore;
+        private ObservableCollection<StoresSet> _searchStoreResultList;
+        private ObservableCollection<StoresSet> _storeList;
+        private IStoresService _storeService;
+        private StoresSet _resultStore;
         #endregion Private Fields
 
         #region Public Properties
@@ -69,7 +74,21 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _searchStore; }
             set { SetProperty(ref _searchStore, value); }
         }
-
+        public ObservableCollection<StoresSet> SearchStoreResultList
+        {
+            get { return _searchStoreResultList; }
+            set { SetProperty(ref _searchStoreResultList, value); }
+        }
+        public ObservableCollection<StoresSet> StoreList
+        {
+            get { return _storeList; }
+            set { SetProperty(ref _storeList, value); }
+        }
+        public StoresSet ResultStore
+        {
+            get { return _resultStore; }
+            set { SetProperty(ref _resultStore, value); }
+        }
         #endregion search store
         #endregion Public Properties
 
@@ -95,10 +114,11 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region Constructor
         [ImportingConstructor]
-        public AccountsViewModel(IAccountsMainService accountsMainService, IRegionManager regionManager)
+        public AccountsViewModel(IAccountsMainService accountsMainService, IRegionManager regionManager, IStoresService storeService)
         {
             #region services
             _accountsMainService = accountsMainService;
+            _storeService = storeService;
             #endregion services
 
             #region infrastructure
@@ -116,13 +136,22 @@ namespace AccountsWork.Accounts.ViewModels
             DeleteConfirmationRequest = new InteractionRequest<IConfirmation>();
             #endregion search acc
 
+            #region search store
+            SearchStoreResultList = new ObservableCollection<StoresSet>();
+            StoreList = new ObservableCollection<StoresSet>(storeService.GetStores());
+
+            SearchStoreCommand = new DelegateCommand(SearchStoreMethod);
+            #endregion search store
+
             #region workers
             _searchWorker = new BackgroundWorker();
             _searchWorker.DoWork += SearchAccountWork;
             _searchWorker.RunWorkerCompleted += SeachAccountWork_Completed;
             #endregion workers
 
-        }        
+        }
+
+        
         #endregion Constructor
 
         #region Methods
@@ -135,12 +164,24 @@ namespace AccountsWork.Accounts.ViewModels
                 var navigationParameters = new NavigationParameters();
                 navigationParameters.Add("Account", ResultAccount);
                 _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, navigationProperty, navigationParameters);
+                ResultAccount = null;
                 IsSearchAccountOpen = false;
             }
             else
             {
-                if(navigationProperty == AddAccountViewKey)
+                if (navigationProperty == StoreAccountsViewKey)
+                {
+                    if (ResultStore != null)
+                    {
+                        var navigationParameters = new NavigationParameters();
+                        navigationParameters.Add("Store", ResultStore);
+                        _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, navigationProperty, navigationParameters);
+                    }
+                }
+                else
+                {
                     _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, navigationProperty);
+                }
             }
             SearchResultList.Clear();
             
@@ -193,6 +234,17 @@ namespace AccountsWork.Accounts.ViewModels
         }
         #endregion search acc
 
+        #region search store
+        private void SearchStoreMethod()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchStore))
+            {
+                SearchStoreResultList = new ObservableCollection<StoresSet>(StoreList.Where(s => s.StoreName.ToLower().Contains(SearchStore.ToLower()) || s.StoreNumber.ToString().Contains(SearchStore)));
+            }
+            else
+                SearchStoreResultList.Clear();
+        }
+        #endregion search store
         #endregion Methods   
     }
 }

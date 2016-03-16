@@ -28,6 +28,7 @@ namespace AccountsWork.BusinessLayer
 
         public void RemoveAccount(AccountsMainSet resultAccount)
         {
+            //var acc = _accountsMainRepository.GetSingle(a => a.Id == resultAccount.Id);
             _accountsMainRepository.Remove(resultAccount);
         }
 
