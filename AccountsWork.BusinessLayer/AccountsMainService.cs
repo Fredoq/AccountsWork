@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using AccountsWork.DataAccessLayer;
 using AccountsWork.DomainModel;
 using AccountsVork.Infrastructure;
+using System.Linq.Expressions;
 
 namespace AccountsWork.BusinessLayer
 {
@@ -21,9 +22,19 @@ namespace AccountsWork.BusinessLayer
             _accountsStatusRepository = accountsStatusRepository;
         }
 
+        public AccountsMainSet GetAccountByIdWithStatusAndCapex(int accountsMainId)
+        {
+            return _accountsMainRepository.GetSingle(a => a.Id == accountsMainId, a => a.AccountsCapexInfoSets, a => a.AccountsStatusDetailsSets);
+        }
+
         public IList<AccountsMainSet> GetAccountsByNumber(string number)
         {
             return _accountsMainRepository.GetList(a => a.AccountNumber.Contains(number));
+        }
+
+        public IList<AccountsMainSet> GetAllAccountsWithStatusAndCapex()
+        {
+            return _accountsMainRepository.GetAll(a => a.AccountsCapexInfoSets, a => a.AccountsStatusDetailsSets, a => a.AccountsStoreDetailsSets);
         }
 
         public void RemoveAccount(AccountsMainSet resultAccount)

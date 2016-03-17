@@ -8,5 +8,7 @@ namespace AccountsWork.BusinessLayer
         IList<AccountsMainSet> GetAccountsByNumber(string number);
         int SaveAccount(AccountsMainSet account);
         void RemoveAccount(AccountsMainSet resultAccount);
+        AccountsMainSet GetAccountByIdWithStatusAndCapex(int accountsMainId);
+        IList<AccountsMainSet> GetAllAccountsWithStatusAndCapex();
     }
 }

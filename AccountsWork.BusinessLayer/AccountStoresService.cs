@@ -15,6 +15,7 @@ namespace AccountsWork.BusinessLayer
         IList<StoresSet> GetAccountStoresById(int id);
         void AddStoresToAccount(ObservableCollection<AccountsStoreDetailsSet> storesForAddList);
         void DeleteStoreFromAccount(int storeNumber, int id);
+        IList<AccountsStoreDetailsSet> GetAccountByStoreNumber(int storeNumber);
     }
 
     [Export(typeof(IAccountStoresService))]
@@ -42,6 +43,11 @@ namespace AccountsWork.BusinessLayer
             {
                 _accountStoresRepository.Remove(store);
             }
+        }
+
+        public IList<AccountsStoreDetailsSet> GetAccountByStoreNumber(int storeNumber)
+        {
+            return _accountStoresRepository.GetList(s => s.AccountStore == storeNumber);
         }
 
         public IList<StoresSet> GetAccountStoresById(int id)

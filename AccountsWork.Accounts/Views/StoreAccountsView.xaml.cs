@@ -8,6 +8,7 @@ namespace AccountsWork.Accounts.Views
     /// Interaction logic for StoreAccountsView.xaml
     /// </summary>
     [Export("StoreAccountsView")]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class StoreAccountsView : UserControl
     {
         #region Public Properties

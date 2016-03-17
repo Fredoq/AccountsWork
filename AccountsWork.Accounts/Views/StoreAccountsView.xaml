@@ -9,14 +9,39 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <syncfusion:SfDataGrid HorizontalAlignment="Left"
-                               ItemsSource="{Binding StoreAccountsList}"
-                               AutoGenerateColumns="False"
-                               VerticalAlignment="Top">
-            
-        </syncfusion:SfDataGrid>
+        <syncfusion:SfBusyIndicator IsBusy="{Binding IsStoreAccountsBusy, Mode=TwoWay}"
+                                    AnimationType="SingleCircle"
+                                    Header="Загрузка...">
+            <syncfusion:SfDataGrid HorizontalAlignment="Left"
+                                   ItemsSource="{Binding StoreAccountsList}"
+                                   AutoGenerateColumns="False"                                   
+                                   VerticalAlignment="Top">
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn HeaderText="Номер счета"
+                                               MappingName="AccountNumber"/>
+                    <syncfusion:GridTextColumn HeaderText="Компания"
+                                               MappingName="AccountCompany"/>
+                    <syncfusion:GridDateTimeColumn HeaderText="Дата счета"
+                                                   MappingName="AccountDate"/>
+                    <syncfusion:GridCurrencyColumn HeaderText="Сумма"
+                                                   MappingName="AccountAmount"
+                                                   CurrencyDecimalSeparator=","
+                                                   CurrencySymbol="₽"/>
+                    <syncfusion:GridTextColumn HeaderText="Компания"
+                                               MappingName="AccountCompany"/>
+                    <syncfusion:GridTextColumn HeaderText="Capex"
+                                               MappingName="AccountCapex"/>
+                    <syncfusion:GridTextColumn HeaderText="Описание"
+                                               MappingName="AccountDescription"/>
+                    <syncfusion:GridTextColumn HeaderText="Статус"
+                                               MappingName="AccountStatus"/>
+                    <syncfusion:GridDateTimeColumn HeaderText="Дата статуса"
+                                                   MappingName="AccountStatusDate"/>
+                </syncfusion:SfDataGrid.Columns>
+            </syncfusion:SfDataGrid>
+        </syncfusion:SfBusyIndicator>
     </Grid>
 </UserControl>

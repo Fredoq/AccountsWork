@@ -9,16 +9,17 @@
 
 namespace AccountsWork.DataAccessLayer
 {
-    using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using AccountsWork.DomainModel;
-    
+
     public partial class AccountsEntities : DbContext
     {
         public AccountsEntities()
             : base("name=AccountsEntities")
         {
+            Configuration.LazyLoadingEnabled = false;
+            Configuration.ProxyCreationEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
