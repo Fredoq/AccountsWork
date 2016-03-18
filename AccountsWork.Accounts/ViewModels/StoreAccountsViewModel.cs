@@ -116,9 +116,9 @@ namespace AccountsWork.Accounts.ViewModels
         {
             IsStoreAccountsBusy = true;
             StoreAccountsList.Clear();
-            var accounts = _accountsMainService.GetAllAccountsWithStatusAndCapex();
-            foreach (var account in accounts.Where(a => a.AccountsStoreDetailsSets.Any(s => s.AccountStore == CurrentStore.StoreNumber)))
-            {
+            var accounts = _accountsMainService.GetAllAccountsForStore(CurrentStore.StoreNumber);
+            foreach (var account in accounts)
+                {
                     var storeAccount = new StoreAccount();
                     var status = account.AccountsStatusDetailsSets.LastOrDefault();
                     var capexes = account.AccountsCapexInfoSets;

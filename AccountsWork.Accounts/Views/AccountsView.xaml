@@ -173,12 +173,6 @@
                                    Margin="2"/>
                             <Label Content="{Binding StoreName}"
                                    Margin="2">
-                                <!--<i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDoubleClick">
-                                        <i:InvokeCommandAction Command="{Binding NavigateCommand}"
-                                                               CommandParameter="StoreAccountsView"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>-->                                
                             </Label>
                             <StackPanel.InputBindings>
                                 <MouseBinding MouseAction="LeftDoubleClick"
@@ -189,6 +183,10 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <Button Content="Изменение статусов"
+                    HorizontalAlignment="Center"
+                    Command="{Binding NavigateToChangeStatusesCommand}"
+                    Margin="6,5,6,4"/>
         </StackPanel>
             <Rectangle Grid.Column="1"
                        Grid.Row="0"

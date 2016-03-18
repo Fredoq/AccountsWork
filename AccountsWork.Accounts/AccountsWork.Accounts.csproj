@@ -123,6 +123,7 @@
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\AddAccountViewModel.cs" />
     <Compile Include="ViewModels\AdditionalInfoViewModel.cs" />
+    <Compile Include="ViewModels\ChangeStatusViewModel.cs" />
     <Compile Include="ViewModels\InfoViewModel.cs" />
     <Compile Include="ViewModels\StoreAccountsViewModel.cs" />
     <Compile Include="Views\AccountsNavigationView.xaml.cs">
@@ -136,6 +137,9 @@
     </Compile>
     <Compile Include="Views\AdditionalInfoView.xaml.cs">
       <DependentUpon>AdditionalInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChangeStatusView.xaml.cs">
+      <DependentUpon>ChangeStatusView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InfoView.xaml.cs">
       <DependentUpon>InfoView.xaml</DependentUpon>
@@ -158,6 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AdditionalInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChangeStatusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -184,7 +192,9 @@
       <Name>AccountsWork.DomainModel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="arrow.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

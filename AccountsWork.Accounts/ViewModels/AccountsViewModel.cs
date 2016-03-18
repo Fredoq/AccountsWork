@@ -96,7 +96,7 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region infrastructure
         public DelegateCommand<string> NavigateCommand { get; set; }
-        
+        public DelegateCommand NavigateToChangeStatusesCommand { get; set; }
         #endregion infrastructure
 
         #region search acc
@@ -125,6 +125,7 @@ namespace AccountsWork.Accounts.ViewModels
             _regionManager = regionManager;
 
             NavigateCommand = new DelegateCommand<string>(Navigate);
+            NavigateToChangeStatusesCommand = new DelegateCommand(NavigateToChangeStatus);
             #endregion infrastructure
 
             #region search acc
@@ -151,7 +152,6 @@ namespace AccountsWork.Accounts.ViewModels
 
         }
 
-        
         #endregion Constructor
 
         #region Methods
@@ -185,6 +185,10 @@ namespace AccountsWork.Accounts.ViewModels
             }
             SearchResultList.Clear();
             
+        }
+        private void NavigateToChangeStatus()
+        {
+            _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, "ChangeStatusView");
         }
         #endregion infrastrcture
 

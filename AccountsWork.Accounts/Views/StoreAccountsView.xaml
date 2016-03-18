@@ -5,8 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="AccountsWork.Accounts.Views.StoreAccountsView"
+             xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -17,6 +21,10 @@
                                     Header="Загрузка...">
             <syncfusion:SfDataGrid HorizontalAlignment="Left"
                                    ItemsSource="{Binding StoreAccountsList}"
+                                   ColumnSizer="Auto"
+                                   AllowFiltering="True"
+                                   Opacity="{Binding IsStoreAccountsBusy, Converter={StaticResource BoolToOpacity}}"
+                                   AllowGrouping="True"
                                    AutoGenerateColumns="False"                                   
                                    VerticalAlignment="Top">
                 <syncfusion:SfDataGrid.Columns>
@@ -35,6 +43,7 @@
                     <syncfusion:GridTextColumn HeaderText="Capex"
                                                MappingName="AccountCapex"/>
                     <syncfusion:GridTextColumn HeaderText="Описание"
+                                               MinimumWidth="150"
                                                MappingName="AccountDescription"/>
                     <syncfusion:GridTextColumn HeaderText="Статус"
                                                MappingName="AccountStatus"/>
