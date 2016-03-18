@@ -56,7 +56,10 @@ namespace AccountsWork.Accounts.ViewModels
         public ObservableCollection<AccountsMainSet> AccountForChangeList
         {
             get { return _accountForChangeList; }
-            set { SetProperty(ref _accountForChangeList, value); }
+            set
+            {
+                SetProperty(ref _accountForChangeList, value);                
+            }
         }
         public List<string> StatusesList
         {
@@ -125,8 +128,9 @@ namespace AccountsWork.Accounts.ViewModels
             #region statuses
             SearchAccountNumberCommand = new DelegateCommand(SearchAccount);
             SelectAccountCommand = new DelegateCommand(SelectAccount);
+            ChangeStatusCommand = new DelegateCommand(ChangeStatus, CanChange).ObservesProperty(() => SelectedStatus).ObservesProperty(() => AccountForChangeDate);            
             AccountForChangeList = new ObservableCollection<AccountsMainSet>();
-            ChangeStatusCommand = new DelegateCommand(ChangeStatus);
+            
             #endregion statuses
         }        
         #endregion Constructor
@@ -138,8 +142,11 @@ namespace AccountsWork.Accounts.ViewModels
         {
             SearchAccountText = string.Empty;
             SearchAccountList = new ObservableCollection<AccountsMainSet>();
+            AccountForChangeList = new ObservableCollection<AccountsMainSet>();
             AccountForChangeDate = DateTime.Now;
             StatusesList = Statuses.GetStatusesList();
+            SelectedStatus = string.Empty;
+            ChangeStatusCommand.RaiseCanExecuteChanged();
             _worker.RunWorkerAsync();
         }
         #endregion infrastructure
@@ -169,17 +176,19 @@ namespace AccountsWork.Accounts.ViewModels
             {
                 AccountForChangeList.Add(SelectedSearchAccount);
                 SearchAccountText = string.Empty;
+                ChangeStatusCommand.RaiseCanExecuteChanged();
             }
+        }
+        private bool CanChange()
+        {
+            return AccountForChangeList.Count != 0 && !string.IsNullOrWhiteSpace(SelectedStatus) && AccountForChangeDate != null;
         }
         private void ChangeStatus()
         {
-            if (AccountForChangeList.Count != 0 && !string.IsNullOrWhiteSpace(SelectedStatus) && AccountForChangeDate != null)
-            {
                 _accountStatusService.UpdateStatus(AccountForChangeList, SelectedStatus, AccountForChangeDate);
                 AccountForChangeList.Clear();
                 SearchAccountText = string.Empty;
                 AccountForChangeDate = DateTime.Now;
-            }
         }
         #endregion statuses
         #endregion Methods
