@@ -2,6 +2,7 @@
 using AccountsWork.BusinessLayer;
 using AccountsWork.DomainModel;
 using AccountsWork.Infrastructure;
+using Prism.Commands;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
@@ -18,15 +19,16 @@ namespace AccountsWork.Accounts.ViewModels
     {
         #region Private Fields
         private string _accountsTabItemHeader;
-        private const string StoresKey = "Store";
-        private StoresSet _currentStore;
         private ObservableCollection<StoreAccount> _storeAccountsList;
         private BackgroundWorker _worker;
         private bool _isStoreAccountsBusy;
-        private IAccountStoresService _accountStoreService;
         private IAccountsMainService _accountsMainService;
-        private IAccountStatusService _accountStatusService;
-        private IAccountCapexesService _accountCapexesService;
+        private string _searchStore;
+        private ObservableCollection<StoresSet> _searchStoreResultList;
+        private ObservableCollection<StoresSet> _storeList;
+        private IStoresService _storeService;
+        private StoresSet _resultStore;
+        private ObservableCollection<AccountsMainSet> _accountsList;
         #endregion Private Fields
 
         #region Public Properties
@@ -40,11 +42,6 @@ namespace AccountsWork.Accounts.ViewModels
         #endregion infrastructure
 
         #region store
-        public StoresSet CurrentStore
-        {
-            get { return _currentStore; }
-            set { SetProperty(ref _currentStore, value); }
-        }
         public ObservableCollection<StoreAccount> StoreAccountsList
         {
             get { return _storeAccountsList; }
@@ -55,69 +52,100 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _isStoreAccountsBusy; }
             set { SetProperty(ref _isStoreAccountsBusy, value); }
         }
+
+        public string SearchStore
+        {
+            get { return _searchStore; }
+            set { SetProperty(ref _searchStore, value); }
+        }
+        public ObservableCollection<StoresSet> SearchStoreResultList
+        {
+            get { return _searchStoreResultList; }
+            set { SetProperty(ref _searchStoreResultList, value); }
+        }
+        public ObservableCollection<StoresSet> StoreList
+        {
+            get { return _storeList; }
+            set { SetProperty(ref _storeList, value); }
+        }
+        public StoresSet ResultStore
+        {
+            get { return _resultStore; }
+            set { SetProperty(ref _resultStore, value); }
+        }
+        public ObservableCollection<AccountsMainSet> AccountsList
+        {
+            get { return _accountsList; }
+            set { SetProperty(ref _accountsList, value); }
+        }
         #endregion store
 
         #endregion Public Properties
 
-        #region Constructor
-        [ImportingConstructor]
-        public StoreAccountsViewModel(IAccountStoresService accountStoreService, IAccountsMainService accountsMainService, IAccountStatusService accountStatusService, IAccountCapexesService accountCapexesService)
+        #region Commands
+
+        #region store
+        public DelegateCommand SearchStoreCommand { get; set; }
+        public DelegateCommand LoadResultStoreCommand { get; set; }
+        #endregion store
+
+    #endregion Commands
+
+    #region Constructor
+    [ImportingConstructor]
+        public StoreAccountsViewModel(IAccountsMainService accountsMainService, IStoresService storeService)
         {
             #region services
-            _accountStoreService = accountStoreService;
             _accountsMainService = accountsMainService;
-            _accountStatusService = accountStatusService;
-            _accountCapexesService = accountCapexesService;
+            _storeService = storeService;
             #endregion services
 
             #region infrastructure
+            AccountsTabItemHeader = "Поиск по ресторанам";
             _worker = new BackgroundWorker();
-            _worker.DoWork += LoadAccountsForStore;
-            _worker.RunWorkerCompleted += LoadAccountsForStore_Completed;
+            _worker.DoWork += LoadStoresAndAccounts;
+            _worker.RunWorkerCompleted += LoadStoresAndAccounts_Completed;
             #endregion infrastructure
 
             #region store
+            SearchStoreResultList = new ObservableCollection<StoresSet>();
             StoreAccountsList = new ObservableCollection<StoreAccount>();
             IsStoreAccountsBusy = false;
+            SearchStoreCommand = new DelegateCommand(SearchStoreMethod);
+            LoadResultStoreCommand = new DelegateCommand(LoadAccountsForStore);
             #endregion store
-        }
+        }        
 
-       
+
         #endregion Constructor
 
         #region Methods
 
         #region infrastructure
-        private StoresSet GetStore(NavigationContext navigationContext)
-        {
-            var parameter = navigationContext.Parameters[StoresKey];
-            var store = (StoresSet)parameter;
-            
-
-            return (StoresSet)store;
-        }
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            CurrentStore = GetStore(navigationContext);
-            if (CurrentStore != null)
-            {
-                AccountsTabItemHeader = string.Format("{0} {1}", CurrentStore.StoreNumber, CurrentStore.StoreName);
-                _worker.RunWorkerAsync();
-            }
+            StoreAccountsList.Clear();
+            _worker.RunWorkerAsync();
         }
         public override bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return false;
+            return true;
+        }
+        private void LoadStoresAndAccounts(object sender, DoWorkEventArgs e)
+        {
+            IsStoreAccountsBusy = true;
+            StoreList = new ObservableCollection<StoresSet>(_storeService.GetStores());
+            AccountsList = new ObservableCollection<AccountsMainSet>(_accountsMainService.GetAllAccountsForStore());
+
         }
         #endregion infrastructure
 
         #region store
-        private void LoadAccountsForStore(object sender, DoWorkEventArgs e)
+        private void LoadAccountsForStore()
         {
-            IsStoreAccountsBusy = true;
-            StoreAccountsList.Clear();
-            var accounts = _accountsMainService.GetAllAccountsForStore(CurrentStore.StoreNumber);
-            foreach (var account in accounts)
+            if (ResultStore == null || AccountsList == null) return;
+            StoreAccountsList.Clear();                  
+            foreach (var account in AccountsList.Where(a => a.AccountsStoreDetailsSets.Any(s => s.AccountStore == ResultStore.StoreNumber)))
                 {
                     var storeAccount = new StoreAccount();
                     var status = account.AccountsStatusDetailsSets.LastOrDefault();
@@ -146,9 +174,18 @@ namespace AccountsWork.Accounts.ViewModels
             }
 
         }
-        private void LoadAccountsForStore_Completed(object sender, RunWorkerCompletedEventArgs e)
+        private void LoadStoresAndAccounts_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
             IsStoreAccountsBusy = false;
+        }
+        private void SearchStoreMethod()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchStore))
+            {
+                SearchStoreResultList = new ObservableCollection<StoresSet>(StoreList.Where(s => s.StoreName.ToLower().Contains(SearchStore.ToLower()) || s.StoreNumber.ToString().Contains(SearchStore)));
+            }
+            else
+                SearchStoreResultList.Clear();
         }
         #endregion store
 

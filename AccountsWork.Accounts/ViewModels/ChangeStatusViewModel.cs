@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using AccountsVork.Infrastructure;
+using Prism.Interactivity.InteractionRequest;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -30,6 +31,8 @@ namespace AccountsWork.Accounts.ViewModels
         private string _selectedStatus;
         private DateTime _accountForChangeDate;
         private IAccountStatusService _accountStatusService;
+        private string _accountPayNumber;
+        private bool _isPayNumberVisible;
         #endregion Private Fields
 
         #region Public Properties
@@ -40,6 +43,7 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _accountsTabItemHeader; }
             set { SetProperty(ref _accountsTabItemHeader, value); }
         }
+        public InteractionRequest<IConfirmation>  ExportConfirmationRequest { get; set; }
         #endregion infrastrcture
 
         #region statuses
@@ -69,7 +73,17 @@ namespace AccountsWork.Accounts.ViewModels
         public string SelectedStatus
         {
             get { return _selectedStatus; }
-            set { SetProperty(ref _selectedStatus, value); }
+            set
+            {
+                SetProperty(ref _selectedStatus, value);
+                if (value == Statuses.InPayed)
+                    IsPayNumberVisible = true;
+                else
+                {
+                    AccountPayNumber = string.Empty;
+                    IsPayNumberVisible = false;
+                }
+            }
         }
         public DateTime AccountForChangeDate
         {
@@ -90,6 +104,16 @@ namespace AccountsWork.Accounts.ViewModels
         {
             get { return _selectedSearchAccount; }
             set { SetProperty(ref _selectedSearchAccount, value); }
+        }
+        public string AccountPayNumber
+        {
+            get { return _accountPayNumber; }
+            set { SetProperty(ref _accountPayNumber, value); }
+        }
+        public bool IsPayNumberVisible
+        {
+            get { return _isPayNumberVisible; }
+            set { SetProperty(ref _isPayNumberVisible, value); }
         }
         #endregion statuses
 
@@ -112,6 +136,7 @@ namespace AccountsWork.Accounts.ViewModels
         {
             #region infrastructure
             AccountsTabItemHeader = "Изменение статусов";
+            ExportConfirmationRequest = new InteractionRequest<IConfirmation>();
             #endregion infrastructure
 
             #region workers
@@ -128,7 +153,7 @@ namespace AccountsWork.Accounts.ViewModels
             #region statuses
             SearchAccountNumberCommand = new DelegateCommand(SearchAccount);
             SelectAccountCommand = new DelegateCommand(SelectAccount);
-            ChangeStatusCommand = new DelegateCommand(ChangeStatus, CanChange).ObservesProperty(() => SelectedStatus).ObservesProperty(() => AccountForChangeDate);            
+            ChangeStatusCommand = new DelegateCommand(ChangeStatus, CanChange).ObservesProperty(() => SelectedStatus).ObservesProperty(() => AccountForChangeDate).ObservesProperty(() => AccountPayNumber);            
             AccountForChangeList = new ObservableCollection<AccountsMainSet>();
             
             #endregion statuses
@@ -141,6 +166,7 @@ namespace AccountsWork.Accounts.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             SearchAccountText = string.Empty;
+            IsPayNumberVisible = false;
             SearchAccountList = new ObservableCollection<AccountsMainSet>();
             AccountForChangeList = new ObservableCollection<AccountsMainSet>();
             AccountForChangeDate = DateTime.Now;
@@ -181,14 +207,41 @@ namespace AccountsWork.Accounts.ViewModels
         }
         private bool CanChange()
         {
-            return AccountForChangeList.Count != 0 && !string.IsNullOrWhiteSpace(SelectedStatus) && AccountForChangeDate != null;
+            int payNumber;
+            if (SelectedStatus != Statuses.InPayed)
+                return AccountForChangeList.Count != 0 && !string.IsNullOrWhiteSpace(SelectedStatus) && AccountForChangeDate != null;
+            else
+                if (int.TryParse(AccountPayNumber, out payNumber))
+                    return AccountForChangeList.Count != 0 && !string.IsNullOrWhiteSpace(SelectedStatus) && AccountForChangeDate != null;
+                else
+                    return false;
         }
         private void ChangeStatus()
         {
+            if (string.IsNullOrWhiteSpace(AccountPayNumber))
+            {
                 _accountStatusService.UpdateStatus(AccountForChangeList, SelectedStatus, AccountForChangeDate);
-                AccountForChangeList.Clear();
-                SearchAccountText = string.Empty;
-                AccountForChangeDate = DateTime.Now;
+            }
+            else
+            {
+                int payNumber;
+                if (int.TryParse(AccountPayNumber, out payNumber))
+                {
+                    _accountStatusService.UpdateStatus(AccountForChangeList, SelectedStatus, AccountForChangeDate, payNumber);
+                }
+            }
+            AccountForChangeList.Clear();
+            SearchAccountText = string.Empty;
+            AccountPayNumber = string.Empty;
+            AccountForChangeDate = DateTime.Now;
+            ExportConfirmationRequest.Raise(new Confirmation { Title = "Экспорт", Content = "Выгрузить в Excel?" },
+                c =>
+                {
+                    if (c.Confirmed)
+                    {
+
+                    }
+                });
         }
         #endregion statuses
         #endregion Methods

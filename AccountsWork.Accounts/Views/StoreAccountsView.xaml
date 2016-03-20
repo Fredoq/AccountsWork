@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:editors="clr-namespace:Syncfusion.Windows.Controls.Input;assembly=Syncfusion.SfInput.Wpf"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="AccountsWork.Accounts.Views.StoreAccountsView"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              mc:Ignorable="d" 
@@ -11,22 +13,65 @@
     <UserControl.Resources>
         <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
     </UserControl.Resources>
-    <Grid>
+    <syncfusion:SfBusyIndicator IsBusy="{Binding IsStoreAccountsBusy, Mode=TwoWay}"
+                                Margin="5"
+                                AnimationType="SingleCircle"
+                                Header="Загрузка...">
+        <Grid Opacity="{Binding IsStoreAccountsBusy, Converter={StaticResource BoolToOpacity}}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"
+                           MaxHeight="230"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <syncfusion:SfBusyIndicator IsBusy="{Binding IsStoreAccountsBusy, Mode=TwoWay}"
-                                    AnimationType="SingleCircle"
-                                    Header="Загрузка...">
-            <syncfusion:SfDataGrid HorizontalAlignment="Left"
-                                   ItemsSource="{Binding StoreAccountsList}"
-                                   ColumnSizer="Auto"
-                                   AllowFiltering="True"
-                                   Opacity="{Binding IsStoreAccountsBusy, Converter={StaticResource BoolToOpacity}}"
-                                   AllowGrouping="True"
-                                   AutoGenerateColumns="False"                                   
-                                   VerticalAlignment="Top">
+        <StackPanel Grid.Row="0"
+                    Orientation="Vertical">
+            <editors:SfTextBoxExt Watermark="Введите ресторан..."
+                                  Margin="5"   
+                                  MinWidth="80"
+                                  HorizontalAlignment="Left"
+                                  Text="{Binding SearchStore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding SearchStoreCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </editors:SfTextBoxExt>
+            <ListBox ItemsSource="{Binding SearchStoreResultList}"
+                     MaxHeight="200"
+                     HorizontalAlignment="Left"
+                     MinWidth="200"
+                     MinHeight="150"
+                     ScrollViewer.CanContentScroll="True"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     SelectedItem="{Binding ResultStore, Mode=TwoWay}"
+                     Margin="5">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding StoreNumber}"
+                                   Margin="2"/>
+                            <Label Content="{Binding StoreName}"
+                                   Margin="2">
+                            </Label>
+                            <StackPanel.InputBindings>
+                                <MouseBinding MouseAction="LeftDoubleClick"
+                                              Command="{Binding DataContext.LoadResultStoreCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                            </StackPanel.InputBindings>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        <syncfusion:SfDataGrid HorizontalAlignment="Left"
+                               ItemsSource="{Binding StoreAccountsList}"
+                               ColumnSizer="Auto"
+                               AllowFiltering="True"
+                               Grid.Row="1"
+                               Margin="5"
+                               AllowGrouping="True"
+                               AutoGenerateColumns="False"                                   
+                               VerticalAlignment="Top">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn HeaderText="Номер счета"
                                                MappingName="AccountNumber"/>
@@ -51,6 +96,7 @@
                                                    MappingName="AccountStatusDate"/>
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-        </syncfusion:SfBusyIndicator>
+        
     </Grid>
+    </syncfusion:SfBusyIndicator>
 </UserControl>

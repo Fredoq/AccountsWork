@@ -9,6 +9,6 @@ namespace AccountsWork.BusinessLayer
         int SaveAccount(AccountsMainSet account);
         void RemoveAccount(AccountsMainSet resultAccount);
         IList<AccountsMainSet> GetAllAccounts();
-        IList<AccountsMainSet> GetAllAccountsForStore(int storeNumber);
+        IList<AccountsMainSet> GetAllAccountsForStore();
     }
 }

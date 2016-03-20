@@ -14,6 +14,7 @@ namespace AccountsWork.BusinessLayer
         void AddNewStatus(AccountsStatusDetailsSet newAccountStatus);
         IList<AccountsStatusDetailsSet> GetStatusesById(int id);
         void UpdateStatus(ObservableCollection<AccountsMainSet> accountForChangeList, string selectedStatus, DateTime accountForChangeDate);
+        void UpdateStatus(ObservableCollection<AccountsMainSet> accountForChangeList, string selectedStatus, DateTime accountForChangeDate, int accountPayNumber);
     }
 
     [Export(typeof(IAccountStatusService))]
@@ -48,6 +49,16 @@ namespace AccountsWork.BusinessLayer
             foreach(var account in accountForChangeList)
             {
                 statuses.Add(new AccountsStatusDetailsSet { AccountMainId = account.Id, AccountStatus = selectedStatus, AccountStatusDate = accountForChangeDate });
+            }
+            _accountsStatusRepository.Add(statuses.ToArray());
+        }
+
+        public void UpdateStatus(ObservableCollection<AccountsMainSet> accountForChangeList, string selectedStatus, DateTime accountForChangeDate, int accountPayNumber)
+        {
+            var statuses = new List<AccountsStatusDetailsSet>();
+            foreach (var account in accountForChangeList)
+            {
+                statuses.Add(new AccountsStatusDetailsSet { AccountMainId = account.Id, AccountStatus = selectedStatus, AccountStatusDate = accountForChangeDate, AccountPayNumber = accountPayNumber });
             }
             _accountsStatusRepository.Add(statuses.ToArray());
         }

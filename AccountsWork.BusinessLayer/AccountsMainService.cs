@@ -33,9 +33,9 @@ namespace AccountsWork.BusinessLayer
             return _accountsMainRepository.GetAll();
         }
 
-        public IList<AccountsMainSet> GetAllAccountsForStore(int storeNumber)
+        public IList<AccountsMainSet> GetAllAccountsForStore()
         {
-            return _accountsMainRepository.GetList(a => a.AccountsStoreDetailsSets.Any(s => s.AccountStore == storeNumber), a => a.AccountsStatusDetailsSets, a => a.AccountsCapexInfoSets, a => a.AccountsStoreDetailsSets);
+            return _accountsMainRepository.GetAll(a => a.AccountsStatusDetailsSets, a => a.AccountsCapexInfoSets, a => a.AccountsStoreDetailsSets);
         }
 
         public void RemoveAccount(AccountsMainSet resultAccount)

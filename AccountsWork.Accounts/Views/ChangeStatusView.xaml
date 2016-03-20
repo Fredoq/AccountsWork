@@ -4,12 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
+             xmlns:prism="http://prismlibrary.com/"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="AccountsWork.Accounts.Views.ChangeStatusView"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             >
     <UserControl.Resources>
         <DataTemplate x:Key="SearchAccTemplate">
             <StackPanel Orientation="Horizontal">
@@ -33,7 +34,13 @@
             </StackPanel>
         </DataTemplate>
         <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ExportConfirmationRequest, Mode=OneWay}">
+            <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
     <syncfusion:SfBusyIndicator IsBusy="{Binding IsChangeStatusBusy, Mode=TwoWay}"
                                 AnimationType="SingleCircle"
                                 Header="Загрузка...">
@@ -41,7 +48,7 @@
             <StackPanel Orientation="Vertical">
                 <TextBlock HorizontalAlignment="Center"
 				       Margin="5"
-				       Text="Передача в бухгалтерию"
+				       Text="Изменение статусов"
 				       FontWeight="Bold"/>
                 <Label Content="Выбор счетов:"
 				       Margin="5"/>
@@ -104,6 +111,12 @@
                                             SelectedIndex="-1"
                                             SelectedValue="{Binding SelectedStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             />
+                    <syncfusion:SfTextBoxExt Watermark="Введите номер платежки..."
+                                             HorizontalAlignment="Left"
+                                             Text="{Binding AccountPayNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             MinWidth="80"
+                                             Visibility="{Binding IsPayNumberVisible, Converter={StaticResource BoolToVisibility}}"
+                                             Margin="3"/>
                 </StackPanel>
                 <Button Content="Изменить статус"
                         HorizontalAlignment="Left"
