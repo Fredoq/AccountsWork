@@ -8,7 +8,7 @@ namespace AccountsWork.BusinessLayer
         IList<AccountsMainSet> GetAccountsByNumber(string number);
         int SaveAccount(AccountsMainSet account);
         void RemoveAccount(AccountsMainSet resultAccount);
-        IList<AccountsMainSet> GetAllAccounts();
+        IList<AccountsMainSet> GetAllAccountsWithStores();
         IList<AccountsMainSet> GetAllAccountsForStore();
     }
 }

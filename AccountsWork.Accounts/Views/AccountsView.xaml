@@ -158,8 +158,15 @@
                     CommandParameter="StoreAccountsView"/>
             <Button Content="Изменение статусов"
                     HorizontalAlignment="Center"
-                    Command="{Binding NavigateToChangeStatusesCommand}"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="ChangeStatusView"
                     Margin="6,5,6,4"/>
+            <Button Content="Добавить работу"
+                    HorizontalAlignment="Center"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="StoresWorkView"
+                    Margin="6,5,6,4"/>
+
         </StackPanel>
             <Rectangle Grid.Column="1"
                        Grid.Row="0"

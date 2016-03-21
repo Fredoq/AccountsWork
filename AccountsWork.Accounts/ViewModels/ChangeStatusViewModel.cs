@@ -11,6 +11,10 @@ using System.Linq;
 using System.Collections.Generic;
 using AccountsVork.Infrastructure;
 using Prism.Interactivity.InteractionRequest;
+using AccountsWork.ExcelReports;
+using Prism.Events;
+using AccountsWork.Accounts.Events;
+using AccountsWork.Accounts.Controllers;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -33,6 +37,10 @@ namespace AccountsWork.Accounts.ViewModels
         private IAccountStatusService _accountStatusService;
         private string _accountPayNumber;
         private bool _isPayNumberVisible;
+        private IExcelReportService _excelReportService;
+        private IEventAggregator _eventAggregator;
+        private string _filename;
+        private AccountsController _accountsController;
         #endregion Private Fields
 
         #region Public Properties
@@ -132,11 +140,12 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region Constructor
         [ImportingConstructor]
-        public ChangeStatusViewModel(IAccountsMainService accountsMainService, IAccountStatusService accountStatusService)
+        public ChangeStatusViewModel(IAccountsMainService accountsMainService, IAccountStatusService accountStatusService, IEventAggregator eventAggregator, AccountsController accountsController, IExcelReportService excelReportService)
         {
             #region infrastructure
             AccountsTabItemHeader = "Изменение статусов";
             ExportConfirmationRequest = new InteractionRequest<IConfirmation>();
+            _accountsController = accountsController;
             #endregion infrastructure
 
             #region workers
@@ -148,7 +157,13 @@ namespace AccountsWork.Accounts.ViewModels
             #region services
             _accountsMainService = accountsMainService;
             _accountStatusService = accountStatusService;
+            _excelReportService = excelReportService;
             #endregion services
+
+            #region events
+            _eventAggregator = eventAggregator;
+            eventAggregator.GetEvent<SaveFileEvent>().Subscribe(GetFilename);
+            #endregion events
 
             #region statuses
             SearchAccountNumberCommand = new DelegateCommand(SearchAccount);
@@ -175,13 +190,18 @@ namespace AccountsWork.Accounts.ViewModels
             ChangeStatusCommand.RaiseCanExecuteChanged();
             _worker.RunWorkerAsync();
         }
+
+        private void GetFilename(string obj)
+        {
+            _filename = obj;
+        }
         #endregion infrastructure
 
         #region statuses
         private void LoadAllAccounts(object sender, DoWorkEventArgs e)
         {
             IsChangeStatusBusy = true;
-            AccountsList = new ObservableCollection<AccountsMainSet>(_accountsMainService.GetAllAccounts());
+            AccountsList = new ObservableCollection<AccountsMainSet>(_accountsMainService.GetAllAccountsWithStores());
         }
         private void LoadAllAccounts_Completed(object sender, DoWorkEventArgs e)
         {
@@ -230,18 +250,25 @@ namespace AccountsWork.Accounts.ViewModels
                     _accountStatusService.UpdateStatus(AccountForChangeList, SelectedStatus, AccountForChangeDate, payNumber);
                 }
             }
-            AccountForChangeList.Clear();
-            SearchAccountText = string.Empty;
-            AccountPayNumber = string.Empty;
-            AccountForChangeDate = DateTime.Now;
             ExportConfirmationRequest.Raise(new Confirmation { Title = "Экспорт", Content = "Выгрузить в Excel?" },
                 c =>
                 {
                     if (c.Confirmed)
                     {
-
+                        var report = _excelReportService.CreateNewStatusesReport(AccountForChangeList);
+                        if (report != null)
+                        {
+                            _accountsController.SaveDialogWindow();
+                            if (!string.IsNullOrWhiteSpace(_filename))
+                                _excelReportService.SaveReport(_filename, report);
+                        }
                     }
                 });
+            AccountForChangeList.Clear();
+            SearchAccountText = string.Empty;
+            AccountPayNumber = string.Empty;
+            AccountForChangeDate = DateTime.Now;
+            
         }
         #endregion statuses
         #endregion Methods

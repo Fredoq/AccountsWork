@@ -8,6 +8,7 @@ using Prism.Mvvm;
 using System.Reflection;
 using System;
 using System.Globalization;
+using AccountsWork.ExcelReports;
 
 namespace AccountsWork
 {
@@ -19,6 +20,7 @@ namespace AccountsWork
             AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Bootstrapper).Assembly));
             AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(GenericDataRepository<>).Assembly));
             AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(AccountsMainService).Assembly));
+            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ExcelReportService).Assembly));
         }
         protected override IModuleCatalog CreateModuleCatalog()
         {

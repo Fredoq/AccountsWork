@@ -38,6 +38,9 @@
     <Reference Include="AccountsWork.DataAccessLayer">
       <HintPath>..\AccountsWork.DataAccessLayer\bin\Debug\AccountsWork.DataAccessLayer.dll</HintPath>
     </Reference>
+    <Reference Include="AccountsWork.ExcelReports">
+      <HintPath>..\AccountsWork.ExcelReports\bin\Debug\AccountsWork.ExcelReports.dll</HintPath>
+    </Reference>
     <Reference Include="AccountsWork.Helpers">
       <HintPath>..\AccountsWork.Helpers\bin\Debug\AccountsWork.Helpers.dll</HintPath>
     </Reference>
@@ -47,6 +50,10 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.0.5.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.0.5\lib\net20\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -118,6 +125,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountsModule.cs" />
+    <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Events\FileEvent.cs" />
     <Compile Include="Model\StoreAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
@@ -126,6 +135,7 @@
     <Compile Include="ViewModels\ChangeStatusViewModel.cs" />
     <Compile Include="ViewModels\InfoViewModel.cs" />
     <Compile Include="ViewModels\StoreAccountsViewModel.cs" />
+    <Compile Include="ViewModels\StoresWorkViewModel.cs" />
     <Compile Include="Views\AccountsNavigationView.xaml.cs">
       <DependentUpon>AccountsNavigationView.xaml</DependentUpon>
     </Compile>
@@ -146,6 +156,9 @@
     </Compile>
     <Compile Include="Views\StoreAccountsView.xaml.cs">
       <DependentUpon>StoreAccountsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StoresWorkView.xaml.cs">
+      <DependentUpon>StoresWorkView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StoreAccountsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StoresWorkView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

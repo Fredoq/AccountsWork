@@ -30,9 +30,6 @@ namespace AccountsWork.Accounts.ViewModels
         private const string AdditionalInfoViewKey = "AdditionalInfoView";
         private const string AddAccountViewKey = "AddAccountView";
         private const string StoreAccountsViewKey = "StoreAccountsView";
-        private ObservableCollection<StoresSet> _searchStoreResultList;
-        private ObservableCollection<StoresSet> _storeList;
-        private StoresSet _resultStore;
         #endregion Private Fields
 
         #region Public Properties
@@ -72,7 +69,6 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region infrastructure
         public DelegateCommand<string> NavigateCommand { get; set; }
-        public DelegateCommand NavigateToChangeStatusesCommand { get; set; }
         #endregion infrastructure
 
         #region search acc
@@ -82,7 +78,6 @@ namespace AccountsWork.Accounts.ViewModels
         #endregion search acc
 
         #endregion Commands
-
 
 
         #region Constructor
@@ -97,7 +92,6 @@ namespace AccountsWork.Accounts.ViewModels
             _regionManager = regionManager;
 
             NavigateCommand = new DelegateCommand<string>(Navigate);
-            NavigateToChangeStatusesCommand = new DelegateCommand(NavigateToChangeStatus);
             #endregion infrastructure
 
             #region search acc
@@ -108,7 +102,6 @@ namespace AccountsWork.Accounts.ViewModels
             CloseSearchCommand = new DelegateCommand(CloseSearch);
             DeleteConfirmationRequest = new InteractionRequest<IConfirmation>();
             #endregion search acc
-
 
             #region workers
             _searchWorker = new BackgroundWorker();
@@ -138,10 +131,6 @@ namespace AccountsWork.Accounts.ViewModels
                 _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, navigationProperty);
             }
             SearchResultList.Clear();            
-        }
-        private void NavigateToChangeStatus()
-        {
-            _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, "ChangeStatusView");
         }
         #endregion infrastrcture
 

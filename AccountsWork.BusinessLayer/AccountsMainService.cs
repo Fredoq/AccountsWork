@@ -28,9 +28,9 @@ namespace AccountsWork.BusinessLayer
             return _accountsMainRepository.GetList(a => a.AccountNumber.Contains(number));
         }
 
-        public IList<AccountsMainSet> GetAllAccounts()
+        public IList<AccountsMainSet> GetAllAccountsWithStores()
         {
-            return _accountsMainRepository.GetAll();
+            return _accountsMainRepository.GetAll(a => a.AccountsStoreDetailsSets);
         }
 
         public IList<AccountsMainSet> GetAllAccountsForStore()
