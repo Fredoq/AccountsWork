@@ -109,6 +109,7 @@ namespace AccountsWork.Accounts.ViewModels
             DeleteConfirmationRequest = new InteractionRequest<IConfirmation>();
             #endregion search acc
 
+
             #region workers
             _searchWorker = new BackgroundWorker();
             _searchWorker.DoWork += SearchAccountWork;
