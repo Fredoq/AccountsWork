@@ -12,21 +12,35 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <syncfusion:SfBusyIndicator>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <syncfusion:SfBusyIndicator IsBusy="{Binding IsStoreWorkBusy}"
+                                    AnimationType="SingleCircle">
             <syncfusion:SfDataGrid AutoGenerateColumns="False"
-                               ItemsSource="{Binding StoresWorkList}"
+                                   Margin="3"
+                                   SelectedItem="{Binding SelectedWork}"
+                                   ItemsSource="{Binding StoresWorkList}"
                                >
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn HeaderText="Номер ресторана"
-                                           MappingName="StoreNumber"/>
+                                               MappingName="StoreNumber"/>
                     <syncfusion:GridTextColumn HeaderText="Работа"
-                                           MappingName="StoreWork"/>
+                                               MappingName="StoreWork"/>
                     <syncfusion:GridDateTimeColumn HeaderText="Выполнить до"
-                                               MappingName="StoreDateOfConfirm"/>
+                                                   MappingName="StoreDateOfConfirm"/>
                     <syncfusion:GridCheckBoxColumn HeaderText="Выполнено"
-                                               MappingName="IsDone"/>
+                                                   MappingName="IsDone"/>
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
         </syncfusion:SfBusyIndicator>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1">
+            <Button Content="Сохранить изменения"
+                    HorizontalAlignment="Left"
+                    Margin="3"
+                    Command="{Binding SaveChangesCommand}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
