@@ -58,6 +58,9 @@ namespace AccountsWork.Accounts.ViewModels
         private ICapexesService _capexService;
         private decimal _capexAmount;
         private AccountsCapexInfoSet _currentCapex;
+        private ObservableCollection<StoreProvenWorkSet> _storesWorkList;
+        private StoreProvenWorkSet _selectedWork;
+        private IStoresWorkService _storesWorkService;
         #endregion Private Fields
 
         #region Public Properties
@@ -178,6 +181,26 @@ namespace AccountsWork.Accounts.ViewModels
         }
         #endregion stores
 
+        #region work
+        public ObservableCollection<StoreProvenWorkSet> StoresWorkList
+        {
+            get { return _storesWorkList; }
+            set { SetProperty(ref _storesWorkList, value); }
+        }
+        public StoreProvenWorkSet SelectedWork
+        {
+            get { return _selectedWork; }
+            set
+            {
+                if (_selectedWork != null)
+                    SelectedWork.PropertyChanged -= SelectedWorkChanged;
+                SetProperty(ref _selectedWork, value);
+                if (_selectedWork != null)
+                    SelectedWork.PropertyChanged += SelectedWorkChanged;
+            }
+        }       
+        #endregion work
+
         #region capexes
         public decimal AvailableSum
         {
@@ -251,7 +274,7 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region Constructor
         [ImportingConstructor]
-        public AdditionalInfoViewModel(IAccountStatusService accountStatusService, IAccountStoresService accountStoresService, IStoresService storesService, IAccountCapexesService accountCapexService, IExpensesService expenseService, ICapexesService capexService)
+        public AdditionalInfoViewModel(IAccountStatusService accountStatusService, IAccountStoresService accountStoresService, IStoresService storesService, IAccountCapexesService accountCapexService, IExpensesService expenseService, ICapexesService capexService, IStoresWorkService storesWorkService)
         {
             #region infrastrcture
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
@@ -289,6 +312,7 @@ namespace AccountsWork.Accounts.ViewModels
             _accountCapexService = accountCapexService;
             _expenseService = expenseService;
             _capexService = capexService;
+            _storesWorkService = storesWorkService;
             #endregion services
 
             #region capexes
@@ -337,6 +361,7 @@ namespace AccountsWork.Accounts.ViewModels
             LoadAccountLastStatus();
             LoadCapexInfo();
             AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(CurrentAccount.Id));
+            StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
             _worker.DoWork -= LoadAccountAdditionalInfo;
         }
         private AccountsMainSet GetAccount(NavigationContext navigationContext)
@@ -448,6 +473,7 @@ namespace AccountsWork.Accounts.ViewModels
             if (storesForAddList.Count == 0) return;
             _accountStoresService.AddStoresToAccount(storesForAddList);
             AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(CurrentAccount.Id));
+            StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
             Application.Current.Dispatcher.BeginInvoke(new Action(() => StoresForLoad = string.Empty));
         }
         private bool CheckStoreErrors()
@@ -514,6 +540,18 @@ namespace AccountsWork.Accounts.ViewModels
             Application.Current.Dispatcher.BeginInvoke(new Action(() => EditAccountStoresListCommand.RaiseCanExecuteChanged()));
         }
         #endregion stores
+
+        #region work
+        private void SelectedWorkChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var work = sender as StoreProvenWorkSet;
+            if (work != null)
+            {
+                _storesWorkService.UpdateWork(work, CurrentAccount.Id);
+                StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
+            }
+        }
+        #endregion work
 
         #region capexes
         private void LoadCapexInfo()

@@ -4,24 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
+             xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="AccountsWork.Accounts.Views.StoresWorkView"
              mc:Ignorable="d" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <helpers:BoolToOpacityConverter x:Key="opacityConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"
+                              MinWidth="300"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <syncfusion:SfBusyIndicator IsBusy="{Binding IsStoreWorkBusy}"
+                                    Header="Идет загрузка..."
                                     AnimationType="SingleCircle">
             <syncfusion:SfDataGrid AutoGenerateColumns="False"
                                    Margin="3"
-                                   SelectedItem="{Binding SelectedWork}"
-                                   ItemsSource="{Binding StoresWorkList}"
+                                   Opacity="{Binding IsStoreWorkBusy, Converter={StaticResource opacityConverter}}"
+                                   SelectedItem="{Binding SelectedWork, UpdateSourceTrigger=PropertyChanged}"
+                                   ItemsSource="{Binding StoresWorkList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                >
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn HeaderText="Номер ресторана"
@@ -31,16 +40,60 @@
                     <syncfusion:GridDateTimeColumn HeaderText="Выполнить до"
                                                    MappingName="StoreDateOfConfirm"/>
                     <syncfusion:GridCheckBoxColumn HeaderText="Выполнено"
+                                                   AllowEditing="True"
                                                    MappingName="IsDone"/>
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
         </syncfusion:SfBusyIndicator>
-        <StackPanel Orientation="Horizontal"
+        <StackPanel Orientation="Horizontal"                   
                     Grid.Row="1">
             <Button Content="Сохранить изменения"
                     HorizontalAlignment="Left"
                     Margin="3"
                     Command="{Binding SaveChangesCommand}"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical"
+                    Grid.Column="1">
+            <Label Content="Добавление работы для ресторана"
+                   HorizontalAlignment="Center"
+                   FontWeight="Bold"
+                   Margin="3"/>
+            <syncfusion:SfBusyIndicator IsBusy="{Binding IsStoreWorkBusy}"                                        
+                                        AnimationType="SingleCircle">
+                <syncfusion:SfTextBoxExt Watermark="Введите номер ресторана..."
+                                         HorizontalAlignment="Center"
+                                         MinWidth="150"
+                                         Opacity="{Binding IsStoreWorkBusy, Converter={StaticResource opacityConverter}}"
+                                         Margin="3,10,3,3"
+                                         Text="{Binding NewWork.StoreNumber, UpdateSourceTrigger=PropertyChanged}"
+                                         AutoCompleteMode="SuggestAppend"
+                                         SearchItemPath="StoreNumber"
+                                         AutoCompleteSource="{Binding StoresList}"/>
+            </syncfusion:SfBusyIndicator>
+            <syncfusion:SfTextBoxExt Watermark="Введите работу..."
+                                     HorizontalAlignment="Center"
+                                     Margin="3,10,3,3"
+                                     MinWidth="150"
+                                     Text="{Binding NewWork.StoreWork, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="80">
+
+            </syncfusion:SfTextBoxExt>
+            <syncfusion:DateTimeEdit HorizontalAlignment="Center"
+                                     CultureInfo="ru-RU"
+                                     Pattern="ShortDate"
+                                     IsEmptyDateEnabled="True"
+                                     NullValue="{x:Null}"
+                                     Margin="3,10,3,3"                                     
+                                     DateTime="{Binding NewWork.StoreDateOfConfirm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     NoneDateText="Срок выполнения...">
+                
+            </syncfusion:DateTimeEdit>
+            <Button Content="Добавить"
+                    Command="{Binding AddNewWorkCommand}"
+                    HorizontalAlignment="Center"
+                    Margin="3,10,3,3"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -4,10 +4,6 @@ using AccountsWork.BusinessLayer;
 using AccountsWork.DataAccessLayer;
 using Prism.Mef;
 using Prism.Modularity;
-using Prism.Mvvm;
-using System.Reflection;
-using System;
-using System.Globalization;
 using AccountsWork.ExcelReports;
 
 namespace AccountsWork

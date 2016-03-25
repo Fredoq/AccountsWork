@@ -47,7 +47,7 @@
     </Reference>
     <Reference Include="AccountsWork.DomainModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\AccountsWork.DomainModel\bin\Release\AccountsWork.DomainModel.dll</HintPath>
+      <HintPath>..\AccountsWork.DomainModel\bin\Debug\AccountsWork.DomainModel.dll</HintPath>
     </Reference>
     <Reference Include="AccountsWork.ExcelReports">
       <HintPath>..\AccountsWork.ExcelReports\bin\Debug\AccountsWork.ExcelReports.dll</HintPath>

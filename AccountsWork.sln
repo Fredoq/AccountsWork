@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsWork.DomainModel", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsWork.BusinessLayer", "AccountsWork.BusinessLayer\AccountsWork.BusinessLayer.csproj", "{CAB33644-BE0F-4013-AA48-49FFF4E1B7D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsWork.BusinessLayer.Tests", "AccountsWork.BusinessLayer.Tests\AccountsWork.BusinessLayer.Tests.csproj", "{7F813563-BBE2-4756-A43E-F5B9B965E2F2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsWork.Reports", "AccountsWork.Reports\AccountsWork.Reports.csproj", "{3EBAF39B-9D07-4004-A55B-5E3EEF147468}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{EA047DEA-F32D-4213-9C01-35F5354B8F2E}"
@@ -55,10 +53,6 @@ Global
 		{CAB33644-BE0F-4013-AA48-49FFF4E1B7D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAB33644-BE0F-4013-AA48-49FFF4E1B7D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAB33644-BE0F-4013-AA48-49FFF4E1B7D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F813563-BBE2-4756-A43E-F5B9B965E2F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F813563-BBE2-4756-A43E-F5B9B965E2F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F813563-BBE2-4756-A43E-F5B9B965E2F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F813563-BBE2-4756-A43E-F5B9B965E2F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3EBAF39B-9D07-4004-A55B-5E3EEF147468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3EBAF39B-9D07-4004-A55B-5E3EEF147468}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EBAF39B-9D07-4004-A55B-5E3EEF147468}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -9,19 +9,65 @@
 
 namespace AccountsWork.DomainModel
 {
+    using Infrastructure;
     using System;
     using System.Collections.Generic;
-    
-    public partial class StoreProvenWorkSet
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+    public partial class StoreProvenWorkSet : ValidatableBindableBase
     {
-        public int Id { get; set; }
-        public int StoreNumber { get; set; }
-        public System.DateTime StoreDateOfConfirm { get; set; }
-        public string StoreWork { get; set; }
-        public Nullable<int> MainAccountId { get; set; }
-        public bool IsDone { get; set; }
+        private int _id;
+        private int _storeNumber;
+        private DateTime? _storeDateOfConfirm;
+        private string _storeWork;
+        private int? _mainAccountId;
+        private bool _isDone;
+        private AccountsMainSet _accountsMainSet;
+        private StoresSet _storesSet;
+
+        public int Id
+        {
+          get { return _id; }
+          set { SetProperty(ref _id, value); }
+        }
+        [Required]
+        public int StoreNumber
+        {
+            get { return _storeNumber; }
+            set { SetProperty(ref _storeNumber, value); }
+        }
+        [Required]
+        public System.DateTime? StoreDateOfConfirm
+        {
+            get { return _storeDateOfConfirm; }
+            set { SetProperty(ref _storeDateOfConfirm, value); }
+        }
+        [Required]
+        public string StoreWork
+        {
+            get { return _storeWork; }
+            set { SetProperty(ref _storeWork, value); }
+        }
+        public Nullable<int> MainAccountId
+        {
+            get { return _mainAccountId; }
+            set { SetProperty(ref _mainAccountId, value); }
+        }
+        public bool IsDone
+        {
+            get { return _isDone; }
+            set { SetProperty(ref _isDone, value); }
+        }
     
-        public virtual AccountsMainSet AccountsMainSet { get; set; }
-        public virtual StoresSet StoresSet { get; set; }
+        public virtual AccountsMainSet AccountsMainSet
+        {
+            get { return _accountsMainSet; }
+            set { SetProperty(ref _accountsMainSet, value); }
+        }
+        public virtual StoresSet StoresSet
+        {
+            get { return _storesSet; }
+            set { SetProperty(ref _storesSet, value); }
+        }       
     }
 }

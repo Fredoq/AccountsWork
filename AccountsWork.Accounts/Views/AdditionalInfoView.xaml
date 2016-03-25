@@ -184,7 +184,7 @@
                         <Popup IsOpen="{Binding IsEditAccountStoresOpen, Mode=TwoWay}"
                                PlacementTarget="{Binding ElementName=btnEditAccStores}"
                                Placement="Right"    
-                               HorizontalOffset="140"
+                               HorizontalOffset="450"
                                VerticalOffset="-30"
                                AllowsTransparency="True"
                                PopupAnimation="Fade">
@@ -275,6 +275,28 @@
                                    ScrollViewer.CanContentScroll="True"
                                    TextWrapping="Wrap"                               
                                    ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        <TextBlock Text="Запланированные работы в выбранных ресторанах:"
+                                   Margin="5"/>
+                        <syncfusion:SfDataGrid AutoGenerateColumns="False"
+                                                   Margin="3" 
+                                                   FontSize="10"
+                                                   ScrollViewer.CanContentScroll="True"
+                                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                   Opacity="{Binding IsAddStoreBusy, Converter={StaticResource BoolToOpacity}}"
+                                                   SelectedItem="{Binding SelectedWork, UpdateSourceTrigger=PropertyChanged}"
+                                                   ItemsSource="{Binding StoresWorkList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <syncfusion:SfDataGrid.Columns>
+                                <syncfusion:GridTextColumn HeaderText="Номер ресторана"
+                                                               MappingName="StoreNumber"/>
+                                <syncfusion:GridTextColumn HeaderText="Работа"
+                                                               MappingName="StoreWork"/>
+                                <syncfusion:GridDateTimeColumn HeaderText="Выполнить до"
+                                                                   MappingName="StoreDateOfConfirm"/>
+                                <syncfusion:GridCheckBoxColumn HeaderText="Выполнено"
+                                                                   AllowEditing="True"
+                                                                   MappingName="IsDone"/>
+                            </syncfusion:SfDataGrid.Columns>
+                        </syncfusion:SfDataGrid>
                     </StackPanel>
                     <Border BorderBrush="BlanchedAlmond"
                             BorderThickness="2,0,0,0">
