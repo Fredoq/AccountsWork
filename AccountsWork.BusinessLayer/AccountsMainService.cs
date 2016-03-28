@@ -57,5 +57,10 @@ namespace AccountsWork.BusinessLayer
             }
             return account.Id;
         }
+
+        public IList<AccountsMainSet> GetAllAccountsWithStoresAndCapex()
+        {
+            return _accountsMainRepository.GetAll(a => a.AccountsCapexInfoSets, a => a.AccountsStatusDetailsSets, a => a.AccountsStoreDetailsSets);
+        }
     }
 }

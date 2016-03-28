@@ -116,10 +116,10 @@ namespace AccountsWork.Accounts.ViewModels
             AdditionalInfoConfirmationRequest.Raise(new Confirmation { Content = "Счет сохранен. Перейти к редактированию доп. информации?", Title = "Редактирование счета" },
                                              c =>
                                              {
+                                                 var singleView = _regionManager.Regions[RegionNames.AccountsTabRegion].ActiveViews.FirstOrDefault();
+                                                 _regionManager.Regions[RegionNames.AccountsTabRegion].Remove(singleView);
                                                  if (c.Confirmed)
-                                                 {
-                                                     var singleView = _regionManager.Regions[RegionNames.AccountsTabRegion].ActiveViews.FirstOrDefault();
-                                                     _regionManager.Regions[RegionNames.AccountsTabRegion].Remove(singleView);
+                                                 {                                                     
                                                      var parameters = new NavigationParameters();
                                                      parameters.Add(AccountKey, Account);
                                                      _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, new Uri(AdditionalInfoViewKey, UriKind.Relative), parameters);

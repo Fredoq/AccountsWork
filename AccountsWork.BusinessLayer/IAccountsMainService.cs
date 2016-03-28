@@ -10,5 +10,6 @@ namespace AccountsWork.BusinessLayer
         void RemoveAccount(AccountsMainSet resultAccount);
         IList<AccountsMainSet> GetAllAccountsWithStores();
         IList<AccountsMainSet> GetAllAccountsForStore();
+        IList<AccountsMainSet> GetAllAccountsWithStoresAndCapex();
     }
 }

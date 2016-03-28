@@ -39,8 +39,12 @@
                 <StackPanel Grid.Row="0"
                             HorizontalAlignment="Center"
                             Orientation="Horizontal">
-                    <Label Content="Номер счета: "/>
+                    <Label Content="Номер счета: "
+                           FontWeight="Bold"/>
                     <Label Content="{Binding CurrentAccount.AccountNumber}"/>
+                    <Label Content="Описание:"
+                           FontWeight="Bold"/>
+                    <Label Content="{Binding CurrentAccount.AccountDescription}"/>
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal"

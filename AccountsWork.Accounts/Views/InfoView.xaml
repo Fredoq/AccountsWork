@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AccountsWork.Accounts.Views.InfoView"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,10 +6,203 @@
              xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="AccountsWork.Accounts.Views.InfoView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <helpers:BoolToOpacityConverter x:Key="opacityConverter"/>
+    </UserControl.Resources>
     <Grid>
-            <TextBlock Text="Всякая классная инфа"></TextBlock>
+        <syncfusion:SfBusyIndicator IsBusy="{Binding IsInfoBusy, Mode=TwoWay}"
+                                    AnimationType="SingleCircle"
+                                     >
+        </syncfusion:SfBusyIndicator>
+        <syncfusion:TileViewControl x:Name="tileViewControl"                                    
+                                    ClickHeaderToMaximize ="True"                                   
+                                    Opacity="{Binding IsInfoBusy, Converter={StaticResource opacityConverter}}"
+                                    MinimizedItemsOrientation="Left"
+                                    MinimizedItemsPercentage="0">
+                <syncfusion:TileViewItem Header="Ошибки в счетах"
+                                         >
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Отсутствуют рестораны: "/>
+                            <Label Content="{Binding StoreError}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Ошибки в суммах: "/>
+                            <Label Content="{Binding SumError}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <syncfusion:TileViewItem.MaximizedItemContent>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Vertical"
+                                        Grid.Row="0"
+                                        Grid.Column="0">
+                                <TextBlock Text="Отсутствуют рестораны"
+                                           Margin="3"
+                                           FontWeight="Bold"/>
+                                <syncfusion:SfDataGrid ItemsSource="{Binding StoreErrorList}"
+                                                       x:Name="storeGrid"
+                                                       HorizontalAlignment="Left"
+                                                       VerticalAlignment="Top"
+                                                       Margin="3"
+                                                       MaxHeight="800"
+                                                       ScrollViewer.CanContentScroll="True"
+                                                       ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                                       SelectedItem="{Binding SelectedStoreError, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       AutoGenerateColumns="False">
+                                    <syncfusion:SfDataGrid.Columns>
+                                        <syncfusion:GridTextColumn HeaderText="Номер счета"
+                                                                   MappingName="AccountNumber"/>
+                                        <syncfusion:GridTextColumn HeaderText="Номер компания"
+                                                                   MappingName="AccountCompany"/>
+                                        <syncfusion:GridCurrencyColumn HeaderText="Сумма"
+                                                                       CurrencySymbol="₽"
+                                                                       CurrencyGroupSizes="3"
+                                                                       CurrencyDecimalSeparator=","
+                                                                       CurrencyDecimalDigits="2"
+                                                                       CurrencyGroupSeparator=" "
+                                                                       MappingName="AccountAmount"/>
+                                        <syncfusion:GridDateTimeColumn HeaderText="Дата счета"
+                                                                       MappingName="AccountDate"/>
+
+                                    </syncfusion:SfDataGrid.Columns>
+                                </syncfusion:SfDataGrid>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1"
+                                        Grid.Column="0"
+                                        Orientation="Horizontal">
+                                <Button Content="Редактировать счет"
+                                        CommandParameter="{Binding SelectedStoreError}"
+                                        Command="{Binding NavigateCommand}"
+                                        />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical"
+                                        Grid.Row="0"
+                                        Grid.Column="1">
+                                <TextBlock Text="Ошибки в статьях"
+                                           Margin="3"
+                                           FontWeight="Bold"/>
+                                <syncfusion:SfDataGrid ItemsSource="{Binding CapexErrorList}"
+                                                       x:Name="capexGrid"
+                                                       HorizontalAlignment="Left"
+                                                       VerticalAlignment="Top"
+                                                       Margin="3"
+                                                       MaxHeight="800"
+                                                       ScrollViewer.CanContentScroll="True"
+                                                       SelectedItem="{Binding SelectedCapexError, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                                       AutoGenerateColumns="False">
+                                    <syncfusion:SfDataGrid.Columns>
+                                        <syncfusion:GridTextColumn HeaderText="Номер счета"
+                                                                   MappingName="AccountNumber"/>
+                                        <syncfusion:GridTextColumn HeaderText="Номер компания"
+                                                                   MappingName="AccountCompany"/>
+                                        <syncfusion:GridCurrencyColumn HeaderText="Сумма"
+                                                                       CurrencySymbol="₽"
+                                                                       CurrencyGroupSizes="3"
+                                                                       CurrencyDecimalSeparator=","
+                                                                       CurrencyDecimalDigits="2"
+                                                                       CurrencyGroupSeparator=" "
+                                                                       MappingName="AccountAmount"/>
+                                        <syncfusion:GridDateTimeColumn HeaderText="Дата счета"
+                                                                       MappingName="AccountDate"/>
+
+                                    </syncfusion:SfDataGrid.Columns>
+                                </syncfusion:SfDataGrid>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+                                <Button Content="Редактировать счет"
+                                        CommandParameter="{Binding SelectedCapexError}"
+                                        Command="{Binding NavigateCommand}"
+                                        
+                                        />
+                            </StackPanel>
+                    </Grid>
+                    </syncfusion:TileViewItem.MaximizedItemContent>
+                </syncfusion:TileViewItem>
+                <syncfusion:TileViewItem Header="Статус по счетам">
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="Выберите год"
+                               Margin="3"
+                               HorizontalAlignment="Center"/>
+                        <syncfusion:DateTimeEdit Pattern="CustomPattern"
+                                                 VerticalAlignment="Top"
+                                                 Margin="3"
+                                                 HorizontalAlignment="Center"
+                                                 CanEdit="True"
+                                                 MinWidth="50"
+                                                 IsEmptyDateEnabled="True" 
+                                                 NullValue="{x:Null}"                                                 
+                                                 DateTime="{Binding CurrentYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                 CustomPattern="yyyy"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Оплаченные "
+                               Margin="3,10,3,3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding PayedCount}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="В бухгалтерии "
+                               Margin="3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding AccCount}"
+                               Margin="3,10,3,3"/>
+                        <Label Content="Более 10 дней: "
+                               Margin="3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding Acc10Count}"
+                               Margin="3"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="В обработке "
+                               Margin="3,3,3,3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding WorkCount}"/>
+                        <Label Content="Более 10 дней: "
+                               Margin="3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding Work10Count}"
+                               Margin="3"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="В ПО "
+                               Margin="3,3,3,3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding POCount}"/>
+                        <Label Content="Более 10 дней: "
+                               Margin="3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding PO10Count}"
+                               Margin="3"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="В возврате "
+                               Margin="3,3,3,3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding ReturnCount}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Отменены "
+                               Margin="3,3,3,3"
+                               HorizontalAlignment="Left"/>
+                        <Label Content="{Binding CancelCount}"/>
+                    </StackPanel>
+                </StackPanel>
+                </syncfusion:TileViewItem>
+        </syncfusion:TileViewControl>
     </Grid>
 </UserControl>
