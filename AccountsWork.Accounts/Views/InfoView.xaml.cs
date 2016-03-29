@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Controls;
 using AccountsWork.Accounts.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace AccountsWork.Accounts.Views
 {
@@ -25,4 +26,5 @@ namespace AccountsWork.Accounts.Views
         }
         #endregion Public Properties
     }
+    
 }

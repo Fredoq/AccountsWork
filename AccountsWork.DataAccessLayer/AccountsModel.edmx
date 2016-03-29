@@ -536,7 +536,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_AccountsMainAccountsEquipmentDetails">
-          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1" />
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="AccountsBudgetDetailsSet" Type="Self.AccountsBudgetDetailsSet" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AccountsMainSet">
@@ -560,7 +562,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_AccountsMainAccountsCapexInfo">
-          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1" />
+          <End Role="AccountsMainSet" Type="Self.AccountsMainSet" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="AccountsCapexInfoSet" Type="Self.AccountsCapexInfoSet" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AccountsMainSet">

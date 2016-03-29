@@ -10,6 +10,7 @@ using AccountsWork.BusinessLayer;
 using System.Collections.Generic;
 using System.Linq;
 using Prism.Commands;
+using AccountsVork.Infrastructure;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -29,6 +30,20 @@ namespace AccountsWork.Accounts.ViewModels
         private AccountsMainSet _selectedCapexError;
         private AccountsMainSet _selectedStoreError;
         private IRegionManager _regionManager;
+        private int _currentYear;
+        private int _startYearStatus;
+        private int _endYearStatus;
+        private int _payedCount;
+        private int _accCount;
+        private int _acc10Count;
+        private bool _isAth;
+        private IList<AccountsMainSet> _accountSelectedList;
+        private int _workCount;
+        private int _work10Count;
+        private int _poCount;
+        private int _po10Count;
+        private int _returnCount;
+        private int _cancelCount;
         #endregion Private Fields 
 
         #region Public Properties
@@ -43,6 +58,11 @@ namespace AccountsWork.Accounts.ViewModels
         {
             get { return _accountList; }
             set { SetProperty(ref _accountList, value); }
+        }
+        public int CurrentYear
+        {
+            get { return _currentYear; }
+            set { SetProperty(ref _currentYear, value); }
         }
         public bool IsInfoBusy
         {
@@ -85,6 +105,74 @@ namespace AccountsWork.Accounts.ViewModels
         }
         #endregion errors
 
+        #region statuses
+        public int StartYearStatus
+        {
+            get { return _startYearStatus; }
+            set { SetProperty(ref _startYearStatus, value); }
+        }
+        public int EndYearStatus
+        {
+            get { return _endYearStatus; }
+            set { SetProperty(ref _endYearStatus, value); }
+        }
+        public bool IsATH
+        {
+            get { return _isAth; }
+            set { SetProperty(ref _isAth, value); }
+        }
+        public int PayedCount
+        {
+            get { return _payedCount; }
+            set { SetProperty(ref _payedCount, value); }
+        }
+        public IList<AccountsMainSet> AccountSelectedList
+        {
+            get { return _accountSelectedList; }
+            set { SetProperty(ref _accountSelectedList, value); }
+        }
+        public int AccCount
+        {
+            get { return _accCount; }
+            set { SetProperty(ref _accCount, value); }
+        }
+        public int Acc10Count
+        {
+            get { return _acc10Count; }
+            set { SetProperty(ref _acc10Count, value); }
+        }
+        public int WorkCount
+        {
+            get { return _workCount; }
+            set { SetProperty(ref _workCount, value); }
+        }
+        public int Work10Count
+        {
+            get { return _work10Count; }
+            set { SetProperty(ref _work10Count, value); }
+        }
+        public int POCount
+        {
+            get { return _poCount; }
+            set { SetProperty(ref _poCount, value); }
+        }
+        public int PO10Count
+        {
+            get { return _po10Count; }
+            set { SetProperty(ref _po10Count, value); }
+        }
+        public int ReturnCount
+        {
+            get { return _returnCount; }
+            set { SetProperty(ref _returnCount, value); }
+        }
+        public int CancelCount
+        {
+            get { return _cancelCount; }
+            set { SetProperty(ref _cancelCount, value); }
+        }
+        #endregion statuses
+
         #endregion Public Properties
 
         #region Commands
@@ -104,6 +192,7 @@ namespace AccountsWork.Accounts.ViewModels
             _regionManager = regionManager;
             AccountList = new List<AccountsMainSet>();
             NavigateCommand = new DelegateCommand<object>(Navigate);
+            CurrentYear = DateTime.Now.Year;
             #endregion infrastructure
 
             #region services
@@ -115,6 +204,12 @@ namespace AccountsWork.Accounts.ViewModels
             CapexErrorList = new ObservableCollection<AccountsMainSet>();
 
             #endregion errors
+
+            #region statuses
+            StartYearStatus = 2010;
+            EndYearStatus = CurrentYear;
+            IsATH = false;
+            #endregion statuses
 
             #region workers
             _worker = new BackgroundWorker();
@@ -141,6 +236,19 @@ namespace AccountsWork.Accounts.ViewModels
             CapexErrorList = new ObservableCollection<AccountsMainSet>(AccountList.Where(a => a.AccountsCapexInfoSets.Count == 0 || a.AccountsCapexInfoSets.Sum(c => c.AccountCapexAmount) != a.AccountAmount));
             StoreError = StoreErrorList.Count;
             SumError = CapexErrorList.Count;
+            LoadStatuses();
+        }
+        public void LoadStatuses()
+        {
+            PayedCount = ChooseAccount(Statuses.InPayed, IsATH, AccountList,0).Count;
+            AccCount = ChooseAccount(Statuses.InAcc, IsATH, AccountList,0).Count;
+            Acc10Count = ChooseAccount(Statuses.InAcc, IsATH, AccountList, 10).Count;
+            WorkCount = ChooseAccount(Statuses.InWork, IsATH, AccountList, 0).Count;
+            Work10Count = ChooseAccount(Statuses.InWork, IsATH, AccountList, 10).Count;
+            POCount = ChooseAccount(Statuses.InPO, IsATH, AccountList, 0).Count;
+            PO10Count = ChooseAccount(Statuses.InPO, IsATH, AccountList, 10).Count;
+            ReturnCount = ChooseAccount(Statuses.InReturn, IsATH, AccountList, 0).Count;
+            CancelCount = ChooseAccount(Statuses.InCancel, IsATH, AccountList, 0).Count;
         }
         private void LoadAccountList_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -154,6 +262,17 @@ namespace AccountsWork.Accounts.ViewModels
                 var navigationParameters = new NavigationParameters();
                 navigationParameters.Add("Account", ResultAccount);
                 _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, "AdditionalInfoView", navigationParameters);
+            }
+        }
+        private IList<AccountsMainSet> ChooseAccount(string status, bool isAth, IList<AccountsMainSet> accounts, int days)
+        {
+            if(isAth)
+            {
+                return accounts.Where(a => a.AccountsStatusDetailsSets.LastOrDefault().AccountStatus == status && a.AccountYear >= StartYearStatus && a.AccountYear <= EndYearStatus && DateTime.Now - a.AccountsStatusDetailsSets.LastOrDefault().AccountStatusDate >= new TimeSpan(days, 0, 0, 0)).ToList();
+            }
+            else
+            {
+                return accounts.Where(a => a.AccountCompany != "ЭйТиЭйч" && a.AccountsStatusDetailsSets.LastOrDefault().AccountStatus == status && a.AccountYear >= StartYearStatus && a.AccountYear <= EndYearStatus && DateTime.Now - a.AccountsStatusDetailsSets.LastOrDefault().AccountStatusDate >= new TimeSpan(days, 0, 0, 0)).ToList();
             }
         }
         #endregion infrastructure

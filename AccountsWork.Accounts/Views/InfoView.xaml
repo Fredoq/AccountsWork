@@ -8,6 +8,7 @@
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="AccountsWork.Accounts.Views.InfoView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -136,31 +137,55 @@
                 </syncfusion:TileViewItem>
                 <syncfusion:TileViewItem Header="Статус по счетам">
                     <StackPanel Orientation="Vertical">
-                        <Label Content="Выберите год"
+                        <Label Content="Выберите промежуток"
                                Margin="3"
                                HorizontalAlignment="Center"/>
-                        <syncfusion:DateTimeEdit Pattern="CustomPattern"
+                        <!--<syncfusion:DateTimeEdit Pattern="CustomPattern"
                                                  VerticalAlignment="Top"
                                                  Margin="3"
                                                  HorizontalAlignment="Center"
                                                  CanEdit="True"
                                                  MinWidth="50"
-                                                 IsEmptyDateEnabled="True" 
+                                                 IsEmptyDateEnabled="True"                                                 
                                                  NullValue="{x:Null}"                                                 
                                                  DateTime="{Binding CurrentYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                 CustomPattern="yyyy"/>
+                                                 CustomPattern="yyyy"/>-->
+                    <syncfusion:SfRangeSlider HorizontalAlignment="Center"
+                                              Minimum="2015"
+                                              Width="200"
+                                              ShowRange="True"
+                                              TickFrequency="1"                                              
+                                              RangeStart="{Binding StartYearStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              RangeEnd="{Binding EndYearStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Maximum="{Binding CurrentYear}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="RangeChanged">
+                                <ei:CallMethodAction MethodName="LoadStatuses" TargetObject="{Binding}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </syncfusion:SfRangeSlider>
+                    <CheckBox IsChecked="{Binding IsATH, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Margin="3"
+                              Content="Включать ЭйТиЭйч">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <ei:CallMethodAction MethodName="LoadStatuses" TargetObject="{Binding}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Оплаченные "
                                Margin="3,10,3,3"
                                HorizontalAlignment="Left"/>
-                        <Label Content="{Binding PayedCount}"/>
+                        <Label Content="{Binding PayedCount}"
+                               Margin="3,10,3,3"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="В бухгалтерии "
                                Margin="3"
                                HorizontalAlignment="Left"/>
                         <Label Content="{Binding AccCount}"
-                               Margin="3,10,3,3"/>
+                               Margin="3"/>
                         <Label Content="Более 10 дней: "
                                Margin="3"
                                HorizontalAlignment="Left"/>
@@ -169,9 +194,10 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="В обработке "
-                               Margin="3,3,3,3"
+                               Margin="3"
                                HorizontalAlignment="Left"/>
-                        <Label Content="{Binding WorkCount}"/>
+                        <Label Content="{Binding WorkCount}"
+                               Margin="3"/>
                         <Label Content="Более 10 дней: "
                                Margin="3"
                                HorizontalAlignment="Left"/>
@@ -180,9 +206,10 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="В ПО "
-                               Margin="3,3,3,3"
+                               Margin="3"
                                HorizontalAlignment="Left"/>
-                        <Label Content="{Binding POCount}"/>
+                        <Label Content="{Binding POCount}"
+                               Margin="3"/>
                         <Label Content="Более 10 дней: "
                                Margin="3"
                                HorizontalAlignment="Left"/>
@@ -191,15 +218,17 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="В возврате "
-                               Margin="3,3,3,3"
+                               Margin="3"
                                HorizontalAlignment="Left"/>
-                        <Label Content="{Binding ReturnCount}"/>
+                        <Label Content="{Binding ReturnCount}"
+                               Margin="3"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Отменены "
-                               Margin="3,3,3,3"
+                               Margin="3"
                                HorizontalAlignment="Left"/>
-                        <Label Content="{Binding CancelCount}"/>
+                        <Label Content="{Binding CancelCount}"
+                               Margin="3"/>
                     </StackPanel>
                 </StackPanel>
                 </syncfusion:TileViewItem>
