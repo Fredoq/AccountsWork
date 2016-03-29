@@ -38,7 +38,7 @@ namespace AccountsWork.ExcelReports
                 foreach(var account in accountsList)
                 {
                     ws.Cells[i + 1, 1].Value = i;
-                    ws.Cells[i + 1, 2].Value = (account.AccountsStoreDetailsSets.Count > 1) ? "По списку" : _storeService.GetStoreName(account.AccountsStoreDetailsSets.FirstOrDefault().AccountStore);
+                    ws.Cells[i + 1, 2].Value = (account.AccountsStoreDetailsSets.Count > 1) ? "По списку" : ((account.AccountsStoreDetailsSets.Count == 0) ? "Не задан" : _storeService.GetStoreName(account.AccountsStoreDetailsSets.FirstOrDefault().AccountStore));
                     ws.Cells[i + 1, 3].Value = account.AccountCompany;
                     ws.Cells[i + 1, 4].Value = account.AccountNumber;
                     ws.Cells[i + 1, 5].Value = account.AccountDate.ToShortDateString();
