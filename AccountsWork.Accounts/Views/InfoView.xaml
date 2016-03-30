@@ -11,6 +11,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="AccountsWork.Accounts.Views.InfoView"
              mc:Ignorable="d" 
+             x:Name="info"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <helpers:BoolToOpacityConverter x:Key="opacityConverter"/>
@@ -151,7 +152,7 @@
                                                  DateTime="{Binding CurrentYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                  CustomPattern="yyyy"/>-->
                     <syncfusion:SfRangeSlider HorizontalAlignment="Center"
-                                              Minimum="2015"
+                                              Minimum="2010"
                                               Width="200"
                                               ShowRange="True"
                                               TickFrequency="1"                                              
@@ -231,6 +232,97 @@
                                Margin="3"/>
                     </StackPanel>
                 </StackPanel>
+                <syncfusion:TileViewItem.MaximizedItemContent>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Выберите промежуток"
+                               Margin="3"
+                               HorizontalAlignment="Center"/>
+                            <syncfusion:SfRangeSlider HorizontalAlignment="Center"
+                                                      Minimum="2015"
+                                                      Width="200"
+                                                      ShowRange="True"
+                                                      TickFrequency="1"                                              
+                                                      RangeStart="{Binding StartYearStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      RangeEnd="{Binding EndYearStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      Maximum="{Binding CurrentYear}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="RangeChanged">
+                                        <ei:CallMethodAction MethodName="LoadStatusesForChoices" TargetObject="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </syncfusion:SfRangeSlider>
+                            <CheckBox IsChecked="{Binding IsATH, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="3"
+                                      Content="Включать ЭйТиЭйч">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <ei:CallMethodAction MethodName="LoadStatusesForChoices" TargetObject="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </CheckBox>
+                            <ListBox ItemsSource="{Binding StatusChoicesList}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding Path=IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Content="{Binding Path=Status}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click">
+                                                    <ei:CallMethodAction MethodName="LoadStatusesForChoices" TargetObject="{Binding ElementName=info, Path=DataContext}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </CheckBox>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                        <syncfusion:SfDataGrid Grid.Column="1"
+                                               AutoGenerateColumns="False"
+                                               SelectedItem="{Binding SelectedAccountExt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                               ItemsSource="{Binding AccountSelectedList}"
+                                               Margin="3">
+                            <syncfusion:SfDataGrid.Columns>
+                                <syncfusion:GridTextColumn HeaderText="Номер счета"
+                                                           MappingName="Account.AccountNumber"/>
+                                <syncfusion:GridTextColumn HeaderText="Номер компания"
+                                                           MappingName="Account.AccountCompany"/>
+                                <syncfusion:GridCurrencyColumn HeaderText="Сумма"
+                                                               CurrencySymbol="₽"
+                                                               CurrencyGroupSizes="3"
+                                                               CurrencyDecimalSeparator=","
+                                                               CurrencyDecimalDigits="2"
+                                                               CurrencyGroupSeparator=" "
+                                                               MappingName="Account.AccountAmount"/>
+                                <syncfusion:GridDateTimeColumn HeaderText="Дата счета"
+                                                               MappingName="Account.AccountDate"/>
+                                <syncfusion:GridTextColumn HeaderText="Статус"
+                                                           MappingName="LastStatus.AccountStatus"/>
+                                <syncfusion:GridDateTimeColumn HeaderText="Дата статуса"
+                                                               MappingName="LastStatus.AccountStatusDate"/>
+
+                            </syncfusion:SfDataGrid.Columns>
+                        </syncfusion:SfDataGrid>
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="1"
+                                    Grid.Row="1">
+                            <Button Content="Эксопрт в Excel"
+                                    Margin="3"
+                                    Command="{Binding ExportToExcelCommand}"/>
+                            <Button Content="Редактировать счет"
+                                    Margin="3"
+                                    CommandParameter="{Binding SelectedAccountExt.Account}"
+                                    Command="{Binding NavigateCommand}"/>
+                        </StackPanel>
+                    </Grid>
+                </syncfusion:TileViewItem.MaximizedItemContent>
                 </syncfusion:TileViewItem>
         </syncfusion:TileViewControl>
     </Grid>

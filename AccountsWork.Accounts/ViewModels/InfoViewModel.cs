@@ -11,6 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Prism.Commands;
 using AccountsVork.Infrastructure;
+using AccountsWork.ExcelReports;
+using Prism.Events;
+using AccountsWork.Accounts.Controllers;
+using AccountsWork.Accounts.Events;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -37,13 +41,19 @@ namespace AccountsWork.Accounts.ViewModels
         private int _accCount;
         private int _acc10Count;
         private bool _isAth;
-        private IList<AccountsMainSet> _accountSelectedList;
+        private ObservableCollection<AccountsExt> _accountSelectedList;
         private int _workCount;
         private int _work10Count;
         private int _poCount;
         private int _po10Count;
         private int _returnCount;
         private int _cancelCount;
+        private IList<StatusChoice> _statusChoicesList;
+        private IExcelReportService _excelReportService;
+        private string _filename;
+        private IEventAggregator _eventAggregator;
+        private AccountsController _accountsController;
+        private AccountsExt _selectedAccountExt;
         #endregion Private Fields 
 
         #region Public Properties
@@ -126,10 +136,15 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _payedCount; }
             set { SetProperty(ref _payedCount, value); }
         }
-        public IList<AccountsMainSet> AccountSelectedList
+        public ObservableCollection<AccountsExt> AccountSelectedList
         {
             get { return _accountSelectedList; }
             set { SetProperty(ref _accountSelectedList, value); }
+        }
+        public AccountsExt SelectedAccountExt
+        {
+            get { return _selectedAccountExt; }
+            set { SetProperty(ref _selectedAccountExt, value); }
         }
         public int AccCount
         {
@@ -171,6 +186,11 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _cancelCount; }
             set { SetProperty(ref _cancelCount, value); }
         }
+        public IList<StatusChoice> StatusChoicesList
+        {
+            get { return _statusChoicesList; }
+            set { SetProperty(ref _statusChoicesList, value); }
+        }
         #endregion statuses
 
         #endregion Public Properties
@@ -179,13 +199,14 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region infrastructure
         public DelegateCommand<object> NavigateCommand { get; set; }
+        public DelegateCommand ExportToExcelCommand { get; set; }
         #endregion infrastructure
 
         #endregion Commands
 
         #region Constructor
         [ImportingConstructor]
-        public InfoViewModel(IAccountsMainService accountsMainService, IRegionManager regionManager)
+        public InfoViewModel(IAccountsMainService accountsMainService, IRegionManager regionManager, IExcelReportService excelReportService, IEventAggregator eventAggregator, AccountsController accountsController)
         {
             #region infrastructure
             AccountsTabItemHeader = "Общая информация";
@@ -193,11 +214,18 @@ namespace AccountsWork.Accounts.ViewModels
             AccountList = new List<AccountsMainSet>();
             NavigateCommand = new DelegateCommand<object>(Navigate);
             CurrentYear = DateTime.Now.Year;
+            _accountsController = accountsController;
             #endregion infrastructure
 
             #region services
             _accountsMainService = accountsMainService;
+            _excelReportService = excelReportService;
             #endregion services
+
+            #region events
+            _eventAggregator = eventAggregator;
+            eventAggregator.GetEvent<SaveFileEvent>().Subscribe(GetFilename);
+            #endregion events
 
             #region errors
             StoreErrorList = new ObservableCollection<AccountsMainSet>();
@@ -209,6 +237,14 @@ namespace AccountsWork.Accounts.ViewModels
             StartYearStatus = 2010;
             EndYearStatus = CurrentYear;
             IsATH = false;
+            StatusChoicesList = new List<StatusChoice> { new StatusChoice { Status = Statuses.InAcc},
+                                                         new StatusChoice { Status = Statuses.InCancel },
+                                                         new StatusChoice { Status = Statuses.InPayed },
+                                                         new StatusChoice { Status = Statuses.InPO },
+                                                         new StatusChoice { Status = Statuses.InReturn },
+                                                         new StatusChoice { Status = Statuses.InWork } };
+            AccountSelectedList = new ObservableCollection<AccountsExt>();
+            ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             #endregion statuses
 
             #region workers
@@ -216,9 +252,9 @@ namespace AccountsWork.Accounts.ViewModels
             _worker.DoWork += LoadAccountList;
             _worker.RunWorkerCompleted += LoadAccountList_Completed;
             #endregion workers
-        }
+        }        
 
-        
+
         #endregion Constructor
 
         #region Methods
@@ -237,19 +273,7 @@ namespace AccountsWork.Accounts.ViewModels
             StoreError = StoreErrorList.Count;
             SumError = CapexErrorList.Count;
             LoadStatuses();
-        }
-        public void LoadStatuses()
-        {
-            PayedCount = ChooseAccount(Statuses.InPayed, IsATH, AccountList,0).Count;
-            AccCount = ChooseAccount(Statuses.InAcc, IsATH, AccountList,0).Count;
-            Acc10Count = ChooseAccount(Statuses.InAcc, IsATH, AccountList, 10).Count;
-            WorkCount = ChooseAccount(Statuses.InWork, IsATH, AccountList, 0).Count;
-            Work10Count = ChooseAccount(Statuses.InWork, IsATH, AccountList, 10).Count;
-            POCount = ChooseAccount(Statuses.InPO, IsATH, AccountList, 0).Count;
-            PO10Count = ChooseAccount(Statuses.InPO, IsATH, AccountList, 10).Count;
-            ReturnCount = ChooseAccount(Statuses.InReturn, IsATH, AccountList, 0).Count;
-            CancelCount = ChooseAccount(Statuses.InCancel, IsATH, AccountList, 0).Count;
-        }
+        }       
         private void LoadAccountList_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
             IsInfoBusy = false;
@@ -264,9 +288,28 @@ namespace AccountsWork.Accounts.ViewModels
                 _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, "AdditionalInfoView", navigationParameters);
             }
         }
+        private void GetFilename(string obj)
+        {
+            _filename = obj;
+        }
+        #endregion infrastructure
+
+        #region statuses
+        public void LoadStatuses()
+        {
+            PayedCount = ChooseAccount(Statuses.InPayed, IsATH, AccountList, 0).Count;
+            AccCount = ChooseAccount(Statuses.InAcc, IsATH, AccountList, 0).Count;
+            Acc10Count = ChooseAccount(Statuses.InAcc, IsATH, AccountList, 10).Count;
+            WorkCount = ChooseAccount(Statuses.InWork, IsATH, AccountList, 0).Count;
+            Work10Count = ChooseAccount(Statuses.InWork, IsATH, AccountList, 10).Count;
+            POCount = ChooseAccount(Statuses.InPO, IsATH, AccountList, 0).Count;
+            PO10Count = ChooseAccount(Statuses.InPO, IsATH, AccountList, 10).Count;
+            ReturnCount = ChooseAccount(Statuses.InReturn, IsATH, AccountList, 0).Count;
+            CancelCount = ChooseAccount(Statuses.InCancel, IsATH, AccountList, 0).Count;
+        }
         private IList<AccountsMainSet> ChooseAccount(string status, bool isAth, IList<AccountsMainSet> accounts, int days)
         {
-            if(isAth)
+            if (isAth)
             {
                 return accounts.Where(a => a.AccountsStatusDetailsSets.LastOrDefault().AccountStatus == status && a.AccountYear >= StartYearStatus && a.AccountYear <= EndYearStatus && DateTime.Now - a.AccountsStatusDetailsSets.LastOrDefault().AccountStatusDate >= new TimeSpan(days, 0, 0, 0)).ToList();
             }
@@ -275,8 +318,53 @@ namespace AccountsWork.Accounts.ViewModels
                 return accounts.Where(a => a.AccountCompany != "ЭйТиЭйч" && a.AccountsStatusDetailsSets.LastOrDefault().AccountStatus == status && a.AccountYear >= StartYearStatus && a.AccountYear <= EndYearStatus && DateTime.Now - a.AccountsStatusDetailsSets.LastOrDefault().AccountStatusDate >= new TimeSpan(days, 0, 0, 0)).ToList();
             }
         }
-        #endregion infrastructure
+        private IList<AccountsExt> ChooseAccountExt(string status, bool isAth, IList<AccountsMainSet> accounts)
+        {
+            if (isAth)
+            {
+                return (from a in accounts
+                        where a.AccountsStatusDetailsSets.LastOrDefault().AccountStatus == status && a.AccountYear >= StartYearStatus && a.AccountYear <= EndYearStatus
+                        select new AccountsExt { Account = a, LastStatus = a.AccountsStatusDetailsSets.LastOrDefault() }).ToList();
+            }
+            else
+            {
+                return (from a in accounts
+                        where a.AccountCompany != "ЭйТиЭйч" && a.AccountsStatusDetailsSets.LastOrDefault().AccountStatus == status && a.AccountYear >= StartYearStatus && a.AccountYear <= EndYearStatus 
+                        select new AccountsExt { Account = a, LastStatus = a.AccountsStatusDetailsSets.LastOrDefault() }).ToList();
+            }
+        }              
+        public void LoadStatusesForChoices()
+        {
+            AccountSelectedList.Clear();
+            foreach (var status in StatusChoicesList.Where(s => s.IsChecked))
+            {
+                foreach (var acc in ChooseAccountExt(status.Status, IsATH, AccountList))
+                    AccountSelectedList.Add(acc);
+            }
+        }
+        private void ExportToExcel()
+        {
+            var report = _excelReportService.CreateAccountWithStatusesReport(new ObservableCollection<AccountsMainSet>(AccountSelectedList.Select(a => a.Account)));
+            if (report != null)
+            {
+                _accountsController.SaveDialogWindow();
+                if (!string.IsNullOrWhiteSpace(_filename))
+                    _excelReportService.SaveReport(_filename, report);
+            }
+        }
+        #endregion statuses
 
         #endregion Methods
+    }
+    public class StatusChoice
+    {
+        public string Status { get; set; }
+        public bool IsChecked { get; set; } = false;
+    }
+
+    public class AccountsExt
+    {
+        public AccountsMainSet Account { get; set; }
+        public AccountsStatusDetailsSet LastStatus { get; set; }
     }
 }
