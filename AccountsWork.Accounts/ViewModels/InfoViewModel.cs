@@ -15,6 +15,7 @@ using AccountsWork.ExcelReports;
 using Prism.Events;
 using AccountsWork.Accounts.Controllers;
 using AccountsWork.Accounts.Events;
+using Syncfusion.Data;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -366,5 +367,24 @@ namespace AccountsWork.Accounts.ViewModels
     {
         public AccountsMainSet Account { get; set; }
         public AccountsStatusDetailsSet LastStatus { get; set; }
+    }
+    public class CustomAggregate : ISummaryAggregate
+    {
+        public CustomAggregate()
+        {
+        }
+        public decimal PositiveSummation { get; set; }
+
+        public Action<System.Collections.IEnumerable, string, System.ComponentModel.PropertyDescriptor> CalculateAggregateFunc()
+        {
+            return (items, property, pd) =>
+            {
+                var enumerableItems = items as IEnumerable<AccountsExt>;
+                foreach (var item in enumerableItems)
+                {
+                    this.PositiveSummation += item.Account.AccountAmount;
+                }
+            };
+        }
     }
 }

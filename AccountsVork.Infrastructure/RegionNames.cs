@@ -12,5 +12,6 @@ namespace AccountsWork.Infrastructure
         public const string MainNavigationRegion = "MainNavigationRegion";
         public const string AddAccountRegion = "AddAccountRegion";
         public const string AccountsTabRegion = "AccountsTabRegion";
+        public const string ReportsTabRegion = "ReportsTabRegion";
     }
 }

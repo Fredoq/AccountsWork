@@ -70,7 +70,8 @@ namespace AccountsWork.ExcelReports
                 ws.Cells[1, 5].Value = "Статус";
                 ws.Cells[1, 6].Value = "Дата статуса";
                 ws.Cells[1, 7].Value = "Комментарий";
-                ws.Cells[1, 1, 1, 7].Style.Font.Bold = true;
+                ws.Cells[1, 8].Value = "Описание";
+                ws.Cells[1, 1, 1, 8].Style.Font.Bold = true;
                 var i = 1;
                 foreach (var account in accountsList)
                 {
@@ -81,9 +82,10 @@ namespace AccountsWork.ExcelReports
                     ws.Cells[i + 1, 5].Value = account.AccountsStatusDetailsSets.LastOrDefault().AccountStatus;
                     ws.Cells[i + 1, 6].Value = account.AccountsStatusDetailsSets.LastOrDefault().AccountStatusDate;
                     ws.Cells[i + 1, 7].Value = account.AccountsStatusDetailsSets.LastOrDefault().Commentary;
+                    ws.Cells[i + 1, 8].Value = account.AccountDescription;
                     i++;
                 }
-                for (int k = 1; k <= 7; k++)
+                for (int k = 1; k <= 8; k++)
                 {
                     ws.Column(k).AutoFit(k);
                 }

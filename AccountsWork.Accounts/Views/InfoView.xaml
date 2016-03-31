@@ -7,6 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
+             xmlns:viewmodel="clr-namespace:AccountsWork.Accounts.ViewModels"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="AccountsWork.Accounts.Views.InfoView"
@@ -15,6 +16,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <helpers:BoolToOpacityConverter x:Key="opacityConverter"/>
+        <viewmodel:CustomAggregate x:Key="customAggregate"/>
     </UserControl.Resources>
     <Grid>
         <syncfusion:SfBusyIndicator IsBusy="{Binding IsInfoBusy, Mode=TwoWay}"
@@ -152,7 +154,7 @@
                                                  DateTime="{Binding CurrentYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                  CustomPattern="yyyy"/>-->
                     <syncfusion:SfRangeSlider HorizontalAlignment="Center"
-                                              Minimum="2010"
+                                              Minimum="2015"
                                               Width="200"
                                               ShowRange="True"
                                               TickFrequency="1"                                              
@@ -286,13 +288,22 @@
                         </StackPanel>
                         <syncfusion:SfDataGrid Grid.Column="1"
                                                AutoGenerateColumns="False"
+                                               AutoExpandGroups="True"
+                                               AllowGrouping="True"
+                                               AllowFrozenGroupHeaders="True"
+                                               NavigationMode="Row"
+                                               ShowColumnWhenGrouped="False"
+                                               ShowGroupDropArea="True"
                                                SelectedItem="{Binding SelectedAccountExt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                ItemsSource="{Binding AccountSelectedList}"
                                                Margin="3">
+                            <syncfusion:SfDataGrid.GroupColumnDescriptions>
+                                <syncfusion:GroupColumnDescription ColumnName="Account.AccountCompany" />
+                            </syncfusion:SfDataGrid.GroupColumnDescriptions>
                             <syncfusion:SfDataGrid.Columns>
                                 <syncfusion:GridTextColumn HeaderText="Номер счета"
                                                            MappingName="Account.AccountNumber"/>
-                                <syncfusion:GridTextColumn HeaderText="Номер компания"
+                                <syncfusion:GridTextColumn HeaderText="Компания"
                                                            MappingName="Account.AccountCompany"/>
                                 <syncfusion:GridCurrencyColumn HeaderText="Сумма"
                                                                CurrencySymbol="₽"

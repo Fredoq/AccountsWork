@@ -3,10 +3,69 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              xmlns:local="clr-namespace:AccountsWork.Reports.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Header" 
+                    Value="{Binding DataContext.ReportsTabItemHeader}">
+            </Setter>
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <ContentControl VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,0,7,0"
+                                            Content="{Binding}"/>
+                            <Button Grid.Column="1"
+                                    Content="x">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <infrastructure:CloseTabAction/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-        <Label Content="WHHHHH"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Rectangle Grid.Column="0"
+                       Grid.Row="0"
+                       Stroke="BlanchedAlmond"
+                       StrokeThickness="2"/>
+        <StackPanel Grid.Column="0" 
+                    MinWidth="230"
+                    Orientation="Vertical">
+            <Button Content="Отчет по Capex"
+                    Margin="6,10,6,4"
+                    HorizontalAlignment="Center"
+                    Padding="2"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="CapexReportView"/>
+        </StackPanel>
+        <Rectangle Grid.Column="1"
+                   Grid.Row="0"
+                   Stroke="BlanchedAlmond"
+                   StrokeThickness="2"/>
+        <TabControl Grid.Row="0"
+                    Grid.Column="1"
+                    prism:RegionManager.RegionName="{x:Static infrastructure:RegionNames.ReportsTabRegion}"/>
     </Grid>
 </UserControl>
