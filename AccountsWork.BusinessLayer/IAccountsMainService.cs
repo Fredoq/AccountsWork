@@ -11,5 +11,8 @@ namespace AccountsWork.BusinessLayer
         IList<AccountsMainSet> GetAllAccountsWithStores();
         IList<AccountsMainSet> GetAllAccountsForStore();
         IList<AccountsMainSet> GetAllAccountsWithStoresAndCapex();
+        AccountsMainSet GetAccountById(int id);
+        IList<AccountsMainSet> GetJustAccounts();
+        IList<AccountsMainSet> GetAccountsWithCapexesAndStatus();
     }
 }

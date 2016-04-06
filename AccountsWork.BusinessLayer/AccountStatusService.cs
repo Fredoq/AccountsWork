@@ -15,6 +15,7 @@ namespace AccountsWork.BusinessLayer
         IList<AccountsStatusDetailsSet> GetStatusesById(int id);
         void UpdateStatus(ObservableCollection<AccountsMainSet> accountForChangeList, string selectedStatus, DateTime accountForChangeDate);
         void UpdateStatus(ObservableCollection<AccountsMainSet> accountForChangeList, string selectedStatus, DateTime accountForChangeDate, int accountPayNumber);
+        IList<AccountsStatusDetailsSet> GetAllStatuses();
     }
 
     [Export(typeof(IAccountStatusService))]
@@ -36,6 +37,11 @@ namespace AccountsWork.BusinessLayer
         public AccountsStatusDetailsSet GetAccountStatusById(int id)
         {
             return _accountsStatusRepository.GetList(s => s.AccountMainId == id).LastOrDefault();
+        }
+
+        public IList<AccountsStatusDetailsSet> GetAllStatuses()
+        {
+            return _accountsStatusRepository.GetAll();
         }
 
         public IList<AccountsStatusDetailsSet> GetStatusesById(int id)
