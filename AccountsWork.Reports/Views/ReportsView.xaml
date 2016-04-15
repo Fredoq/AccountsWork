@@ -59,6 +59,18 @@
                     Padding="2"
                     Command="{Binding NavigateCommand}"
                     CommandParameter="CapexReportView"/>
+            <Button Content="Детальный отчет по ресторанам"
+                    Margin="4"
+                    HorizontalAlignment="Center"
+                    Padding="2"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="ServiceReportForStoreView"/>
+            <Button Content="Загрузить инфо по сервису"
+                    Margin="6,10,6,4"
+                    HorizontalAlignment="Center"
+                    Padding="2"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="LoadServiceInvoView"/>
         </StackPanel>
         <Rectangle Grid.Column="1"
                    Grid.Row="0"

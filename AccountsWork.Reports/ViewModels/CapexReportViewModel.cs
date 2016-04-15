@@ -167,6 +167,7 @@ namespace AccountsWork.Reports.ViewModels
             {
                 CapexList.Clear();
                 CapexAccountsList.Clear();
+                StatusSumList.Clear();
                 foreach (var capex in FullCapexList.Where(f => f.CapexYear == SelectedYear))
                 {
                     var capexWithRest = new CapexWithRest();

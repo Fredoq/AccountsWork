@@ -138,8 +138,8 @@ namespace AccountsWork.Accounts.ViewModels
 
         private void SearchAccountWork(object sender, DoWorkEventArgs e)
         {
-            IsSearchAccBusy = true;
-            SearchAccount();
+                IsSearchAccBusy = true;
+                SearchAccount();
         }
         private void SeachAccountWork_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -148,7 +148,10 @@ namespace AccountsWork.Accounts.ViewModels
         }
         private void StartSearch()
         {
-            _searchWorker.RunWorkerAsync();
+            if (!IsSearchAccBusy)
+            {
+                _searchWorker.RunWorkerAsync();
+            }
         }
         private void SearchAccount()
         {

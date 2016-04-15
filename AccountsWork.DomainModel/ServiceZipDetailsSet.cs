@@ -23,6 +23,7 @@ namespace AccountsWork.DomainModel
         public int StoreNumber { get; set; }
         public decimal ZipPrice { get; set; }
         public string Company { get; set; }
+        public Nullable<int> ServiceYear { get; set; }
     
         public virtual StoresSet StoresSet { get; set; }
         public virtual ZipSet ZipSet { get; set; }

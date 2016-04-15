@@ -91,6 +91,7 @@
     <Compile Include="AccountsStatusRepository.cs" />
     <Compile Include="AccountStoresRepository.cs" />
     <Compile Include="CapexRepository.cs" />
+    <Compile Include="ServiceZipsRepository.cs" />
     <Compile Include="WorksRepository.cs" />
     <Compile Include="ExpenseRepository.cs" />
     <Compile Include="StoresRepository.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="AccountsMainRepository.cs" />
     <Compile Include="IGenericDataRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ZipRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="AccountsModel.edmx">

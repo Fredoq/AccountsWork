@@ -107,6 +107,7 @@
           <Property Name="StoreNumber" Type="int" Nullable="false" />
           <Property Name="ZipPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Company" Type="nvarchar" MaxLength="50" />
+          <Property Name="ServiceYear" Type="int" />
         </EntityType>
         <EntityType Name="StoreProvenWorkSet">
           <Key>
@@ -479,6 +480,7 @@
           <Property Name="Company" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="StoresSet" Relationship="Self.FK_ServiceZipDetailsSet_StoresSet" FromRole="ServiceZipDetailsSet" ToRole="StoresSet" />
           <NavigationProperty Name="ZipSet" Relationship="Self.FK_ServiceZipDetailsSet_ZipSet" FromRole="ServiceZipDetailsSet" ToRole="ZipSet" />
+          <Property Name="ServiceYear" Type="Int32" />
         </EntityType>
         <EntityType Name="StoreProvenWorkSet">
           <Key>
@@ -846,6 +848,7 @@
           <EntitySetMapping Name="ServiceZipDetailsSets">
             <EntityTypeMapping TypeName="AccountsModel.ServiceZipDetailsSet">
               <MappingFragment StoreEntitySet="ServiceZipDetailsSet">
+                <ScalarProperty Name="ServiceYear" ColumnName="ServiceYear" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ZipName" ColumnName="ZipName" />
                 <ScalarProperty Name="ServiceMonth" ColumnName="ServiceMonth" />

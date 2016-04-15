@@ -81,6 +81,7 @@
     <Compile Include="AccountStoresService.cs" />
     <Compile Include="AsyncQuery.cs" />
     <Compile Include="CapexesService.cs" />
+    <Compile Include="ServiceZipsService.cs" />
     <Compile Include="StoresWorkService.cs" />
     <Compile Include="ExpensesService.cs" />
     <Compile Include="StoresService.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="ITypesService.cs" />
     <Compile Include="ICompaniesService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ZipService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
