@@ -130,6 +130,7 @@
           <Property Name="StoreRegion" Type="nvarchar" MaxLength="50" />
           <Property Name="StoreCompany" Type="nvarchar" MaxLength="50" />
           <Property Name="StoreOpenDate" Type="date" />
+          <Property Name="StoreCloseDate" Type="date" />
         </EntityType>
         <EntityType Name="TypeSet">
           <Key>
@@ -509,6 +510,7 @@
           <Property Name="StoreRegion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="StoreCompany" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="StoreOpenDate" Type="DateTime" Precision="0" />
+          <Property Name="StoreCloseDate" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="TypeSet">
           <Key>
@@ -876,6 +878,7 @@
           <EntitySetMapping Name="StoresSets">
             <EntityTypeMapping TypeName="AccountsModel.StoresSet">
               <MappingFragment StoreEntitySet="StoresSet">
+                <ScalarProperty Name="StoreCloseDate" ColumnName="StoreCloseDate" />
                 <ScalarProperty Name="StoreOpenDate" ColumnName="StoreOpenDate" />
                 <ScalarProperty Name="StoreCompany" ColumnName="StoreCompany" />
                 <ScalarProperty Name="StoreRegion" ColumnName="StoreRegion" />

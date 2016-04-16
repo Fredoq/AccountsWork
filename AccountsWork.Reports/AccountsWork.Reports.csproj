@@ -125,6 +125,7 @@
     <Compile Include="Model\AccountsWithStatus.cs" />
     <Compile Include="Model\CapexWithRest.cs" />
     <Compile Include="Model\StatusSum.cs" />
+    <Compile Include="Model\StoresWithCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportsModule.cs" />
     <Compile Include="ViewModels\CapexReportViewModel.cs" />

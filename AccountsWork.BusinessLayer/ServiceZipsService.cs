@@ -3,12 +3,14 @@ using AccountsWork.DomainModel;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System;
 
 namespace AccountsWork.BusinessLayer
 {
     public interface IServiceZipsService
     {
         void AddServiceZips(IList<ServiceZipDetailsSet> serviceZipList);
+        IList<ServiceZipDetailsSet> GetAllWithZips();
     }
 
     [Export(typeof(IServiceZipsService))]
@@ -25,6 +27,11 @@ namespace AccountsWork.BusinessLayer
         public void AddServiceZips(IList<ServiceZipDetailsSet> serviceZipList)
         {
             _serviceZipsRepository.Add(serviceZipList.ToArray());
+        }
+
+        public IList<ServiceZipDetailsSet> GetAllWithZips()
+        {
+            return _serviceZipsRepository.GetAll(s => s.ZipSet);
         }
     }
 }
