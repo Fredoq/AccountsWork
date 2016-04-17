@@ -1,4 +1,5 @@
-﻿using AccountsWork.Reports.ViewModels;
+﻿using AccountsWork.Reports.Model;
+using AccountsWork.Reports.ViewModels;
 using System.ComponentModel.Composition;
 using System.Windows.Controls;
 
@@ -23,6 +24,17 @@ namespace AccountsWork.Reports.Views
         public ServiceReportForStoreView()
         {
             InitializeComponent();
+        }
+
+        private void SfChart_SelectionChanged(object sender, Syncfusion.UI.Xaml.Charts.ChartSelectionChangedEventArgs e)
+        {
+            if (e.SelectedSegment != null)
+            {
+                var viewModel = DataContext as ServiceReportForStoreViewModel;
+                var stackedStore = (StackedStoreInfo)e.SelectedSegment.Item;
+                if (stackedStore != null)
+                    viewModel.SelectedStackedStore = stackedStore;
+            }
         }
     }
 }

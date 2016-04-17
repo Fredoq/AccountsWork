@@ -3,14 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:AccountsWork.Reports.Views"
+             xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              mc:Ignorable="d" 
              >
-    <Grid>
+    <UserControl.Resources>
+        <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
+    </UserControl.Resources>
+    <Grid Opacity="{Binding IsServiceBusy, Converter={StaticResource BoolToOpacity}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <syncfusion:SfBusyIndicator IsBusy="{Binding IsServiceBusy}"
                                     AnimationType="SingleCircle"
                                     Header="Загрузка..."/>
@@ -18,7 +28,8 @@
                                FontSize="9"
                                AllowFiltering="True"
                                ShowGroupDropArea="True"
-                               SelectionMode="Multiple"
+                               SelectionMode="Single"
+                               SelectionUnit="Row"
                                SelectedItem="{Binding SelectedStore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                ItemsSource="{Binding StoresWithCheckList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                AutoGenerateColumns="False">
@@ -42,6 +53,102 @@
                                                HeaderText="Выбор"
                                                ColumnSizer="SizeToHeader"
                                                AllowEditing="True"/>
+            </syncfusion:SfDataGrid.Columns>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="CurrentCellValueChanged">
+                    <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </syncfusion:SfDataGrid>
+        <syncfusion:SfChart Grid.Column="1"
+                            Grid.Row="0"
+                            Margin="5"
+                            SelectionChanged="SfChart_SelectionChanged"
+                            AreaBorderThickness="0,1,1,1">
+            <syncfusion:SfChart.Behaviors>
+                <syncfusion:ChartSelectionBehavior EnableSegmentSelection="True"
+                                                   SelectionStyle="Single"
+                                                   SelectionMode="MouseClick"/>
+            </syncfusion:SfChart.Behaviors>
+            <syncfusion:SfChart.Legend>
+                <syncfusion:ChartLegend Foreground="Black" FontSize="18"/>
+            </syncfusion:SfChart.Legend>
+            <syncfusion:SfChart.Header>
+                <TextBlock FontSize="20"
+                           Foreground="Black" 
+                           FontFamily="Segoe UI" 
+                           Margin="0,0,0,20">Ремонт/Оборудование</TextBlock>
+            </syncfusion:SfChart.Header>
+            <syncfusion:SfChart.PrimaryAxis>
+                <syncfusion:CategoryAxis FontSize="20"   
+                                         Header="Ресторан" 
+                                         Foreground="Black"/>
+            </syncfusion:SfChart.PrimaryAxis>
+            <syncfusion:SfChart.SecondaryAxis>
+                <syncfusion:NumericalAxis FontSize="20"  
+                                          Header="Сумма" 
+                                          Foreground="Black"/>
+            </syncfusion:SfChart.SecondaryAxis>
+            <syncfusion:StackingBarSeries EnableAnimation="True" 
+                                          LegendIcon="Circle"  
+                                          Label="Оборудование" 
+                                          XBindingPath="Store.StoreNumber" 
+                                          YBindingPath="EquipmentSum"
+                                          ItemsSource="{Binding StackedStoreList}" 
+                                          ShowTooltip="True" 
+                                          syncfusion:ChartTooltip.EnableAnimation="True">
+                <syncfusion:StackingBarSeries.AdornmentsInfo>
+                    <syncfusion:ChartAdornmentInfo AdornmentsPosition="TopAndBottom" 
+                                                   ShowLabel="True"/>
+                </syncfusion:StackingBarSeries.AdornmentsInfo>
+            </syncfusion:StackingBarSeries>
+            <syncfusion:StackingBarSeries EnableAnimation="True" 
+                                          LegendIcon="Circle" 
+                                          Label="Ремонт"                                          
+                                          XBindingPath="Store.StoreNumber" 
+                                          YBindingPath="RepairSum"
+                                          ItemsSource="{Binding StackedStoreList}" 
+                                          ShowTooltip="True" 
+                                          syncfusion:ChartTooltip.EnableAnimation="True">
+                <syncfusion:StackingBarSeries.AdornmentsInfo>
+                    <syncfusion:ChartAdornmentInfo AdornmentsPosition="TopAndBottom"
+                                                   
+                                                   ShowLabel="True"/>
+                </syncfusion:StackingBarSeries.AdornmentsInfo>
+            </syncfusion:StackingBarSeries>
+        </syncfusion:SfChart>
+        <syncfusion:SfDateTimeRangeNavigator Grid.Row="1"
+                                             Height="100"                                             
+                                             Minimum="{Binding MinimumDate}"
+                                             Maximum="{Binding MaximumDate}"                                             
+                                             ViewRangeStart="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             ViewRangeEnd="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Grid.Column="1">
+            <syncfusion:SfDateTimeRangeNavigator.Intervals>
+                <syncfusion:Interval IntervalType="Year"/>
+                <syncfusion:Interval IntervalType="Month"/>
+            </syncfusion:SfDateTimeRangeNavigator.Intervals>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ValueChanged">
+                    <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </syncfusion:SfDateTimeRangeNavigator>
+        <syncfusion:SfDataGrid Grid.Column="2"
+                               VerticalAlignment="Top"
+                               AutoGenerateColumns="False"
+                               AutoGenerateRelations="True"
+                               ItemsSource="{Binding StoreZipList}">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn HeaderText="Зип"
+                                           MappingName="ZipName"/>
+                <syncfusion:GridCurrencyColumn HeaderText="Сумма"
+                                               MappingName="Summ"
+                                               CurrencyDecimalDigits="2"
+                                               CurrencyDecimalSeparator=","
+                                               CurrencyGroupSeparator=" "
+                                               CurrencyGroupSizes="3"
+                                               CurrencySymbol="₽"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
     </Grid>
