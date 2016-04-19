@@ -83,8 +83,6 @@
                                                    MappingName="AccountAmount"
                                                    CurrencyDecimalSeparator=","
                                                    CurrencySymbol="₽"/>
-                    <syncfusion:GridTextColumn HeaderText="Компания"
-                                               MappingName="AccountCompany"/>
                     <syncfusion:GridTextColumn HeaderText="Capex"
                                                MappingName="AccountCapex"/>
                     <syncfusion:GridTextColumn HeaderText="Описание"

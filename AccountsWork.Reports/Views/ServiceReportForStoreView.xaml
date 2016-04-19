@@ -12,19 +12,22 @@
         <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
     </UserControl.Resources>
     <Grid Opacity="{Binding IsServiceBusy, Converter={StaticResource BoolToOpacity}}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition />
         </Grid.RowDefinitions>
         <syncfusion:SfBusyIndicator IsBusy="{Binding IsServiceBusy}"
                                     AnimationType="SingleCircle"
+                                    Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
                                     Header="Загрузка..."/>
-        <syncfusion:SfDataGrid Grid.Column="0"
+        <syncfusion:DockingManager AutoHideAnimationMode="Scale"
+                                   PersistState="false" 
+                                   Grid.Row="1"
+                                   UseDocumentContainer="True"
+                                   ContainerMode="TDI">
+            <syncfusion:SfDataGrid Grid.Column="0"
                                FontSize="9"
                                AllowFiltering="True"
                                ShowGroupDropArea="True"
@@ -32,39 +35,47 @@
                                SelectionUnit="Row"
                                SelectedItem="{Binding SelectedStore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                ItemsSource="{Binding StoresWithCheckList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               AutoGenerateColumns="False">
-            <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn MappingName="Store.StoreNumber"
+                               AutoGenerateColumns="False"
+                               syncfusion:DockingManager.Header="Рестораны"
+                               syncfusion:DockingManager.State="AutoHidden"
+                               syncfusion:DockingManager.DesiredWidthInDockedMode="500"                                  
+                               syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                               syncfusion:DockingManager.SideInDockedMode="Right">
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn MappingName="Store.StoreNumber"
                                            HeaderText="Номер"                                           
                                            ColumnSizer="SizeToHeader"/>
-                <syncfusion:GridTextColumn MappingName="Store.StoreName"
+                    <syncfusion:GridTextColumn MappingName="Store.StoreName"
                                            MaximumWidth="70"
                                            HeaderText="Название ресторана"
                                            ColumnSizer="SizeToHeader"/>
-                <syncfusion:GridTextColumn MappingName="Store.StoreRegion"
+                    <syncfusion:GridTextColumn MappingName="Store.StoreRegion"
                                            HeaderText="Регион"
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
-                <syncfusion:GridTextColumn MappingName="Store.StoreCompany"
+                    <syncfusion:GridTextColumn MappingName="Store.StoreCompany"
                                            HeaderText="Компания"
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
-                <syncfusion:GridCheckBoxColumn MappingName="Check"
+                    <syncfusion:GridCheckBoxColumn MappingName="Check"
                                                HeaderText="Выбор"
                                                ColumnSizer="SizeToHeader"
                                                AllowEditing="True"/>
-            </syncfusion:SfDataGrid.Columns>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="CurrentCellValueChanged">
-                    <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </syncfusion:SfDataGrid>
-        <syncfusion:SfChart Grid.Column="1"
-                            Grid.Row="0"
+                </syncfusion:SfDataGrid.Columns>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="CurrentCellValueChanged">
+                        <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </syncfusion:SfDataGrid>
+            <syncfusion:SfChart 
                             Margin="5"
                             SelectionChanged="SfChart_SelectionChanged"
-                            AreaBorderThickness="0,1,1,1">
+                            AreaBorderThickness="0,1,1,1"
+                            syncfusion:DockingManager.State="Document"
+                            syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                            syncfusion:DockingManager.Header="Диаграмма"
+                            syncfusion:DockingManager.SideInDockedMode="Top">
             <syncfusion:SfChart.Behaviors>
                 <syncfusion:ChartSelectionBehavior EnableSegmentSelection="True"
                                                    SelectionStyle="Single"
@@ -117,28 +128,35 @@
                 </syncfusion:StackingBarSeries.AdornmentsInfo>
             </syncfusion:StackingBarSeries>
         </syncfusion:SfChart>
-        <syncfusion:SfDateTimeRangeNavigator Grid.Row="1"
+            <syncfusion:SfDateTimeRangeNavigator 
+                                             x:Name="dtNav"
                                              Height="100"                                             
                                              Minimum="{Binding MinimumDate}"
                                              Maximum="{Binding MaximumDate}"                                             
                                              ViewRangeStart="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              ViewRangeEnd="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                             Grid.Column="1">
-            <syncfusion:SfDateTimeRangeNavigator.Intervals>
-                <syncfusion:Interval IntervalType="Year"/>
-                <syncfusion:Interval IntervalType="Month"/>
-            </syncfusion:SfDateTimeRangeNavigator.Intervals>
-            <i:Interaction.Triggers>
+                                             syncfusion:DockingManager.State="Dock"
+                                             syncfusion:DockingManager.Header="Интервал"
+                                             syncfusion:DockingManager.DesiredHeightInDockedMode="140"
+                                             syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                                             syncfusion:DockingManager.SideInDockedMode="Bottom"
+                                             >
+                <i:Interaction.Triggers>
                 <i:EventTrigger EventName="ValueChanged">
                     <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </syncfusion:SfDateTimeRangeNavigator>
-        <syncfusion:SfDataGrid Grid.Column="2"
+        <syncfusion:SfDataGrid 
                                VerticalAlignment="Top"
                                AutoGenerateColumns="False"
                                AutoGenerateRelations="True"
-                               ItemsSource="{Binding StoreZipList}">
+                               ItemsSource="{Binding StoreZipList}"
+                               syncfusion:DockingManager.State="AutoHidden"
+                               syncfusion:DockingManager.Header="Список запчастей"
+                               syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                               syncfusion:DockingManager.DesiredWidthInDockedMode="560"
+                               syncfusion:DockingManager.SideInDockedMode="Right">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn HeaderText="Зип"
                                            MappingName="ZipName"/>
@@ -151,5 +169,6 @@
                                                CurrencySymbol="₽"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
+        </syncfusion:DockingManager>
     </Grid>
 </UserControl>

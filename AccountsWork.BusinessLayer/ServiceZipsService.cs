@@ -11,6 +11,7 @@ namespace AccountsWork.BusinessLayer
     {
         void AddServiceZips(IList<ServiceZipDetailsSet> serviceZipList);
         IList<ServiceZipDetailsSet> GetAllWithZips();
+        IList<ServiceZipDetailsSet> GetAll();
     }
 
     [Export(typeof(IServiceZipsService))]
@@ -27,6 +28,11 @@ namespace AccountsWork.BusinessLayer
         public void AddServiceZips(IList<ServiceZipDetailsSet> serviceZipList)
         {
             _serviceZipsRepository.Add(serviceZipList.ToArray());
+        }
+
+        public IList<ServiceZipDetailsSet> GetAll()
+        {
+            return _serviceZipsRepository.GetAll();
         }
 
         public IList<ServiceZipDetailsSet> GetAllWithZips()

@@ -32,6 +32,8 @@ namespace AccountsWork.Reports.ViewModels
         private IAccountsMainService _accountsMainService;
         private IList<AccountsMainSet> _accountsList;
         private ObservableCollection<StatusSum> _statusSumList;
+        private IList<StoresSet> _storesList;
+        private IStoresService _storesService;
         #endregion Private Fields
 
         #region Public Properties
@@ -105,7 +107,7 @@ namespace AccountsWork.Reports.ViewModels
         #endregion Commands
 
         [ImportingConstructor]
-        public CapexReportViewModel(ICapexesService capexService, IAccountStatusService statusService, IAccountsMainService accountsMainService)
+        public CapexReportViewModel(ICapexesService capexService, IAccountStatusService statusService, IAccountsMainService accountsMainService, IStoresService storeService)
         {
             #region infrastructure
             ReportsTabItemHeader = "Отчет по CAPEX";
@@ -120,12 +122,14 @@ namespace AccountsWork.Reports.ViewModels
             LoadCapexCommand = new DelegateCommand(LoadCapex);
             LoadSelectedCapexCommand = new DelegateCommand(LoadSelectedCapex);
             StatusSumList = new ObservableCollection<StatusSum>();
+            _storesList = new List<StoresSet>();
             #endregion capex
 
             #region services
             _capexService = capexService;
             _statusService = statusService;
             _accountsMainService = accountsMainService;
+            _storesService = storeService;
             #endregion services
 
             #region workers
@@ -148,7 +152,8 @@ namespace AccountsWork.Reports.ViewModels
         {
             IsCapexBusy = true;
             FullCapexList = _capexService.GetCapexes();
-            AccountsList = _accountsMainService.GetAccountsWithCapexesAndStatus();       
+            AccountsList = _accountsMainService.GetAllAccountsWithStoresAndCapex();
+            _storesList = _storesService.GetStores();  
         }
         private void LoadFullCapexInfo_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -176,11 +181,14 @@ namespace AccountsWork.Reports.ViewModels
                     if (capex.CapexAmount == 0)
                     {                        
                         capexWithRest.Rest = sum;
+                        capexWithRest.Pay = 100;
                     }
                     else
                     {
                         capexWithRest.Rest = capex.CapexAmount - sum;
+                        capexWithRest.Pay = sum == 0 ? 0 : Convert.ToInt32(sum * 100 / capex.CapexAmount);
                     }
+                    capexWithRest.PaySum = sum;            
                     CapexList.Add(capexWithRest);             
                 }
             }
@@ -194,7 +202,7 @@ namespace AccountsWork.Reports.ViewModels
                 var query = from a in AccountsList
                             where a.AccountsStatusDetailsSets.LastOrDefault().AccountStatus != Statuses.InCancel &&
                                   a.AccountsCapexInfoSets.Any(c => c.CapexId == SelectedCapex.Capex.Id)
-                            select new AccountsWithStatus { Account = a, Status = a.AccountsStatusDetailsSets.LastOrDefault() };
+                            select new AccountsWithStatus { Account = a, Status = a.AccountsStatusDetailsSets.LastOrDefault(), StoresList = _storesList.Where(s => a.AccountsStoreDetailsSets.Any(store => store.AccountStore == s.StoreNumber)).ToList() };
                 var groups = from a in AccountsList
                              where a.AccountsStatusDetailsSets.LastOrDefault().AccountStatus != Statuses.InCancel &&
                                    a.AccountsCapexInfoSets.Any(c => c.CapexId == SelectedCapex.Capex.Id)

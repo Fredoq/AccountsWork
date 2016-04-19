@@ -24,6 +24,9 @@ namespace AccountsWork.Reports.Views
         public ServiceReportForStoreView()
         {
             InitializeComponent();
+
+            dtNav.Intervals.Add(new Syncfusion.UI.Xaml.Charts.Interval { IntervalType = Syncfusion.UI.Xaml.Charts.NavigatorIntervalType.Year });
+            dtNav.Intervals.Add(new Syncfusion.UI.Xaml.Charts.Interval { IntervalType = Syncfusion.UI.Xaml.Charts.NavigatorIntervalType.Month });
         }
 
         private void SfChart_SelectionChanged(object sender, Syncfusion.UI.Xaml.Charts.ChartSelectionChangedEventArgs e)
