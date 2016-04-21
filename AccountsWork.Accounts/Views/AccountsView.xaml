@@ -38,7 +38,6 @@
                                         <infrastructure:CloseTabAction/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                                
                             </Button>
                         </Grid>
                     </DataTemplate>

@@ -27,7 +27,24 @@
                                    Grid.Row="1"
                                    UseDocumentContainer="True"
                                    ContainerMode="TDI">
-            <syncfusion:SfDataGrid Grid.Column="0"
+            <Grid syncfusion:DockingManager.Header="Рестораны"
+                  syncfusion:DockingManager.State="AutoHidden"
+                  syncfusion:DockingManager.DesiredWidthInDockedMode="500"                                  
+                  syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                  syncfusion:DockingManager.SideInDockedMode="Right">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <CheckBox Content="Выделить все" 
+                          IsChecked="{Binding IsSelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding SelectAllCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </CheckBox>
+                <syncfusion:SfDataGrid Grid.Row="1"
                                FontSize="9"
                                AllowFiltering="True"
                                ShowGroupDropArea="True"
@@ -36,38 +53,35 @@
                                SelectedItem="{Binding SelectedStore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                ItemsSource="{Binding StoresWithCheckList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                AutoGenerateColumns="False"
-                               syncfusion:DockingManager.Header="Рестораны"
-                               syncfusion:DockingManager.State="AutoHidden"
-                               syncfusion:DockingManager.DesiredWidthInDockedMode="500"                                  
-                               syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
-                               syncfusion:DockingManager.SideInDockedMode="Right">
-                <syncfusion:SfDataGrid.Columns>
-                    <syncfusion:GridTextColumn MappingName="Store.StoreNumber"
+                               >
+                    <syncfusion:SfDataGrid.Columns>
+                        <syncfusion:GridTextColumn MappingName="Store.StoreNumber"
                                            HeaderText="Номер"                                           
                                            ColumnSizer="SizeToHeader"/>
-                    <syncfusion:GridTextColumn MappingName="Store.StoreName"
+                        <syncfusion:GridTextColumn MappingName="Store.StoreName"
                                            MaximumWidth="70"
                                            HeaderText="Название ресторана"
                                            ColumnSizer="SizeToHeader"/>
-                    <syncfusion:GridTextColumn MappingName="Store.StoreRegion"
+                        <syncfusion:GridTextColumn MappingName="Store.StoreRegion"
                                            HeaderText="Регион"
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
-                    <syncfusion:GridTextColumn MappingName="Store.StoreCompany"
+                        <syncfusion:GridTextColumn MappingName="Store.StoreCompany"
                                            HeaderText="Компания"
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
-                    <syncfusion:GridCheckBoxColumn MappingName="Check"
+                        <syncfusion:GridCheckBoxColumn MappingName="Check"
                                                HeaderText="Выбор"
                                                ColumnSizer="SizeToHeader"
                                                AllowEditing="True"/>
-                </syncfusion:SfDataGrid.Columns>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="CurrentCellValueChanged">
-                        <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </syncfusion:SfDataGrid>
+                    </syncfusion:SfDataGrid.Columns>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="CurrentCellValueChanged">
+                            <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </syncfusion:SfDataGrid>
+            </Grid>
             <syncfusion:SfChart 
                             Margin="5"
                             SelectionChanged="SfChart_SelectionChanged"

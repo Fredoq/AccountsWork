@@ -14,5 +14,6 @@ namespace AccountsWork.BusinessLayer
         AccountsMainSet GetAccountById(int id);
         IList<AccountsMainSet> GetJustAccounts();
         IList<AccountsMainSet> GetAccountsWithCapexesAndStatus();
+        IList<AccountsMainSet> GetServiceAccounts();
     }
 }

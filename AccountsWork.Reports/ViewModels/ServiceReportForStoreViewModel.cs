@@ -34,6 +34,7 @@ namespace AccountsWork.Reports.ViewModels
         private IList<string> _monthes;
         private ObservableCollection<StoreZip> _storeZipList;
         private StackedStoreInfo _selectedStackedStore;
+        private bool _isSelectAll;
         #endregion Private Fields
 
         #region Public Properties
@@ -108,6 +109,11 @@ namespace AccountsWork.Reports.ViewModels
             get { return _selectedStackedStore; }
             set { SetProperty(ref _selectedStackedStore, value); LoadSelectedStorezip(); }
         }
+        public bool IsSelectAll
+        {
+            get { return _isSelectAll; }
+            set { SetProperty(ref _isSelectAll, value); }
+        }       
         #endregion report
 
         #endregion Public Properties
@@ -116,6 +122,7 @@ namespace AccountsWork.Reports.ViewModels
 
         #region report
         public DelegateCommand LoadReportCommand { get; set; }
+        public DelegateCommand SelectAllCommand { get; set; }
         #endregion report
 
         #endregion Commands
@@ -139,6 +146,8 @@ namespace AccountsWork.Reports.ViewModels
             LoadReportCommand = new DelegateCommand(LoadReport);
             StackedStoreList = new ObservableCollection<StackedStoreInfo>();
             StoreZipList = new ObservableCollection<StoreZip>();
+            IsSelectAll = false;
+            SelectAllCommand = new DelegateCommand(SelectAll);
             #endregion report
 
             #region services
@@ -151,7 +160,7 @@ namespace AccountsWork.Reports.ViewModels
             _worker.DoWork += LoadServiceZip;
             _worker.RunWorkerCompleted += LoadServiceZip_Completed;
             #endregion workers
-        }      
+        }        
         #endregion Constructor
 
         #region Methods
@@ -188,6 +197,7 @@ namespace AccountsWork.Reports.ViewModels
                 }
             return num;
         }
+      
         #endregion infrastructure
 
         #region report
@@ -214,6 +224,21 @@ namespace AccountsWork.Reports.ViewModels
             foreach(var item in query)
             {
                 StoreZipList.Add(item);
+            }
+        }
+        private void SelectAll()
+        {
+            if (IsSelectAll)
+            {
+                foreach (var store in StoresWithCheckList)
+                    store.Check = true;
+                LoadReport();
+            }
+            else
+            {
+                foreach (var store in StoresWithCheckList)
+                    store.Check = false;
+                LoadReport();
             }
         }
         #endregion report

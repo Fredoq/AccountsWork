@@ -26,6 +26,9 @@ namespace AccountsWork.Reports.ViewModels
         private IList<StoresSet> _storesList;
         private ObservableCollection<MonthExp> _monthExpList;
         private IList<string> _monthes;
+        private IList<AccountsMainSet> _serviceAccounts;
+        private IAccountsMainService _accountsMainService;
+        private ObservableCollection<MonthExp> _monthServExpList;
         #endregion Private Fields
 
         #region Public Properties
@@ -59,10 +62,20 @@ namespace AccountsWork.Reports.ViewModels
             get { return _storesList; }
             set { SetProperty(ref _storesList, value); }
         }
+        public IList<AccountsMainSet> ServiceAccountsList
+        {
+            get { return _serviceAccounts; }
+            set { SetProperty(ref _serviceAccounts, value); }
+        }
         public ObservableCollection<MonthExp> MonthExpList
         {
             get { return _monthExpList; }
             set { SetProperty(ref _monthExpList, value); }
+        }
+        public ObservableCollection<MonthExp> MonthServExpList
+        {
+            get { return _monthServExpList; }
+            set { SetProperty(ref _monthServExpList, value); }
         }
         #endregion report
 
@@ -70,7 +83,7 @@ namespace AccountsWork.Reports.ViewModels
 
         #region Constructor
         [ImportingConstructor]
-        public ServiceReportForStoreByMonthViewModel(IServiceZipsService serviceZipService, IStoresService storeService)
+        public ServiceReportForStoreByMonthViewModel(IServiceZipsService serviceZipService, IStoresService storeService, IAccountsMainService accountsMainService)
         {
             #region infrastructure
             ReportsTabItemHeader = "Отчет по затратам на ресторан";
@@ -81,11 +94,14 @@ namespace AccountsWork.Reports.ViewModels
             ServiceZipList = new ObservableCollection<ServiceZipDetailsSet>();
             MonthExpList = new ObservableCollection<MonthExp>();
             StoresList = new List<StoresSet>();
+            ServiceAccountsList = new List<AccountsMainSet>();
+            MonthServExpList = new ObservableCollection<MonthExp>();
             #endregion report
 
             #region services
             _serviceZipService = serviceZipService;
             _storeService = storeService;
+            _accountsMainService = accountsMainService;
             #endregion services
 
             #region workers
@@ -104,6 +120,7 @@ namespace AccountsWork.Reports.ViewModels
             ServiceZipList.Clear();
             StoresList.Clear();
             MonthExpList.Clear();
+            ServiceAccountsList.Clear();
             IsServiceBusy = true;
             _worker.RunWorkerAsync();       
         }
@@ -112,12 +129,19 @@ namespace AccountsWork.Reports.ViewModels
             IsServiceBusy = false;
             foreach (var exp in GetMonthExpList())
                 MonthExpList.Add(exp);
+            var list = GetServiceExp();
+            foreach (var ser in list)
+            {
+                if (ser.MonthYear >= new DateTime(2015,1,1))
+                    MonthServExpList.Add(ser);
+            }
         }
 
         private void LoadServiceZip(object sender, DoWorkEventArgs e)
         {
             ServiceZipList = new ObservableCollection<ServiceZipDetailsSet>(_serviceZipService.GetAll());
-            StoresList = _storeService.GetStores().Where(s => s.StoreNumber > 10000).ToList();           
+            StoresList = _storeService.GetStores().Where(s => s.StoreNumber > 10000).ToList();
+            ServiceAccountsList = _accountsMainService.GetServiceAccounts();  
         }
         private int ReturnNumberMonth(string month)
         {
@@ -143,6 +167,15 @@ namespace AccountsWork.Reports.ViewModels
                     group s by new { s.ServiceMonth, s.ServiceYear }
                     into ym
                     select new MonthExp { MonthYear = new DateTime(ym.Key.ServiceYear.Value, ReturnNumberMonth(ym.Key.ServiceMonth), 1), Expense = (ym.Where(s => s.ZipQuantity.Value == 0).Sum(s => s.ZipPrice) + ym.Where(s => s.ZipQuantity.Value != 0).Sum(s => s.ZipPrice * s.ZipQuantity.Value)) / StoreCount(new DateTime(ym.Key.ServiceYear.Value, ReturnNumberMonth(ym.Key.ServiceMonth), 1)), StoreCount = StoreCount(new DateTime(ym.Key.ServiceYear.Value, ReturnNumberMonth(ym.Key.ServiceMonth), 1)) }).ToList();
+        }
+        private IList<MonthExp> GetServiceExp()
+        {
+            return (from a in ServiceAccountsList
+                    where a.AccountCompany == "ККС Интер Фуд" || a.AccountCompany == "АйСиЭл"
+                    group a by new { a.AccountDate.Month, a.AccountDate.Year }
+                    into ym
+                    select new MonthExp { MonthYear = new DateTime(ym.Key.Year, ym.Key.Month, 1), Expense = ym.Sum(ac => ac.AccountAmount) / StoreCount(new DateTime(ym.Key.Year, ym.Key.Month, 1)), StoreCount = StoreCount(new DateTime(ym.Key.Year, ym.Key.Month, 1)) }).ToList();
+
         }
         #endregion report
 
