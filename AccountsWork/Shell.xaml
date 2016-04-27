@@ -10,10 +10,17 @@
         mc:Ignorable="d"
         syncfusion:SkinStorage.VisualStyle="Metro"
         TitleTextAlignment="Center"
-        TitleBarBackground="AntiqueWhite"
-        ResizeBorderBrush="AntiqueWhite"
-        ResizeBorderThickness="3"
-        Title="Счета" Height="350" Width="525" WindowState="Maximized" FontFamily="Calibri">
+        TitleBarBackground="{DynamicResource PrimaryHueMidBrush}"
+        ResizeBorderBrush="{DynamicResource PrimaryHueMidBrush}"
+        ResizeBorderThickness="1"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
+        Title="Счета" Height="350" Width="525" WindowState="Maximized">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
