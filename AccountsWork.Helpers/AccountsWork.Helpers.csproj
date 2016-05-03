@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="AmountToVisibilityConverter .cs" />
     <Compile Include="BoolToVisibilityConverter.cs" />
+    <Compile Include="HintAssist.cs" />
     <Compile Include="ObjectToVisibilityConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BoolToOpacityConverter.cs" />
