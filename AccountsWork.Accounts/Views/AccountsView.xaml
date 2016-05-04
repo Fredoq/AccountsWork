@@ -13,169 +13,213 @@
              xmlns:editors="clr-namespace:Syncfusion.Windows.Controls.Input;assembly=Syncfusion.SfInput.Wpf"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{StaticResource MaterialDesignFont}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <Style TargetType="TabItem">
-            <Setter Property="Header" 
-                    Value="{Binding DataContext.AccountsTabItemHeader}">
-            </Setter>
-            <Setter Property="HeaderTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <ContentControl VerticalAlignment="Center"
-                                            HorizontalAlignment="Center"
-                                            Margin="0,0,7,0"
-                                            Content="{Binding}"/>
-                            <Button Grid.Column="1"
-                                    Content="x">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <infrastructure:CloseTabAction/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
+        <ResourceDictionary>
+            <Style TargetType="TabItem">
+                <Setter Property="Header" 
+                        Value="{Binding DataContext.AccountsTabItemHeader}">
+                </Setter>
+                <Setter Property="HeaderTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <ContentControl VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Margin="0,0,7,0"    
+                                                Content="{Binding}"/>
+                                <Button Grid.Column="1"
+                                        Content="x">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <infrastructure:CloseTabAction/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding DeleteConfirmationRequest, Mode=OneWay}">
             <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
-        </prism:InteractionRequestTrigger>      
+        </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
-    <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Rectangle Grid.Column="0"
-                       Grid.Row="0"
-                       Stroke="BlanchedAlmond"
-                       StrokeThickness="2"/>
-            <StackPanel Grid.Column="0" 
-                        MinWidth="230"
-                        Orientation="Vertical">
-                <Button Content="Общая информация"
-                        Margin="6,10,6,4"
-                        HorizontalAlignment="Center"
-                        Padding="2"
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="InfoView"/>
-                <Button Content="Добавить счет"
-                        Margin="6,10,6,4"
-                        HorizontalAlignment="Center"
-                        Padding="2"
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="AddAccountView"/>
-                <editors:SfTextBoxExt Watermark="Введите номер счета..."
-                                      Margin="6,10,6,4"
-                                      x:Name="txtSearchAcc"
-                                      Text="{Binding SearchAccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Content="Найти"
-                        Margin="6,1,6,4"
-                        HorizontalAlignment="Right"
-                        FontSize="10"
-                        Padding="2"
-                        Command="{Binding SearchAccountCommand}"/>
-            <Popup IsOpen="{Binding IsSearchAccountOpen, Mode=TwoWay}"
-                   PlacementTarget="{Binding ElementName=txtSearchAcc}"
-                   Placement="Right" 
-                   x:Name="popupSearch"
-                   AllowsTransparency="True"
-                   PopupAnimation="Fade">
-                <Border BorderThickness="1"
-                        Background="#FFE6E6E6"
-                        BorderBrush="BlanchedAlmond">
-                    <StackPanel Orientation="Vertical"
-                                >
-                        <Notification:SfBusyIndicator IsBusy="{Binding IsSearchAccBusy, Mode=TwoWay}"
-                                                      Header="Идет поиск..."                                                                    
-                                                      AnimationType="SingleCircle">
-                            <ListBox ItemsSource="{Binding SearchResultList}"
-                                     ScrollViewer.CanContentScroll="True"
-                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                     MaxHeight="300"
-                                     MaxWidth="500"
-                                     Opacity="{Binding IsSearchAccBusy, Converter={StaticResource BoolToOpacity}}"
-                                     SelectedItem="{Binding ResultAccount}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderBrush="BlanchedAlmond"
-                                            BorderThickness="1">
-                                            <StackPanel Orientation="Horizontal">
-                                                <Label Content="Номер: "/>
-                                                <Label Content="{Binding AccountNumber}"/>
-                                                <Label Content=" Компания: "/>
-                                                <Label Content="{Binding AccountCompany}"/>
-                                                <Label Content=" Сумма: "/>
-                                                <TextBlock Text="{Binding AccountAmount, StringFormat=C, ConverterCulture=ru-RU}"
-                                                       Margin="3,5,3,3"/>
-                                                <Label Content=" Год: "/>
-                                                <Label Content="{Binding AccountYear}"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </Notification:SfBusyIndicator>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="Ред. основную инфо"
-                                    Margin="5"
-                                    HorizontalAlignment="Left"
-                                    Command="{Binding NavigateCommand}"
-                                    CommandParameter="AddAccountView"/>
-                            <Button Content="Ред. доп. инфо"
-                                    Margin="5"
-                                    HorizontalAlignment="Left"
-                                    Command="{Binding NavigateCommand}"
-                                    CommandParameter="AdditionalInfoView"/>
-                            <Button Content="Удалить"
-                                    Margin="5"
-                                    HorizontalAlignment="Left"
-                                    Command="{Binding DeleteAccountCommand}"/>
-                            <Button Content="X"
-                                    Margin="5"
-                                    HorizontalAlignment="Right"
-                                    Command="{Binding CloseSearchCommand}"/>
-                        </StackPanel>
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <StackPanel Grid.Column="0" 
+                            MinWidth="230"
+                            Orientation="Vertical">
+                    <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                  HorizontalAlignment="Right" 
+                                  Margin="10"
+                                  IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+                    <Button Content="Общая информация"                             
+                            Style="{StaticResource MaterialDesignFlatButton}"  
+                            Command="{Binding NavigateCommand}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,30,0,0"
+                            HorizontalContentAlignment="Left"                       
+                            CommandParameter="InfoView"/>
+                    <Button Content="Добавить счет"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="AddAccountView"/>
+                    <Button Content="Поиск по ресторанам"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding NavigateCommand}"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            CommandParameter="StoreAccountsView"/>
+                    <Button Content="Изменение статусов"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="ChangeStatusView"/>
+                    <Button Content="Добавить работу"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="StoresWorkView"/>
+                    <Button Content="Тест"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="AddFullAccountView"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="txtSearchAcc"
+                            Margin="15,9,15,5"
+                            MinWidth="230"                    
+                            Text="{Binding SearchAccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                            materialDesign:TextFieldAssist.Hint="Введите номер счета для поиска..."/>
+                        <materialDesign:PopupBox IsPopupOpen="{Binding IsSearchAccountOpen, Mode=TwoWay}"                                            
+                                                 x:Name="popupSearch"
+                                                 StaysOpen="True"
+                                                 Width="1"
+                                                 Foreground="Transparent"                                     >
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Border BorderBrush="{DynamicResource SecondaryAccentBrush}"
+                                        Grid.Row="1"
+                                        Margin="5"
+                                        BorderThickness="0,2,0,0"/>
+                                <Notification:SfBusyIndicator IsBusy="{Binding IsSearchAccBusy, Mode=TwoWay}"
+                                                                  Header="Идет поиск..."                                                                    
+                                                                  AnimationType="SingleCircle"/>
+                                <ListBox ItemsSource="{Binding SearchResultList}"
+                                             MaxHeight="400"
+                                             ScrollViewer.CanContentScroll="True"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                             Opacity="{Binding IsSearchAccBusy, Converter={StaticResource BoolToOpacity}}"
+                                             SelectedItem="{Binding ResultAccount}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label Content="Номер: "/>
+                                                    <Label Content="{Binding AccountNumber}"/>
+                                                    <Label Content=" Компания: "/>
+                                                    <Label Content="{Binding AccountCompany}"/>
+                                                    <Label Content=" Сумма: "/>
+                                                    <TextBlock Text="{Binding AccountAmount, StringFormat=C, ConverterCulture=ru-RU}"
+                                                               Margin="3,5,3,3"/>
+                                                    <Label Content=" Год: "/>
+                                                    <Label Content="{Binding AccountYear}"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <StackPanel Orientation="Horizontal"
+                                            Grid.Row="1"
+                                            Margin="0,15,0,0">
+                                    <Button Content="Ред. основную инфо"                                            
+                                            HorizontalAlignment="Left"
+                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                            Margin="0,5,0,0"
+                                            Command="{Binding NavigateCommand}"
+                                            CommandParameter="AddAccountView"/>
+                                    <Button Content="Ред. доп. инфо"
+                                            HorizontalAlignment="Left"
+                                            Margin="0,5,0,0"
+                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                            Command="{Binding NavigateCommand}"
+                                            CommandParameter="AdditionalInfoView"/>
+                                    <Button Content="Удалить"
+                                            HorizontalAlignment="Left"
+                                            Margin="0,5,0,0"
+                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                            Command="{Binding DeleteAccountCommand}"/>
+                                    <!--<Button Content="X"
+                                            HorizontalAlignment="Right"
+                                            Margin="0,5,0,0"
+                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                            Command="{Binding CloseSearchCommand}"/>-->
+                                </StackPanel>
+                            </Grid>
+                        </materialDesign:PopupBox>
                     </StackPanel>
-                </Border>
-            </Popup>
-            <Button Content="Поиск по ресторанам"
-                    Command="{Binding NavigateCommand}"
-                    Margin="6,5,6,4"
-                    HorizontalAlignment="Center"
-                    CommandParameter="StoreAccountsView"/>
-            <Button Content="Изменение статусов"
-                    HorizontalAlignment="Center"
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="ChangeStatusView"
-                    Margin="6,5,6,4"/>
-            <Button Content="Добавить работу"
-                    HorizontalAlignment="Center"
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="StoresWorkView"
-                    Margin="6,5,6,4"/>
 
-        </StackPanel>
-            <Rectangle Grid.Column="1"
-                       Grid.Row="0"
-                       Stroke="BlanchedAlmond"
-                       StrokeThickness="2"/>
-        <TabControl Grid.Row="0"
-                    Grid.Column="1"
-                    prism:RegionManager.RegionName="{x:Static infrastructure:RegionNames.AccountsTabRegion}">
-            
-        </TabControl>
-        </Grid>
+                    <Button     Content="Найти"
+                                Margin="6,1,6,4"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                HorizontalAlignment="Right"
+                                FontSize="10"
+                                Padding="2"
+                                Command="{Binding SearchAccountCommand}"/>
+                </StackPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                              IsChecked="{Binding IsLeftOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Grid.Column="0"
+                              VerticalAlignment="Top"
+                              Margin="10"
+                              x:Name="MenuToggleButton"/>
+                <TabControl prism:RegionManager.RegionName="{x:Static infrastructure:RegionNames.AccountsTabRegion}"
+                            Grid.Column="1"
+                            />
+            </Grid>
+        </materialDesign:DrawerHost>
+    </materialDesign:DialogHost>
+
 </UserControl>

@@ -147,9 +147,7 @@ namespace AccountsWork.Accounts.ViewModels
         private AccountsMainSet GetAccount(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters[AccountKey];
-            var account = (AccountsMainSet)parameter;
-            
-
+            var account = (AccountsMainSet)parameter;           
             return (AccountsMainSet)account;
         }
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)

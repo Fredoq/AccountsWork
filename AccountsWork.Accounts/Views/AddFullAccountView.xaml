@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AccountsWork.Accounts.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -14,6 +15,11 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{StaticResource MaterialDesignFont}"
              mc:Ignorable="d" >
+    <!--<i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadAllCommand}"></i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -33,9 +39,10 @@
             <ColumnDefinition MinWidth="250" Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <materialDesign:Card Margin="5">
+        <materialDesign:Card Margin="5" >
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -57,9 +64,10 @@
                          Margin="5"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Padding="2"
+                         Text="{Binding Account.AccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
                          materialDesign:TextFieldAssist.Hint="Введите номер счета..."/>
                 <ComboBox Grid.Row="2"
-                          Margin="5"
+                          Margin="5,10,5,5"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           materialDesign:TextFieldAssist.Hint="Выберите компанию..."
                           DisplayMemberPath="Company"
@@ -68,20 +76,20 @@
                           ItemsSource="{Binding Companies}"/>
                 <DatePicker Grid.Row="3" 
                             FirstDayOfWeek="Monday"
-                            Margin="5"
+                            Margin="5,10,5,5"
+                            SelectedDate="{Binding Account.AccountDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                             Style="{StaticResource MaterialDesignDatePicker}"
                             materialDesign:TextFieldAssist.Hint="Выберите дату счета..."         
-                            helpers:HintAssist.IsFloating="True"
-                            />
+                            helpers:HintAssist.IsFloating="True"/>
                 <TextBox Grid.Row="4" 
-                         Margin="5"
+                         Margin="5,10,5,5"
                          HorizontalAlignment="Stretch" 
                          SpellCheck.IsEnabled="True"                  
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:TextFieldAssist.Hint="Введите сумму счета..."
                          Text="{Binding Account.AccountAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
                 <ComboBox Grid.Row="5" 
-                          Margin="5"
+                          Margin="5,10,5,5"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           materialDesign:TextFieldAssist.Hint="Выберите тип счета..."
                           DisplayMemberPath="Type"
@@ -91,14 +99,14 @@
                 <TextBox Grid.Row="6" 
                          TextWrapping="Wrap"
                          AcceptsReturn="True"
-                         Margin="5"
+                         Margin="5,10,5,5"
                          MinHeight="100"
                          HorizontalAlignment="Stretch" 
                          SpellCheck.IsEnabled="True"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:TextFieldAssist.Hint="Введите описание счета..."
                          Text="{Binding Account.AccountDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <ComboBox Margin="5"
+                <ComboBox Margin="5,10,5,5"
                           x:Name="CmbType" 
                           Grid.Row="7" 
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
@@ -108,11 +116,15 @@
                     <ComboBoxItem>ООО</ComboBoxItem>
                     <ComboBoxItem>ЗАО</ComboBoxItem>
                 </ComboBox>
-                <TextBox Margin="5" 
+                <TextBox Margin="5,13,5,5"
                          Grid.Row="8" 
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:TextFieldAssist.Hint="Введите год бюджета..."                        
                          Text="{Binding Account.AccountYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Grid.Row="9"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Content="Сохранить"
+                        Command="{Binding SaveAccountCommand}"/>
             </Grid>
         </materialDesign:Card>
     </Grid>

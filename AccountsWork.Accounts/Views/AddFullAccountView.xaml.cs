@@ -30,7 +30,7 @@ namespace AccountsWork.Accounts.Views
 
         #region Public Properties
         [Import]
-        public AddAccountViewModel ViewModel
+        public AddFullAccountViewModel ViewModel
         {
             set { this.DataContext = value; }
         }
