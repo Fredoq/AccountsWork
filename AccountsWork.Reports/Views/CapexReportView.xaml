@@ -14,6 +14,7 @@
     <UserControl.Resources>
         <conv:LabelConverter x:Key="labelconverter"/>
         <conv:ColorConverter x:Key="colorConv"/>
+        <helpers:AmountToVisibilityConverter x:Key="amountConv"/>
         <helpers:BoolToOpacityConverter x:Key="boolToOpacity"/>
         <DataTemplate x:Key="labelTemplate">
             <Grid>
@@ -44,17 +45,21 @@
                 Grid.RowSpan="3"
                 Grid.Column="0"
                 BorderThickness="0,0,2,0"/>
-        <syncfusion:SfBusyIndicator AnimationType="SingleCircle"
-                                    Header="Идет загрузка..."
-                                    IsBusy="{Binding IsCapexBusy}"/>
-        <StackPanel Orientation="Vertical"
-                    Margin="3"
-                    Grid.RowSpan="2">
+        <Grid Margin="3"                    
+              Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
             <Label Content="Выберите год:"
 				   Margin="3"
+                   Grid.Row="0"
 				   HorizontalAlignment="Center"/>
             <ComboBox SelectedValue="{Binding SelectedYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                      
 				      Margin="3"
+                      Grid.Row="1"
 				      ItemsSource="{Binding YearList}"
 				      HorizontalAlignment="Center"
 				      MinWidth="60">
@@ -64,8 +69,14 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
+            <syncfusion:SfBusyIndicator AnimationType="SingleCircle"
+                                        Header="Идет загрузка..."
+                                        Grid.Row="2"
+                                        IsBusy="{Binding IsCapexBusy}"/>
             <ListView ItemsSource="{Binding CapexList}"
 				      Margin="3" 
+                      Grid.Row="3"
+                      VerticalAlignment="Stretch"
 				      SelectedItem="{Binding SelectedCapex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
@@ -76,16 +87,17 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition MinWidth="210"/>
+                                <ColumnDefinition MinWidth="190"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Border BorderBrush="BlanchedAlmond"
                                     Grid.ColumnSpan="2"
-                                    Grid.RowSpan="2"
+                                    Grid.RowSpan="3"
                                     Grid.Row="0"
                                     Grid.Column="0"
                                     BorderThickness="0,0,0,2"/>
@@ -107,28 +119,100 @@
                                 <TextBlock Text="{Binding Capex.CapexAmount, ConverterCulture=ru-RU, StringFormat=C}"
 									       Margin="3"/>
                             </StackPanel>
-                            <StackPanel Grid.RowSpan="2"
-								        Grid.Row="0"
-								        Grid.Column="1"
+                            <StackPanel Grid.Row="2"
+								        Grid.Column="0"
 								        Orientation="Horizontal">
                                 <TextBlock Text="Остаток: "
-									       Margin="3"
-									       VerticalAlignment="Center"
-									       FontWeight="Bold"/>
+									       Margin="3"		
+                                           Visibility="{Binding Capex.CapexAmount, Converter={StaticResource amountConv}}"
+                                FontWeight="Bold"/>
                                 <TextBlock Text="{Binding Rest, ConverterCulture=ru-RU, StringFormat=C}"
-									       Margin="3"
-									       VerticalAlignment="Center"/>
+                                           Visibility="{Binding Capex.CapexAmount, Converter={StaticResource amountConv}}"
+									       Margin="3"/>
                             </StackPanel>
+                            <syncfusion:SfCircularGauge Grid.RowSpan="3"
+                                                        Grid.Column="1"
+                                                        x:Name="gauge1"
+                                                        Background="Transparent"                                                        
+                                                        >
+                                <syncfusion:SfCircularGauge.Resources>
+                                    <Style TargetType="syncfusion:CircularScaleLabel">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="syncfusion:CircularScaleLabel">
+                                                    <Grid>
+                                                        <TextBlock Text="{Binding Content}" Foreground="{Binding Foreground}" FontSize="{Binding LabelFontSize}" Margin="0,15,0,0" />
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </syncfusion:SfCircularGauge.Resources>
+                                <syncfusion:SfCircularGauge.GaugeHeader >
+                                    <StackPanel>
+                                        <TextBlock Foreground="Gray" 
+                                                   Margin="0,25,0,0"
+                                                   FontSize="15" 
+                                                   HorizontalAlignment="Center" 
+                                                   FontWeight="Bold"  >
+                                            <Run Text=" "></Run>
+                                            <Run Text="{Binding ElementName=gauge1, Path=Scales[0].Ranges[0].EndValue, Mode=TwoWay}"></Run>
+                                            <Run Text="%"></Run>
+                                        </TextBlock>
+                                        <TextBlock  Text="Израсходовано:" 
+                                                    Foreground="Gray" 
+                                                    FontSize="11"
+                                                    
+                                                    FontWeight="Bold"
+                                                    MinWidth="100"
+                                                    Margin="7,17,3,3" />
+                                        <TextBlock Text="{Binding PaySum, ConverterCulture=ru-RU, StringFormat=C}"                                  	                                               	       
+                                                   Margin="3,0,0,0"
+                                                   HorizontalAlignment="Center"
+                                        	       Foreground="Gray"/>
+                                    </StackPanel>
+                                </syncfusion:SfCircularGauge.GaugeHeader>
+                                <syncfusion:SfCircularGauge.Scales>
+                                    <syncfusion:CircularScale RimStroke="#FFE8E8E8"
+                                                              RimStrokeThickness="15"
+                                                              TickStroke="#c1c1c1"
+                                                              SmallTickStroke="#c1c1c1"
+                                                              TickShape="Triangle"
+                                                              LabelStroke="#999999"
+                                                              FontSize="10"
+                                                              FontWeight="SemiBold"
+                                                              RangePointerPosition="Cross"
+                                                              TickLength="0"
+                                                              LabelOffset="-0.1"
+                                                              LabelPosition="Custom"
+                                                              Interval="100" 
+                                                              MinorTicksPerInterval="0" 
+                                                              BindRangeStrokeToLabels="False"
+                                                              BindRangeStrokeToTicks="False" 
+                                                              TickStrokeThickness="1.5" 
+                                                              SmallTickStrokeThickness="1.5"
+                                                              StartAngle="180" 
+                                                              SweepAngle="180" StartValue="0" EndValue="100" >
+                                        <syncfusion:CircularScale.Ranges>
+                                            <syncfusion:CircularRange StartValue="0" EndValue="{Binding Pay}" Stroke="#FF0DBCF5" />
+                                        </syncfusion:CircularScale.Ranges>
+                                        <syncfusion:CircularScale.Pointers>
+                                            <syncfusion:CircularPointer  Value="{Binding Pay}" PointerType="RangePointer" RangePointerStroke="Transparent" RangePointerStrokeThickness="60" />
+                                        </syncfusion:CircularScale.Pointers>
+                                    </syncfusion:CircularScale>
+                                </syncfusion:SfCircularGauge.Scales>
+                            </syncfusion:SfCircularGauge>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackPanel>
+        </Grid>
         <syncfusion:SfDataGrid Grid.Column="1"
                                Grid.Row="1"
                                HorizontalAlignment="Left"
                                ColumnSizer="AutoLastColumnFill"
-                               Margin="3"                               
+                               Margin="3"   
+                               AutoGenerateRelations="True"
                                ItemsSource="{Binding CapexAccountsList}"
                                SelectedItem="{Binding SelectedCapexAccount}">
             <syncfusion:SfDataGrid.Columns>

@@ -65,6 +65,12 @@
                     Padding="2"
                     Command="{Binding NavigateCommand}"
                     CommandParameter="ServiceReportForStoreView"/>
+            <Button Content="Отчет по сервису на ресторан"
+                    Margin="4"
+                    HorizontalAlignment="Center"
+                    Padding="2"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="ServiceReportForStoreByMonthView"/>
             <Button Content="Загрузить инфо по сервису"
                     Margin="6,10,6,4"
                     HorizontalAlignment="Center"

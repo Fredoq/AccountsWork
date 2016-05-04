@@ -3,46 +3,186 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:AccountsWork.Reports.Views"
+             xmlns:helpers="clr-namespace:AccountsWork.Helpers;assembly=AccountsWork.Helpers"
              mc:Ignorable="d" 
              >
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <UserControl.Resources>
+        <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
+    </UserControl.Resources>
+    <Grid Opacity="{Binding IsServiceBusy, Converter={StaticResource BoolToOpacity}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <syncfusion:SfBusyIndicator IsBusy="{Binding IsServiceBusy}"
                                     AnimationType="SingleCircle"
+                                    Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
                                     Header="Загрузка..."/>
-        <syncfusion:SfDataGrid Grid.Column="0"
+        <syncfusion:DockingManager AutoHideAnimationMode="Scale"
+                                   PersistState="false" 
+                                   Grid.Row="1"
+                                   UseDocumentContainer="True"
+                                   ContainerMode="TDI">
+            <Grid syncfusion:DockingManager.Header="Рестораны"
+                  syncfusion:DockingManager.State="AutoHidden"
+                  syncfusion:DockingManager.DesiredWidthInDockedMode="500"                                  
+                  syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                  syncfusion:DockingManager.SideInDockedMode="Right">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <CheckBox Content="Выделить все" 
+                          IsChecked="{Binding IsSelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding SelectAllCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </CheckBox>
+                <syncfusion:SfDataGrid Grid.Row="1"
                                FontSize="9"
                                AllowFiltering="True"
                                ShowGroupDropArea="True"
-                               SelectionMode="Multiple"
+                               SelectionMode="Single"
+                               SelectionUnit="Row"
                                SelectedItem="{Binding SelectedStore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                ItemsSource="{Binding StoresWithCheckList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               AutoGenerateColumns="False">
-            <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn MappingName="Store.StoreNumber"
+                               AutoGenerateColumns="False"
+                               >
+                    <syncfusion:SfDataGrid.Columns>
+                        <syncfusion:GridTextColumn MappingName="Store.StoreNumber"
                                            HeaderText="Номер"                                           
                                            ColumnSizer="SizeToHeader"/>
-                <syncfusion:GridTextColumn MappingName="Store.StoreName"
+                        <syncfusion:GridTextColumn MappingName="Store.StoreName"
                                            MaximumWidth="70"
                                            HeaderText="Название ресторана"
                                            ColumnSizer="SizeToHeader"/>
-                <syncfusion:GridTextColumn MappingName="Store.StoreRegion"
+                        <syncfusion:GridTextColumn MappingName="Store.StoreRegion"
                                            HeaderText="Регион"
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
-                <syncfusion:GridTextColumn MappingName="Store.StoreCompany"
+                        <syncfusion:GridTextColumn MappingName="Store.StoreCompany"
                                            HeaderText="Компания"
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
-                <syncfusion:GridCheckBoxColumn MappingName="Check"
+                        <syncfusion:GridCheckBoxColumn MappingName="Check"
                                                HeaderText="Выбор"
                                                ColumnSizer="SizeToHeader"
                                                AllowEditing="True"/>
+                    </syncfusion:SfDataGrid.Columns>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="CurrentCellValueChanged">
+                            <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </syncfusion:SfDataGrid>
+            </Grid>
+            <syncfusion:SfChart 
+                            Margin="5"
+                            SelectionChanged="SfChart_SelectionChanged"
+                            AreaBorderThickness="0,1,1,1"
+                            syncfusion:DockingManager.State="Document"
+                            syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                            syncfusion:DockingManager.Header="Диаграмма"
+                            syncfusion:DockingManager.SideInDockedMode="Top">
+            <syncfusion:SfChart.Behaviors>
+                <syncfusion:ChartSelectionBehavior EnableSegmentSelection="True"
+                                                   SelectionStyle="Single"
+                                                   SelectionMode="MouseClick"/>
+            </syncfusion:SfChart.Behaviors>
+            <syncfusion:SfChart.Legend>
+                <syncfusion:ChartLegend Foreground="Black" FontSize="18"/>
+            </syncfusion:SfChart.Legend>
+            <syncfusion:SfChart.Header>
+                <TextBlock FontSize="20"
+                           Foreground="Black" 
+                           FontFamily="Segoe UI" 
+                           Margin="0,0,0,20">Ремонт/Оборудование</TextBlock>
+            </syncfusion:SfChart.Header>
+            <syncfusion:SfChart.PrimaryAxis>
+                <syncfusion:CategoryAxis FontSize="20"   
+                                         Header="Ресторан" 
+                                         Foreground="Black"/>
+            </syncfusion:SfChart.PrimaryAxis>
+            <syncfusion:SfChart.SecondaryAxis>
+                <syncfusion:NumericalAxis FontSize="20"  
+                                          Header="Сумма" 
+                                          Foreground="Black"/>
+            </syncfusion:SfChart.SecondaryAxis>
+            <syncfusion:StackingBarSeries EnableAnimation="True" 
+                                          LegendIcon="Circle"  
+                                          Label="Оборудование" 
+                                          XBindingPath="Store.StoreNumber" 
+                                          YBindingPath="EquipmentSum"
+                                          ItemsSource="{Binding StackedStoreList}" 
+                                          ShowTooltip="True" 
+                                          syncfusion:ChartTooltip.EnableAnimation="True">
+                <syncfusion:StackingBarSeries.AdornmentsInfo>
+                    <syncfusion:ChartAdornmentInfo AdornmentsPosition="TopAndBottom" 
+                                                   ShowLabel="True"/>
+                </syncfusion:StackingBarSeries.AdornmentsInfo>
+            </syncfusion:StackingBarSeries>
+            <syncfusion:StackingBarSeries EnableAnimation="True" 
+                                          LegendIcon="Circle" 
+                                          Label="Ремонт"                                          
+                                          XBindingPath="Store.StoreNumber" 
+                                          YBindingPath="RepairSum"
+                                          ItemsSource="{Binding StackedStoreList}" 
+                                          ShowTooltip="True" 
+                                          syncfusion:ChartTooltip.EnableAnimation="True">
+                <syncfusion:StackingBarSeries.AdornmentsInfo>
+                    <syncfusion:ChartAdornmentInfo AdornmentsPosition="TopAndBottom"
+                                                   
+                                                   ShowLabel="True"/>
+                </syncfusion:StackingBarSeries.AdornmentsInfo>
+            </syncfusion:StackingBarSeries>
+        </syncfusion:SfChart>
+            <syncfusion:SfDateTimeRangeNavigator 
+                                             x:Name="dtNav"
+                                             Height="100"                                             
+                                             Minimum="{Binding MinimumDate}"
+                                             Maximum="{Binding MaximumDate}"                                             
+                                             ViewRangeStart="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             ViewRangeEnd="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             syncfusion:DockingManager.State="Dock"
+                                             syncfusion:DockingManager.Header="Интервал"
+                                             syncfusion:DockingManager.DesiredHeightInDockedMode="140"
+                                             syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                                             syncfusion:DockingManager.SideInDockedMode="Bottom"
+                                             >
+                <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ValueChanged">
+                    <i:InvokeCommandAction Command="{Binding LoadReportCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </syncfusion:SfDateTimeRangeNavigator>
+        <syncfusion:SfDataGrid 
+                               VerticalAlignment="Top"
+                               AutoGenerateColumns="False"
+                               AutoGenerateRelations="True"
+                               ItemsSource="{Binding StoreZipList}"
+                               syncfusion:DockingManager.State="AutoHidden"
+                               syncfusion:DockingManager.Header="Список запчастей"
+                               syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                               syncfusion:DockingManager.DesiredWidthInDockedMode="560"
+                               syncfusion:DockingManager.SideInDockedMode="Right">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn HeaderText="Зип"
+                                           MappingName="ZipName"/>
+                <syncfusion:GridCurrencyColumn HeaderText="Сумма"
+                                               MappingName="Summ"
+                                               CurrencyDecimalDigits="2"
+                                               CurrencyDecimalSeparator=","
+                                               CurrencyGroupSeparator=" "
+                                               CurrencyGroupSizes="3"
+                                               CurrencySymbol="₽"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
+        </syncfusion:DockingManager>
     </Grid>
 </UserControl>

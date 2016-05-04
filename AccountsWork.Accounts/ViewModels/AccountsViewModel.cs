@@ -30,6 +30,7 @@ namespace AccountsWork.Accounts.ViewModels
         private const string AdditionalInfoViewKey = "AdditionalInfoView";
         private const string AddAccountViewKey = "AddAccountView";
         private const string StoreAccountsViewKey = "StoreAccountsView";
+        private bool _isLeftOpen;
         #endregion Private Fields
 
         #region Public Properties
@@ -61,6 +62,11 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _isSearchAccBusy; }
             set { SetProperty(ref _isSearchAccBusy, value); }
         }
+        public bool IsLeftOpen
+        {
+            get { return _isLeftOpen; }
+            set { SetProperty(ref _isLeftOpen, value); }
+        }
         #endregion search acc
 
         #endregion Public Properties
@@ -90,7 +96,7 @@ namespace AccountsWork.Accounts.ViewModels
 
             #region infrastructure
             _regionManager = regionManager;
-
+            IsLeftOpen = false;
             NavigateCommand = new DelegateCommand<string>(Navigate);
             #endregion infrastructure
 
@@ -130,7 +136,8 @@ namespace AccountsWork.Accounts.ViewModels
             {
                 _regionManager.RequestNavigate(RegionNames.AccountsTabRegion, navigationProperty);
             }
-            SearchResultList.Clear();            
+            SearchResultList.Clear();
+            IsLeftOpen = false;          
         }
         #endregion infrastrcture
 

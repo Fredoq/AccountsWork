@@ -1,0 +1,178 @@
+﻿<UserControl xmlns:syncfusion="http://schemas.syncfusion.com/wpf"  x:Class="AccountsWork.Reports.Views.ServiceReportForStoreByMonthView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AccountsWork.Reports.Views"
+             xmlns:conv="clr-namespace:AccountsWork.Reports.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900">
+    <UserControl.Resources>
+        <DataTemplate x:Key="labelTemplate">
+            <TextBlock Text="{Binding LabelContent}" 
+                       Foreground="Black"  
+                       FontSize="16"/>
+        </DataTemplate>
+        <Style TargetType="Line" 
+               x:Key="AxisStyle">
+            <Setter Property="Stroke" 
+                    Value="DarkGray"  />
+            <Setter Property="StrokeThickness" 
+                    Value="1"/>
+        </Style>
+        <Style TargetType="Line" 
+               x:Key="AxisStyle1">
+            <Setter Property="Stroke" 
+                    Value="DarkGray"  />
+            <Setter Property="StrokeThickness" 
+                    Value="0.5"/>
+        </Style>
+        <conv:AmountLabelConverter x:Key="amountConv"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <syncfusion:SfBusyIndicator IsBusy="{Binding IsServiceBusy}"
+                                    AnimationType="SingleCircle"
+                                    Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Header="Загрузка..."/>
+        <syncfusion:DockingManager Grid.Row="1"
+                                   PersistState="false"
+                                   ContainerMode="TDI"
+                                   UseDocumentContainer="True">
+            <syncfusion:SfChart FontSize="22" 
+                                Foreground="Black"
+                                Margin="27,25,37,36"                                 
+                                AreaBorderThickness="0,1,1,1"
+                                syncfusion:DockingManager.State="Document"
+                                syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
+                                syncfusion:DockingManager.Header="Диаграмма"
+                                syncfusion:DockingManager.SideInDockedMode="Top">
+                <syncfusion:SfChart.Header>
+                    <TextBlock Foreground="Black" 
+                               FontSize="20" 
+                               FontFamily="Segoe UI"
+                               Margin="0,0,0,20">Распределение затрат</TextBlock>
+                </syncfusion:SfChart.Header>
+                <syncfusion:SfChart.PrimaryAxis>
+                    <syncfusion:CategoryAxis PlotOffset="30" 
+                                             ShowTrackBallInfo="True"                                             
+                                             LabelFormat="MM.yyyy" 
+                                             Header="Месяц/Год" 
+                                             Foreground="Black"
+                                             LabelTemplate="{StaticResource labelTemplate}"  
+                                             AxisLineStyle="{StaticResource AxisStyle1}" 
+                                             MajorTickLineStyle="{StaticResource AxisStyle}"/>
+                </syncfusion:SfChart.PrimaryAxis>
+                <syncfusion:SfChart.SecondaryAxis>
+                    <syncfusion:NumericalAxis  Header="Сумма" 
+                                               Foreground="Black"
+                                               Minimum="1000" 
+                                               Interval="3000" 
+                                               LabelFormat="## ### ₽"                                               
+                                               Maximum="60000"
+                                               LabelTemplate="{StaticResource labelTemplate}"  
+                                               AxisLineStyle="{StaticResource AxisStyle}" 
+                                               MajorTickLineStyle="{StaticResource AxisStyle}"/>
+                </syncfusion:SfChart.SecondaryAxis>
+                <syncfusion:SplineSeries EnableAnimation="True" 
+                                         XBindingPath="MonthYear"
+                                         ItemsSource="{Binding MonthServExpList}"  
+                                         YBindingPath="Expense" 
+                                         ShowTooltip="True">
+                    <syncfusion:SplineSeries.TooltipTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontSize="11"
+                                           Margin="3">
+                                    <Run Text="Сумма: "/>
+                                    <Run Text="{Binding Item.Expense, StringFormat=C, ConverterCulture=Ru-ru}"/>
+                                </TextBlock>
+                                <TextBlock FontSize="11"
+                                           Margin="3">
+                                    <Run Text="Кол-во ресторанов: "/>
+                                    <Run Text="{Binding Item.StoreCount}"/>
+                                </TextBlock>
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </syncfusion:SplineSeries.TooltipTemplate>
+                    <syncfusion:SplineSeries.AdornmentsInfo>
+                        <syncfusion:ChartAdornmentInfo ShowLabel="True"
+                                                       SegmentLabelContent="LabelContentPath"
+                                                       HorizontalAlignment="Left"
+                                                       ShowConnectorLine="False">
+                            <syncfusion:ChartAdornmentInfo.LabelTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource amountConv}}"
+                                               FontSize="9"/>
+                                </DataTemplate>
+                            </syncfusion:ChartAdornmentInfo.LabelTemplate>
+                            <syncfusion:ChartAdornmentInfo.SymbolTemplate>
+                                <DataTemplate>
+                                    <Grid IsHitTestVisible="True" >
+                                        <Ellipse Fill="#FFECCD0D" 
+                                                 Height="18" 
+                                                 Width="18" 
+                                                 StrokeThickness="3" 
+                                                 Stroke="White"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </syncfusion:ChartAdornmentInfo.SymbolTemplate>
+                        </syncfusion:ChartAdornmentInfo>
+                    </syncfusion:SplineSeries.AdornmentsInfo>
+                </syncfusion:SplineSeries>
+                <syncfusion:SplineSeries EnableAnimation="True" 
+                                         XBindingPath="MonthYear"
+                                         ItemsSource="{Binding MonthExpList}"  
+                                         YBindingPath="Expense" 
+                                         ShowTooltip="True">
+                    <syncfusion:SplineSeries.TooltipTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontSize="11"
+                                           Margin="3">
+                                    <Run Text="Сумма: "/>
+                                    <Run Text="{Binding Item.Expense, StringFormat=C, ConverterCulture=Ru-ru}"/>
+                                </TextBlock>
+                                <TextBlock FontSize="11"
+                                           Margin="3">
+                                    <Run Text="Кол-во ресторанов: "/>
+                                    <Run Text="{Binding Item.StoreCount}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </syncfusion:SplineSeries.TooltipTemplate>
+                    <syncfusion:SplineSeries.AdornmentsInfo>
+                        <syncfusion:ChartAdornmentInfo ShowLabel="True"
+                                                       SegmentLabelContent="LabelContentPath"
+                                                       HorizontalAlignment="Left"
+                                                       ShowConnectorLine="False">
+                            <syncfusion:ChartAdornmentInfo.LabelTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource amountConv}}"
+                                               FontSize="9"/>
+                                </DataTemplate>
+                            </syncfusion:ChartAdornmentInfo.LabelTemplate>
+                            <syncfusion:ChartAdornmentInfo.SymbolTemplate>
+                                <DataTemplate>
+                                    <Grid IsHitTestVisible="True" >
+                                        <Ellipse Fill="#FF1BA1E2" 
+                                                 Height="18" 
+                                                 Width="18" 
+                                                 StrokeThickness="3" 
+                                                 Stroke="White"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </syncfusion:ChartAdornmentInfo.SymbolTemplate>
+                        </syncfusion:ChartAdornmentInfo>
+                    </syncfusion:SplineSeries.AdornmentsInfo>
+                </syncfusion:SplineSeries>
+            </syncfusion:SfChart>
+        </syncfusion:DockingManager>
+    </Grid>
+</UserControl>

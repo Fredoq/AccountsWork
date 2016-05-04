@@ -77,5 +77,10 @@ namespace AccountsWork.BusinessLayer
         {
             return _accountsMainRepository.GetAll(a => a.AccountsCapexInfoSets, a => a.AccountsStatusDetailsSets);
         }
+
+        public IList<AccountsMainSet> GetServiceAccounts()
+        {
+            return _accountsMainRepository.GetList(a => a.AccountType == "Сервис");
+        }
     }
 }

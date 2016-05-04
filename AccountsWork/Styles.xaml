@@ -5,12 +5,12 @@
                     mc:Ignorable="d">
     <Style x:Key="MainViewRadioButtonStyle" TargetType="ToggleButton">
         <Setter Property="Background" Value="{x:Null}"/>
-        <Setter Property="Foreground" Value="#FF0E233E"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidForegroundBrush}"/>
         <Setter Property="Padding" Value="3"/>
-        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="FontSize" Value="24"/>
-        <Setter Property="BorderBrush" Value="#FF204d89" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueLightBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
@@ -52,45 +52,45 @@
                                 <VisualState x:Name="Unchecked"/>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="BaseBackground" BorderBrush="#FFD1E5FF" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
-                            <Border.Background>
+                        <Border x:Name="BaseBackground" BorderBrush="#FFD1E5FF" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Background="{DynamicResource SecondaryAccentBrush}">
+                            <!--<Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FFD1E4FF" Offset="0"/>
                                     <GradientStop Color="#FFC0D8FF" Offset="1"/>
                                     <GradientStop Color="#FFADD1FF" Offset="0.301"/>
                                     <GradientStop Color="#FFD1E5FF" Offset="0.3"/>
                                 </LinearGradientBrush>
-                            </Border.Background>
+                            </Border.Background>-->
                         </Border>
-                        <Border x:Name="MouseOverBackground" BorderBrush="#FFFFE8A7" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0">
-                            <Border.Background>
+                        <Border x:Name="MouseOverBackground" BorderBrush="#FFFFE8A7" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0" Background="{DynamicResource PrimaryHueLightBrush}">
+                            <!--<Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="White" Offset="0"/>
                                     <GradientStop Color="#FFFFE69E" Offset="1"/>
                                     <GradientStop Color="#FFFFE8A7" Offset="0.3"/>
                                     <GradientStop Color="#FFFFD767" Offset="0.301"/>
                                 </LinearGradientBrush>
-                            </Border.Background>
+                            </Border.Background>-->
                         </Border>
-                        <Border x:Name="PressedBackground" BorderBrush="#FFFFAC42" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0">
-                            <Border.Background>
+                        <Border x:Name="PressedBackground" BorderBrush="#FFFFAC42" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0" Background="{DynamicResource PrimaryHueMidBrush}">
+                            <!--<Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FFFFDB69" Offset="0"/>
                                     <GradientStop Color="#FFFEBA66" Offset="1"/>
                                     <GradientStop Color="#FFFFAC42" Offset="0.3"/>
                                     <GradientStop Color="#FFFB8E3E" Offset="0.301"/>
                                 </LinearGradientBrush>
-                            </Border.Background>
+                            </Border.Background>-->
                         </Border>
-                        <Border x:Name="CheckedBackground" BorderBrush="#FFFFBB6E" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0">
-                            <Border.Background>
+                        <Border x:Name="CheckedBackground" BorderBrush="#FFFFBB6E" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Opacity="0" Background="{DynamicResource PrimaryHueMidBrush}">
+                            <!--<Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FFFFD9AA" Offset="0"/>
                                     <GradientStop Color="#FFFEE17A" Offset="1"/>
                                     <GradientStop Color="#FFFFBB6E" Offset="0.3"/>
                                     <GradientStop Color="#FFFFAE42" Offset="0.301"/>
                                 </LinearGradientBrush>
-                            </Border.Background>
+                            </Border.Background>-->
                         </Border>
                         <Grid Margin="{TemplateBinding BorderThickness}">
                             <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
@@ -176,4 +176,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
 </ResourceDictionary>
