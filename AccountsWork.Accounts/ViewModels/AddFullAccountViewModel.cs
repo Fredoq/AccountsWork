@@ -23,6 +23,9 @@ namespace AccountsWork.Accounts.ViewModels
         private IList<AccountsCompaniesSet> _companies;
         private IList<TypeSet> _types;
         private readonly BackgroundWorker _worker;
+        private bool _isInEditMode;
+        private bool _isAdditinalInfoEnabled;
+        private decimal _availableSum;
         private const string AccountKey = "Account";
 
         #endregion Private Fields
@@ -34,6 +37,18 @@ namespace AccountsWork.Accounts.ViewModels
         {
             get { return _accountsTabItemHeader; }
             set { SetProperty(ref _accountsTabItemHeader, value); }
+        }
+
+        public bool IsInEditMode
+        {
+            get { return _isInEditMode; }
+            set { SetProperty(ref _isInEditMode, value); }
+        }
+
+        public bool IsAdditinalInfoEnabled
+        {
+            get { return _isAdditinalInfoEnabled; }
+            set { SetProperty(ref _isAdditinalInfoEnabled, value); }
         }
         #endregion infrastructure
 
@@ -61,6 +76,14 @@ namespace AccountsWork.Accounts.ViewModels
             set { SetProperty(ref _types, value); }
         }
         #endregion account
+
+        #region capexes
+        public decimal AvailableSum
+        {
+            get { return _availableSum; }
+            set { SetProperty(ref _availableSum, value); }
+        }
+        #endregion capexes
 
         #endregion Public Properties
 
@@ -108,12 +131,15 @@ namespace AccountsWork.Accounts.ViewModels
             }
             else
             {
+                IsInEditMode = true;
                 AccountsTabItemHeader = "Новый счет";
                 Account = new AccountsMainSet
                 {
                     AccountYear = DateTime.Now.Year,
                     AccountDate = DateTime.Now
                 };
+                IsAdditinalInfoEnabled = false;
+                AvailableSum = 0M;
             }
             _worker.RunWorkerAsync();
         }
@@ -131,7 +157,7 @@ namespace AccountsWork.Accounts.ViewModels
         {
             var parameter = navigationContext.Parameters[AccountKey];
             var account = (AccountsMainSet)parameter;
-            return (AccountsMainSet)account;
+            return account;
         }
         private void AccountPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -140,6 +166,8 @@ namespace AccountsWork.Accounts.ViewModels
         private void SaveCommand()
         {
             Account.Id = _accountsService.SaveAccount(Account);
+            IsAdditinalInfoEnabled = true;
+            IsInEditMode = false;
         }
         private bool CanSave()
         {
