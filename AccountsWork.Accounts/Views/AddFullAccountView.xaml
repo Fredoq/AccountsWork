@@ -42,7 +42,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <materialDesign:Card Margin="5"
                              IsEnabled="{Binding IsInEditMode, Mode=TwoWay}">
@@ -135,11 +135,13 @@
         </materialDesign:Card>
         <materialDesign:Card Margin="5"
                              Grid.Row="1"
+                             VerticalAlignment="Stretch"
                              IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}"
                              Grid.Column="0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <materialDesign:ColorZone Grid.Row="0"
@@ -158,6 +160,84 @@
                                Style="{StaticResource MaterialDesignBody2TextBlock}"
                                Margin="5"/>
                 </StackPanel>
+                <materialDesign:DialogHost Grid.Row="2"
+                                           IsOpen="{Binding IsAddCapexOpen, Mode=TwoWay}">
+                    <materialDesign:DialogHost.DialogContent>
+                        <StackPanel Orientation="Vertical">
+                            <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      materialDesign:TextFieldAssist.Hint="Выберите статью..." 
+                                      ItemsSource="{Binding ExpensesList}"
+                                      SelectedValue="{Binding NewCapexForAccount.AccountExpense, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedValuePath="Expense"
+                                      DisplayMemberPath="Expense"
+                                      Margin="3"/>
+                            <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      materialDesign:TextFieldAssist.Hint="Выберите Capex..." 
+                                      ItemsSource="{Binding CapexesList}"
+                                      SelectedValue="{Binding NewCapexForAccount.AccountCapexName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedValuePath="CapexName"
+                                      DisplayMemberPath="CapexName"
+                                      Margin="3"/>
+                            <DockPanel>
+                                <TextBox Text="{Binding CapexAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=C, ConverterCulture=ru-RU}"
+                                         Margin="3"
+                                         MinWidth="60"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:TextFieldAssist.Hint="Введите сумму..."/>
+                                <Button Content="CA"
+                                        Margin="3"
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding CopyAvailableSumCommand}"
+                                        DockPanel.Dock="Right"/>
+                            </DockPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Добавить"
+                                        Margin="3"
+                                        IsDefault="True"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Command="{Binding AddCapexToAccountCommand}"/>
+                                <Button Content="Отменить"
+                                        Margin="3"
+                                        IsCancel="True"
+                                        Command="{Binding CloseAddCapexToAccountCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </materialDesign:DialogHost.DialogContent>
+                    <Border BorderThickness="1" 
+                            BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                            MinHeight="200"
+                            ClipToBounds="True">
+                        <Grid>
+                            <ListBox ItemsSource="{Binding AccountCapexList}"
+                                     SelectedItem="{Binding CurrentCapex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Статья: "/>
+                                            <Label Content="{Binding AccountExpense}"/>
+                                            <Label Content=" Capex: "/>
+                                            <Label Content="{Binding AccountCapexName}"/>
+                                            <Label Content=" Сумма: "/>
+                                            <TextBlock Text="{Binding AccountCapexAmount, StringFormat=C, ConverterCulture=ru-RU}"
+                                                       Margin="3,5,3,3"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                    Command="{Binding OpenAddCapexToAccountCommand}"
+                                    VerticalAlignment="Bottom" 
+                                    HorizontalAlignment="Right" 
+                                    Margin="0 0 5 5">
+                                <Viewbox Width="22" Height="22">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                    </Canvas>
+                                </Viewbox>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </materialDesign:DialogHost>
             </Grid>
         </materialDesign:Card>
     </Grid>

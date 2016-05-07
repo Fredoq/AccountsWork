@@ -7,6 +7,7 @@ using AccountsWork.DomainModel;
 using AccountsWork.Infrastructure;
 using Prism.Commands;
 using Prism.Regions;
+using System.Collections.ObjectModel;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -27,6 +28,13 @@ namespace AccountsWork.Accounts.ViewModels
         private bool _isAdditinalInfoEnabled;
         private decimal _availableSum;
         private const string AccountKey = "Account";
+        private bool _isAddCapexOpen;
+        private AccountsCapexInfoSet _newCapexForAccount;
+        private AccountsCapexInfoSet _currentCapex;
+        private decimal _capexAmount;
+        private ObservableCollection<AccountsCapexInfoSet> _accountCapexList;
+        private ObservableCollection<AccountsExpenseSet> _expensesList;
+        private ObservableCollection<CapexSet> _capexesList;
 
         #endregion Private Fields
 
@@ -83,12 +91,58 @@ namespace AccountsWork.Accounts.ViewModels
             get { return _availableSum; }
             set { SetProperty(ref _availableSum, value); }
         }
+        public bool IsAddCapexOpen
+        {
+            get { return _isAddCapexOpen; }
+            set { SetProperty(ref _isAddCapexOpen, value); }
+        }
+        public AccountsCapexInfoSet NewCapexForAccount
+        {
+            get { return _newCapexForAccount; }
+            set { SetProperty(ref _newCapexForAccount, value); }
+        }
+        public AccountsCapexInfoSet CurrentCapex
+        {
+            get { return _currentCapex; }
+            set { SetProperty(ref _currentCapex, value); }
+        }
+        public decimal CapexAmount
+        {
+            get { return _capexAmount; }
+            set { SetProperty(ref _capexAmount, value); }
+        }
+
+        public ObservableCollection<AccountsCapexInfoSet> AccountCapexList
+        {
+            get { return _accountCapexList; }
+            set { SetProperty(ref _accountCapexList, value); }
+        }
+        public ObservableCollection<AccountsExpenseSet> ExpensesList
+        {
+            get { return _expensesList; }
+            set { SetProperty(ref _expensesList, value); }
+        }
+        public ObservableCollection<CapexSet> CapexesList
+        {
+            get { return _capexesList; }
+            set { SetProperty(ref _capexesList, value); }
+        }
         #endregion capexes
 
         #endregion Public Properties
 
         #region Commands
+        #region account
         public DelegateCommand SaveAccountCommand { get; set; }
+        #endregion account
+
+        #region capexes
+        public DelegateCommand OpenAddCapexToAccountCommand { get; set; }
+        public DelegateCommand CloseAddCapexToAccountCommand { get; set; }
+        public DelegateCommand AddCapexToAccountCommand { get; set; }
+        public DelegateCommand DeleteCapexAccountCommand { get; set; }
+        public DelegateCommand CopyAvailableSumCommand { get; set; }
+        #endregion capexes
         #endregion Commands
 
         #region Constructor
@@ -107,6 +161,11 @@ namespace AccountsWork.Accounts.ViewModels
             _worker.DoWork += LoadAccount;
             #endregion workers 
 
+            #region  capexes
+            OpenAddCapexToAccountCommand = new DelegateCommand(OpenAddCapexToAccount);
+            CloseAddCapexToAccountCommand = new DelegateCommand(CloseAddCapexToAccount);
+            #endregion capexes
+
             #region services
             _companiesService = companiesService;
             _typesService = typesService;
@@ -114,8 +173,7 @@ namespace AccountsWork.Accounts.ViewModels
 
             #endregion services
 
-        }        
-
+        }      
         #endregion Constructor
 
         #region Methods
@@ -176,6 +234,17 @@ namespace AccountsWork.Accounts.ViewModels
             return !Account.HasErrors;
         }
         #endregion account
+
+        #region capexes
+        private void OpenAddCapexToAccount()
+        {
+            IsAddCapexOpen = true;
+        }
+        private void CloseAddCapexToAccount()
+        {
+            IsAddCapexOpen = false;
+        }
+        #endregion capexes
 
         #endregion Methods
 
