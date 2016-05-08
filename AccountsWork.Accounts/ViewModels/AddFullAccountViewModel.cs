@@ -206,6 +206,8 @@ namespace AccountsWork.Accounts.ViewModels
             if (Account != null)
             {
                 AccountsTabItemHeader = "Ред. информации по сч. " + Account.AccountNumber;
+                IsInEditMode = true;
+                IsAdditinalInfoEnabled = true;
             }
             else
             {

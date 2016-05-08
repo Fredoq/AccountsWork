@@ -29,6 +29,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />
@@ -209,7 +210,14 @@
                     </materialDesign:DialogHost.DialogContent>
                     <Grid MinHeight="200">
                         <ListBox ItemsSource="{Binding AccountCapexList}"
-                                     SelectedItem="{Binding CurrentCapex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                 Style="{StaticResource MaterialDesignListBox}"
+                                 SelectedItem="{Binding CurrentCapex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem"
+                                       BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -221,16 +229,12 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <Border Grid.ColumnSpan="2"
-                                                    Grid.RowSpan="2"
-                                                    BorderBrush="{DynamicResource PrimaryHueLightBrush}"
-                                                    BorderThickness="0,0,0,1"/>
                                         <StackPanel Grid.Column="0"
-                                                        Grid.Row="0"
-                                                        Orientation="Horizontal">
+                                                    Grid.Row="0"
+                                                    Orientation="Horizontal">
                                             <Label Content="Статья: "
-                                                       HorizontalAlignment="Left"
-                                                       Style="{StaticResource MaterialDesignLabel}"/>
+                                                   HorizontalAlignment="Left"
+                                                   Style="{StaticResource MaterialDesignLabel}"/>
                                             <Label Content="{Binding AccountExpense}"
                                                        HorizontalAlignment="Right"
                                                        Style="{StaticResource MaterialDesignLabel}"/>
@@ -248,7 +252,7 @@
                                         <TextBlock Text="{Binding AccountCapexAmount, StringFormat=C, ConverterCulture=ru-RU}"
                                                        VerticalAlignment="Center"
                                                        HorizontalAlignment="Right"
-                                                       Margin="5"
+                                                       Margin="5,5,5,5"
                                                        Grid.Row="0"
                                                        Grid.Column="1"
                                                        Grid.RowSpan="2"
@@ -257,11 +261,6 @@
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                </Style>
-                            </ListBox.ItemContainerStyle>
                         </ListBox>
                         <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
                                     Command="{Binding OpenAddCapexToAccountCommand}"
