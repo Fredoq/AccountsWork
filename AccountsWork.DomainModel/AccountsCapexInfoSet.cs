@@ -7,21 +7,74 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations;
+using AccountsWork.Infrastructure;
+
 namespace AccountsWork.DomainModel
 {
-    using System;
-    using System.Collections.Generic;
-    
-    public partial class AccountsCapexInfoSet
+
+    public partial class AccountsCapexInfoSet : ValidatableBindableBase
     {
-        public int Id { get; set; }
-        public int AccountsMainId { get; set; }
-        public string AccountCapexName { get; set; }
-        public decimal AccountCapexAmount { get; set; }
-        public string AccountExpense { get; set; }
-        public int CapexId { get; set; }
+        private int _id;
+        private int _accountsMainId;
+        private string _accountCapexName;
+        private decimal _accountCapexAmount;
+        private string _accountExpense;
+        private int _capexId;
+
+        [Required]
+        public int Id
+        {
+            get { return _id; }
+            set { SetProperty(ref _id, value); }
+        }
+        [Required]
+        public int AccountsMainId
+        {
+            get { return _accountsMainId; }
+            set { SetProperty(ref _accountsMainId, value); }
+        }
+        [CustomValidation(typeof(AccountsCapexInfoSet), "CheckAccountCapexName")]
+        public string AccountCapexName
+        {
+            get { return _accountCapexName; }
+            set { SetProperty(ref _accountCapexName, value); }
+        }
+        [Required]
+        public decimal AccountCapexAmount
+        {
+            get { return _accountCapexAmount; }
+            set { SetProperty(ref _accountCapexAmount, value); }
+        }
+        [CustomValidation(typeof(AccountsCapexInfoSet), "CheckAccountExpenseName")]
+        public string AccountExpense
+        {
+            get { return _accountExpense; }
+            set { SetProperty(ref _accountExpense, value); }
+        }
+        [Required]
+        public int CapexId
+        {
+            get { return _capexId; }
+            set { SetProperty(ref _capexId, value); }
+        }
     
         public virtual AccountsMainSet AccountsMainSet { get; set; }
         public virtual CapexSet CapexSet { get; set; }
+
+        #region Validation Methods
+        public static ValidationResult CheckAccountCapexName(string name, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return new ValidationResult("Не выбран Capex");
+            return ValidationResult.Success;
+        }
+        public static ValidationResult CheckAccountExpenseName(string name, ValidationContext context)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return new ValidationResult("Не выбрана статья");
+            return ValidationResult.Success;
+        }
+        #endregion Validation Methods
     }
 }

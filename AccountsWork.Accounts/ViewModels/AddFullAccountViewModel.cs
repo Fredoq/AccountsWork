@@ -8,6 +8,7 @@ using AccountsWork.Infrastructure;
 using Prism.Commands;
 using Prism.Regions;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace AccountsWork.Accounts.ViewModels
 {
@@ -17,6 +18,13 @@ namespace AccountsWork.Accounts.ViewModels
         private readonly ICompaniesService _companiesService;
         private readonly ITypesService _typesService;
         private readonly IAccountsMainService _accountsService;
+        private readonly IAccountStatusService _accountStatusService;
+        private readonly IAccountStoresService _accountStoresService;
+        private readonly IStoresService _storesService;
+        private readonly IAccountCapexesService _accountCapexService;
+        private readonly IExpensesService _expenseService;
+        private readonly ICapexesService _capexService;
+        private readonly IStoresWorkService _storesWorkService;
 
         #region Private Fields
         private string _accountsTabItemHeader;
@@ -31,7 +39,6 @@ namespace AccountsWork.Accounts.ViewModels
         private bool _isAddCapexOpen;
         private AccountsCapexInfoSet _newCapexForAccount;
         private AccountsCapexInfoSet _currentCapex;
-        private decimal _capexAmount;
         private ObservableCollection<AccountsCapexInfoSet> _accountCapexList;
         private ObservableCollection<AccountsExpenseSet> _expensesList;
         private ObservableCollection<CapexSet> _capexesList;
@@ -99,17 +106,20 @@ namespace AccountsWork.Accounts.ViewModels
         public AccountsCapexInfoSet NewCapexForAccount
         {
             get { return _newCapexForAccount; }
-            set { SetProperty(ref _newCapexForAccount, value); }
+            set
+            {
+                if (_newCapexForAccount != null)
+                    NewCapexForAccount.PropertyChanged -= NewCapexPropertyChanged;
+                SetProperty(ref _newCapexForAccount, value);
+                if (_newCapexForAccount != null)
+                    NewCapexForAccount.PropertyChanged += NewCapexPropertyChanged;
+            }
         }
+
         public AccountsCapexInfoSet CurrentCapex
         {
             get { return _currentCapex; }
             set { SetProperty(ref _currentCapex, value); }
-        }
-        public decimal CapexAmount
-        {
-            get { return _capexAmount; }
-            set { SetProperty(ref _capexAmount, value); }
         }
 
         public ObservableCollection<AccountsCapexInfoSet> AccountCapexList
@@ -147,7 +157,7 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region Constructor
         [ImportingConstructor]
-        public AddFullAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService)
+        public AddFullAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService, IAccountStatusService accountStatusService, IAccountStoresService accountStoresService, IStoresService storesService, IAccountCapexesService accountCapexService, IExpensesService expenseService, ICapexesService capexService, IStoresWorkService storesWorkService)
         {
 
 
@@ -164,16 +174,26 @@ namespace AccountsWork.Accounts.ViewModels
             #region  capexes
             OpenAddCapexToAccountCommand = new DelegateCommand(OpenAddCapexToAccount);
             CloseAddCapexToAccountCommand = new DelegateCommand(CloseAddCapexToAccount);
+            CopyAvailableSumCommand = new DelegateCommand(CopyAvailableSum);
+            AddCapexToAccountCommand = new DelegateCommand(AddCapexToAccount, CanAddCapex).ObservesProperty(() => NewCapexForAccount);
             #endregion capexes
 
             #region services
             _companiesService = companiesService;
             _typesService = typesService;
             _accountsService = accountsService;
+            _accountStatusService = accountStatusService;
+            _accountStoresService = accountStoresService;
+            _storesService = storesService;
+            _accountCapexService = accountCapexService;
+            _expenseService = expenseService;
+            _capexService = capexService;
+            _storesWorkService = storesWorkService;
 
             #endregion services
 
-        }      
+        }
+       
         #endregion Constructor
 
         #region Methods
@@ -197,7 +217,7 @@ namespace AccountsWork.Accounts.ViewModels
                     AccountDate = DateTime.Now
                 };
                 IsAdditinalInfoEnabled = false;
-                AvailableSum = 0M;
+                AvailableSum = 0M;               
             }
             _worker.RunWorkerAsync();
         }
@@ -207,9 +227,17 @@ namespace AccountsWork.Accounts.ViewModels
         #region account
         private void LoadAccount(object sender, DoWorkEventArgs e)
         {
-            if (Companies != null && Types != null) return;
             Companies = _companiesService.GetCompanies();
             Types = _typesService.GetTypes();
+            ExpensesList = new ObservableCollection<AccountsExpenseSet>(_expenseService.GetExpensesList());
+            if (Account.Id != 0)
+            {
+                LoadCapexInfo();
+            }
+            else
+            {
+                AccountCapexList = new ObservableCollection<AccountsCapexInfoSet>();
+            }
         }
         private AccountsMainSet GetAccount(NavigationContext navigationContext)
         {
@@ -225,6 +253,8 @@ namespace AccountsWork.Accounts.ViewModels
         {
             Account.Id = _accountsService.SaveAccount(Account);
             IsAdditinalInfoEnabled = true;
+            CapexesList = new ObservableCollection<CapexSet>(_capexService.GetCapexesForYearList(Account.AccountYear));
+            LoadCapexInfo();
             IsInEditMode = false;
         }
         private bool CanSave()
@@ -239,10 +269,42 @@ namespace AccountsWork.Accounts.ViewModels
         private void OpenAddCapexToAccount()
         {
             IsAddCapexOpen = true;
+            NewCapexForAccount = new AccountsCapexInfoSet { AccountsMainId = Account.Id};
         }
         private void CloseAddCapexToAccount()
         {
             IsAddCapexOpen = false;
+        }
+        private void CopyAvailableSum()
+        {
+            NewCapexForAccount.AccountCapexAmount = AvailableSum;
+        }
+        private void AddCapexToAccount()
+        {
+            if (NewCapexForAccount != null)
+            {
+                NewCapexForAccount.CapexId = _capexService.GetCapexIdByName(NewCapexForAccount.AccountCapexName, Account.AccountYear);
+                _accountCapexService.AddCapexToAccount(NewCapexForAccount);
+                LoadCapexInfo();
+                IsAddCapexOpen = false;
+            }
+        }
+        private bool CanAddCapex()
+        {
+            if (NewCapexForAccount == null) return false;
+            NewCapexForAccount.ValidateProperties();
+            if (NewCapexForAccount.AccountCapexAmount > AvailableSum)
+                return false;
+            return !NewCapexForAccount.HasErrors;
+        }
+        private void LoadCapexInfo()
+        {
+            AccountCapexList = new ObservableCollection<AccountsCapexInfoSet>(_accountCapexService.GetCapexesById(Account.Id));
+            AvailableSum = Account.AccountAmount - AccountCapexList.Sum(c => c.AccountCapexAmount);
+        }
+        private void NewCapexPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            AddCapexToAccountCommand.RaiseCanExecuteChanged();
         }
         #endregion capexes
 
