@@ -382,7 +382,7 @@ namespace AccountsWork.Accounts.ViewModels
                 var enumerableItems = items as IEnumerable<AccountsExt>;
                 foreach (var item in enumerableItems)
                 {
-                    this.PositiveSummation += item.Account.AccountAmount;
+                    this.PositiveSummation += item.Account.AccountAmount.Value;
                 }
             };
         }

@@ -161,9 +161,9 @@ namespace AccountsWork.Accounts.ViewModels
         {
 
 
-            #region infrastructure
-            SaveAccountCommand = new DelegateCommand(SaveCommand, CanSave).ObservesProperty(() => Account);
-            #endregion infrastructure  
+            #region account
+            SaveAccountCommand = new DelegateCommand(SaveAccount, CanSave).ObservesProperty(() => Account);
+            #endregion account
 
             #region workers
 
@@ -192,8 +192,7 @@ namespace AccountsWork.Accounts.ViewModels
 
             #endregion services
 
-        }
-       
+        }      
         #endregion Constructor
 
         #region Methods
@@ -206,12 +205,10 @@ namespace AccountsWork.Accounts.ViewModels
             if (Account != null)
             {
                 AccountsTabItemHeader = "Ред. информации по сч. " + Account.AccountNumber;
-                IsInEditMode = true;
                 IsAdditinalInfoEnabled = true;
             }
             else
             {
-                IsInEditMode = true;
                 AccountsTabItemHeader = "Новый счет";
                 Account = new AccountsMainSet
                 {
@@ -219,6 +216,7 @@ namespace AccountsWork.Accounts.ViewModels
                     AccountDate = DateTime.Now
                 };
                 IsAdditinalInfoEnabled = false;
+                IsInEditMode = true;
                 AvailableSum = 0M;               
             }
             _worker.RunWorkerAsync();
@@ -251,18 +249,23 @@ namespace AccountsWork.Accounts.ViewModels
         {
             SaveAccountCommand.RaiseCanExecuteChanged();
         }
-        private void SaveCommand()
+        private void SaveAccount()
         {
             Account.Id = _accountsService.SaveAccount(Account);
             IsAdditinalInfoEnabled = true;
             CapexesList = new ObservableCollection<CapexSet>(_capexService.GetCapexesForYearList(Account.AccountYear));
-            LoadCapexInfo();
             IsInEditMode = false;
+            LoadCapexInfo();
         }
         private bool CanSave()
         {
-            if (Account == null) return false;
+            if (Account == null)
+            {
+                IsInEditMode = false;
+                return false;
+            }           
             Account.ValidateProperties();
+            IsInEditMode = !Account.HasErrors;
             return !Account.HasErrors;
         }
         #endregion account
@@ -302,7 +305,7 @@ namespace AccountsWork.Accounts.ViewModels
         private void LoadCapexInfo()
         {
             AccountCapexList = new ObservableCollection<AccountsCapexInfoSet>(_accountCapexService.GetCapexesById(Account.Id));
-            AvailableSum = Account.AccountAmount - AccountCapexList.Sum(c => c.AccountCapexAmount);
+            AvailableSum = Account.AccountAmount.Value - AccountCapexList.Sum(c => c.AccountCapexAmount);
         }
         private void NewCapexPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

@@ -151,7 +151,7 @@ namespace AccountsWork.Accounts.ViewModels
                     var status = account.AccountsStatusDetailsSets.LastOrDefault();
                     var capexes = account.AccountsCapexInfoSets;
 
-                    storeAccount.AccountAmount = account.AccountAmount;
+                    storeAccount.AccountAmount = account.AccountAmount.Value;
                     if (capexes != null)
                     {
                         var i = 1;

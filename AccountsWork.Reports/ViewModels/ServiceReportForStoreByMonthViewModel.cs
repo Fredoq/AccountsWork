@@ -174,7 +174,7 @@ namespace AccountsWork.Reports.ViewModels
                     where a.AccountCompany == "ККС Интер Фуд" || a.AccountCompany == "АйСиЭл"
                     group a by new { a.AccountDate.Month, a.AccountDate.Year }
                     into ym
-                    select new MonthExp { MonthYear = new DateTime(ym.Key.Year, ym.Key.Month, 1), Expense = ym.Sum(ac => ac.AccountAmount) / StoreCount(new DateTime(ym.Key.Year, ym.Key.Month, 1)), StoreCount = StoreCount(new DateTime(ym.Key.Year, ym.Key.Month, 1)) }).ToList();
+                    select new MonthExp { MonthYear = new DateTime(ym.Key.Year, ym.Key.Month, 1), Expense = ym.Sum(ac => ac.AccountAmount.Value) / StoreCount(new DateTime(ym.Key.Year, ym.Key.Month, 1)), StoreCount = StoreCount(new DateTime(ym.Key.Year, ym.Key.Month, 1)) }).ToList();
 
         }
         #endregion report

@@ -557,7 +557,7 @@ namespace AccountsWork.Accounts.ViewModels
         private void LoadCapexInfo()
         {
             AccountCapexList = new ObservableCollection<AccountsCapexInfoSet>(_accountCapexService.GetCapexesById(CurrentAccount.Id));
-            AvailableSum = CurrentAccount.AccountAmount - AccountCapexList.Sum(c => c.AccountCapexAmount);
+            AvailableSum = CurrentAccount.AccountAmount.Value - AccountCapexList.Sum(c => c.AccountCapexAmount);
         }
         private void OpenAddCapexToAccount()
         {

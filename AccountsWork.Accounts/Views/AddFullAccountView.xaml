@@ -45,8 +45,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <materialDesign:Card Margin="5"
-                             IsEnabled="{Binding IsInEditMode, Mode=TwoWay}">
+        <materialDesign:Card Margin="5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -65,7 +64,8 @@
                     <TextBlock Text="Шапка счета"
                                Padding="3"
                                Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
-                               TextAlignment="Center"/>
+                               TextAlignment="Center">
+                    </TextBlock>
                 </materialDesign:ColorZone>
                 <TextBox Grid.Row="1"
                          Margin="5"                        
@@ -94,7 +94,7 @@
                          SpellCheck.IsEnabled="True"                  
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:TextFieldAssist.Hint="Введите сумму счета..."
-                         Text="{Binding Account.AccountAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
+                         Text="{Binding Account.AccountAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue='', StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
                 <ComboBox Grid.Row="5" 
                           Margin="5,10,5,5"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
@@ -130,6 +130,7 @@
                          Text="{Binding Account.AccountYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Grid.Row="9"
                         Style="{StaticResource MaterialDesignFlatButton}"
+                        IsEnabled="{Binding IsInEditMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Content="Сохранить"
                         Command="{Binding SaveAccountCommand}"/>
             </Grid>

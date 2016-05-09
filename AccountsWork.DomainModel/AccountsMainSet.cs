@@ -23,7 +23,7 @@ namespace AccountsWork.DomainModel
         private string _accountNumber;
         private string _accountCompany;
         private DateTime _accountDate;
-        private decimal _accountAmount;
+        private decimal? _accountAmount;
         private string _accountDescription;
         private string _accountMcdType;
         private int _accountYear;
@@ -68,7 +68,7 @@ namespace AccountsWork.DomainModel
         }
 
         [Required]
-        public decimal AccountAmount
+        public decimal? AccountAmount
         {
             get { return _accountAmount; }
             set { SetProperty(ref _accountAmount, value); }
