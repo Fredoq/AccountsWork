@@ -56,8 +56,11 @@
                     <TextBlock Foreground="Black" 
                                FontSize="20" 
                                FontFamily="Segoe UI"
-                               Margin="0,0,0,20">Распределение затрат</TextBlock>
+                               Margin="0,0,-90,20">Распределение затрат</TextBlock>
                 </syncfusion:SfChart.Header>
+                <syncfusion:SfChart.Legend>
+                    <syncfusion:ChartLegend Foreground="Black" FontSize="18"/>
+                </syncfusion:SfChart.Legend>
                 <syncfusion:SfChart.PrimaryAxis>
                     <syncfusion:CategoryAxis PlotOffset="30" 
                                              ShowTrackBallInfo="True"                                             
@@ -81,6 +84,7 @@
                 </syncfusion:SfChart.SecondaryAxis>
                 <syncfusion:SplineSeries EnableAnimation="True" 
                                          XBindingPath="MonthYear"
+                                         Label="Общие затраты"
                                          ItemsSource="{Binding MonthServExpList}"  
                                          YBindingPath="Expense" 
                                          ShowTooltip="True">
@@ -128,6 +132,7 @@
                 </syncfusion:SplineSeries>
                 <syncfusion:SplineSeries EnableAnimation="True" 
                                          XBindingPath="MonthYear"
+                                         Label="MnR"
                                          ItemsSource="{Binding MonthExpList}"  
                                          YBindingPath="Expense" 
                                          ShowTooltip="True">

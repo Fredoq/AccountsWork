@@ -71,7 +71,8 @@ namespace AccountsWork.ExcelReports
                 ws.Cells[1, 6].Value = "Дата статуса";
                 ws.Cells[1, 7].Value = "Комментарий";
                 ws.Cells[1, 8].Value = "Описание";
-                ws.Cells[1, 1, 1, 8].Style.Font.Bold = true;
+                ws.Cells[1, 9].Value = "Статья";
+                ws.Cells[1, 1, 1, 9].Style.Font.Bold = true;
                 var i = 1;
                 foreach (var account in accountsList)
                 {
@@ -83,6 +84,10 @@ namespace AccountsWork.ExcelReports
                     ws.Cells[i + 1, 6].Value = account.AccountsStatusDetailsSets.LastOrDefault().AccountStatusDate;
                     ws.Cells[i + 1, 7].Value = account.AccountsStatusDetailsSets.LastOrDefault().Commentary;
                     ws.Cells[i + 1, 8].Value = account.AccountDescription;
+                    foreach (var cap in account.AccountsCapexInfoSets)
+                    {
+                        ws.Cells[i + 1, 9].Value += cap.AccountExpense + ";";
+                    }
                     i++;
                 }
                 for (int k = 1; k <= 8; k++)

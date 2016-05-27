@@ -41,6 +41,7 @@ namespace AccountsWork.Accounts.ViewModels
         private IEventAggregator _eventAggregator;
         private string _filename;
         private AccountsController _accountsController;
+        private AccountsMainSet _accountForAcc;
         #endregion Private Fields
 
         #region Public Properties
@@ -72,6 +73,11 @@ namespace AccountsWork.Accounts.ViewModels
             {
                 SetProperty(ref _accountForChangeList, value);                
             }
+        }
+        public AccountsMainSet AccountForAcc
+        {
+            get { return _accountForAcc; }
+            set { SetProperty(ref _accountForAcc, value); }
         }
         public List<string> StatusesList
         {
@@ -134,6 +140,7 @@ namespace AccountsWork.Accounts.ViewModels
         public DelegateCommand SearchAccountNumberCommand { get; set; }
         public DelegateCommand SelectAccountCommand { get; set; }
         public DelegateCommand ChangeStatusCommand { get; set; }
+        public DelegateCommand DeleteSelectedAccCommand { get; set; }
         #endregion statuses
 
         #endregion Commands
@@ -168,6 +175,7 @@ namespace AccountsWork.Accounts.ViewModels
             #region statuses
             SearchAccountNumberCommand = new DelegateCommand(SearchAccount);
             SelectAccountCommand = new DelegateCommand(SelectAccount);
+            DeleteSelectedAccCommand = new DelegateCommand(DeleteSelected);
             ChangeStatusCommand = new DelegateCommand(ChangeStatus, CanChange).ObservesProperty(() => SelectedStatus).ObservesProperty(() => AccountForChangeDate).ObservesProperty(() => AccountPayNumber);            
             AccountForChangeList = new ObservableCollection<AccountsMainSet>();
             
@@ -224,6 +232,11 @@ namespace AccountsWork.Accounts.ViewModels
                 SearchAccountText = string.Empty;
                 ChangeStatusCommand.RaiseCanExecuteChanged();
             }
+        }
+        private void DeleteSelected()
+        {
+            if (AccountForAcc == null) return;
+            AccountForChangeList.Remove(AccountForAcc);
         }
         private bool CanChange()
         {

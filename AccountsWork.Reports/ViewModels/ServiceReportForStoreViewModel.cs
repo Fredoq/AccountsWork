@@ -107,7 +107,7 @@ namespace AccountsWork.Reports.ViewModels
         public StackedStoreInfo SelectedStackedStore
         {
             get { return _selectedStackedStore; }
-            set { SetProperty(ref _selectedStackedStore, value); LoadSelectedStorezip(); }
+            set { SetProperty(ref _selectedStackedStore, value); LoadAllSelectedStorezip(); }
         }
         public bool IsSelectAll
         {
@@ -224,6 +224,38 @@ namespace AccountsWork.Reports.ViewModels
             foreach(var item in query)
             {
                 StoreZipList.Add(item);
+            }
+        }
+        private void LoadAllSelectedStorezip()
+        {
+            StoreZipList.Clear();
+            foreach(var store in StackedStoreList)
+            {
+                var query = from s in store.ServiceZipList
+                            group s by s.ZipSet.MainZipName into zip
+                            select new StoreZip { ZipName = zip.Key, Summ = zip.Sum(z => z.ZipQuantity == 0 ? z.ZipPrice : z.ZipPrice * z.ZipQuantity.Value), ZipList = new ObservableCollection<ZipPrice>(zip.Select(z => new ZipPrice { Price = z.ZipPrice, Quantity = z.ZipQuantity.Value, Zip = z.ZipName }).ToList()) };
+                foreach (var item in query)
+                {
+                    if (StoreZipList.Count == 0)
+                    {
+                        StoreZipList.Add(item);
+                        continue;
+                    }
+                    int temp = 0;
+                   foreach(var stZip in StoreZipList)
+                    {
+                        if (stZip.ZipName == item.ZipName)
+                        {
+                            temp = 1;
+                            stZip.Summ += item.Summ;
+                            stZip.ZipList.AddRange(item.ZipList);
+                        }
+                    }
+                   if (temp == 0)
+                    {
+                        StoreZipList.Add(item);
+                    }
+                }
             }
         }
         private void SelectAll()

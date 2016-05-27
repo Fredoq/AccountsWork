@@ -15,11 +15,6 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{StaticResource MaterialDesignFont}"
              mc:Ignorable="d" >
-    <!--<i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadAllCommand}"></i:InvokeCommandAction>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -39,13 +34,17 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <materialDesign:Card Margin="5">
+        <materialDesign:Card Margin="5"
+                             Grid.RowSpan="2"
+                             Grid.Row="0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -136,7 +135,7 @@
             </Grid>
         </materialDesign:Card>
         <materialDesign:Card Margin="5"
-                             Grid.Row="1"
+                             Grid.Row="2"
                              MinWidth="280"
                              VerticalAlignment="Stretch"
                              IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}"
@@ -287,6 +286,228 @@
                         </Button>
                     </Grid>
                 </materialDesign:DialogHost>
+            </Grid>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="5"
+                             Grid.Row="0"
+                             Grid.Column="1"
+                             MinHeight="300"
+                             MaxHeight="400"
+                             IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <materialDesign:ColorZone Grid.Row="0"
+                                          Mode="PrimaryMid">
+                    <TextBlock Text="Статус счета"
+                               Padding="3"
+                               Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
+                               TextAlignment="Center"/>
+                </materialDesign:ColorZone>
+                <materialDesign:DialogHost Grid.Row="1"
+                                           IsOpen="{Binding IsChangeStatusOpen, Mode=TwoWay}">
+                    <materialDesign:DialogHost.DialogContent>
+                        <StackPanel Orientation="Vertical">
+                            <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      materialDesign:TextFieldAssist.Hint="Выберите статус..."
+                                      ItemsSource="{Binding StatusesList}"
+                                      Margin="5"
+                                      SelectedValue="{Binding NewAccountStatus.AccountStatus, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <DatePicker FirstDayOfWeek="Monday"
+                                        Margin="5"
+                                        Style="{StaticResource MaterialDesignDatePicker}"
+                                        materialDesign:TextFieldAssist.Hint="Выберите дату статуса..."   
+                                        SelectedDate="{Binding NewAccountStatus.AccountStatusDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <TextBox MinHeight="50"
+                                     MinWidth="100"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     Margin="5"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:TextFieldAssist.Hint="Введите комментарий..."
+                                     Text="{Binding NewAccountStatus.Commentary, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <TextBox Text="{Binding NewAccountStatus.AccountPayNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                     Margin="5"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:TextFieldAssist.Hint="Введите номер платежки..."/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Сохранить"
+                                        IsDefault="True"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Command="{Binding SaveNewStatusCommand}"/>
+                                <Button Content="Отменить"
+                                        Margin="3"
+                                        IsCancel="True"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Command="{Binding CancelNewStatusCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </materialDesign:DialogHost.DialogContent>
+                    <Grid>
+                        <DataGrid AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  SelectionMode="Single"
+                                  SelectionUnit="FullRow"
+                                  SelectedItem="{Binding SelectedAccountStatus, Mode=TwoWay}"
+                                  ItemsSource="{Binding StatusHistoryList}">
+                        <DataGrid.Columns>
+                            <materialDesign:MaterialDataGridTextColumn Header="Дата статуса"
+                                                                       Binding="{Binding Path=AccountStatusDate, StringFormat=d}"/>
+                            <materialDesign:MaterialDataGridTextColumn Header="Статус"
+                                                                       Binding="{Binding Path=AccountStatus}"
+                                                                       EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"/>
+                            <materialDesign:MaterialDataGridTextColumn Header="Комментарий"
+                                                                       Binding="{Binding Path=Commentary}"/>
+                            <materialDesign:MaterialDataGridTextColumn Header="Номер платежки"
+                                                                       Binding="{Binding Path=AccountPayNumber}"/>
+                        </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                Command="{Binding ChangeStatusCommand}"
+                                VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Right" 
+                                Margin="0 0 55 5">
+                            <Viewbox Width="22" Height="22">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                Command="{Binding DeleteSelectedStatusCommand}"
+                                VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Right" 
+                                Margin="0 0 5 5">
+                            <Viewbox Width="22" Height="22">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,13H5V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                    </Grid>
+                </materialDesign:DialogHost>
+                
+            </Grid>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="5"
+                             Grid.RowSpan="2"
+                             Grid.Row="1"
+                             Grid.Column="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <materialDesign:ColorZone Grid.Row="0"
+                                          Grid.ColumnSpan="2"
+                                          Mode="PrimaryMid">
+                    <TextBlock Text="Рестораны / Люди"
+                               Padding="3"
+                               Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
+                               TextAlignment="Center"/>
+                </materialDesign:ColorZone>
+                <materialDesign:DialogHost Grid.Row="1"
+                                           IsOpen="{Binding IsEditAccountStoresOpen, Mode=TwoWay}">
+                    <materialDesign:DialogHost.DialogContent>
+                        <StackPanel Orientation="Vertical"
+                                    Grid.Column="1"
+                                    Margin="4">
+                            <TextBox Text="{Binding StoresForLoad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     MinHeight="100"
+                                     MaxHeight="300"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:TextFieldAssist.Hint="Рестораны"
+                                     ScrollViewer.CanContentScroll="True"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                            <Label Content="Обнаруженные ошибки:"
+                                   Style="{StaticResource MaterialDesignLabel}"/>
+                            <TextBlock Text="{Binding StoresError, Mode=TwoWay}"
+                                       Foreground="Red"
+                                       FontStyle="Italic"
+                                       FontSize="11"
+                                       MaxHeight="250"    
+                                       Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                       ScrollViewer.CanContentScroll="True"
+                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                       TextWrapping="Wrap"/>
+                            <Button Content="Добавить"
+                                    Margin="3"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Command="{Binding AddStoresToAccountCommand}"/>
+                        </StackPanel>
+                    </materialDesign:DialogHost.DialogContent>
+                    <Grid>
+                        <DataGrid AutoGenerateColumns="False"
+                                  SelectionUnit="FullRow"
+                                  MinHeight="200"
+                                  VerticalAlignment="Stretch"
+                                  IsReadOnly="True"   
+                                  SelectedItem="{Binding CurrentAccountStore, Mode=TwoWay}"
+                                  CanUserDeleteRows="True"
+                                  ItemsSource="{Binding AccountStoresList}">
+                            <DataGrid.Columns>
+                                <materialDesign:MaterialDataGridTextColumn Header="Номер ресторана"
+                                                                           Binding="{Binding Path=StoreNumber}"/>
+                                <materialDesign:MaterialDataGridTextColumn Header="Название ресторана"
+                                                                           MaxWidth="200"
+                                                                           Binding="{Binding Path=StoreName}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                Command="{Binding EditAccountStoresListCommand}"
+                                VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Right" 
+                                Margin="0 0 55 5">
+                            <Viewbox Width="22" Height="22">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                Command="{Binding DeleteAccountStoreCommand}"
+                                VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Right" 
+                                Margin="0 0 5 5">
+                            <Viewbox Width="22" Height="22">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,13H5V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                    </Grid>
+                </materialDesign:DialogHost>
+                <DataGrid AutoGenerateColumns="False"
+                          Grid.Column="1"
+                          Grid.Row="1"
+                          IsReadOnly="True"
+                          ScrollViewer.CanContentScroll="True"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          SelectedItem="{Binding SelectedWork, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding StoresWorkList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <materialDesign:MaterialDataGridTextColumn Header="Номер ресторана"
+                                                                   Binding="{Binding Path=StoreNumber}"/>
+                        <materialDesign:MaterialDataGridTextColumn Header="Работа"
+                                                                   Binding="{Binding Path=StoreWork}"/>
+                        <materialDesign:MaterialDataGridTextColumn Header="Выполнить до"
+                                                                   Binding="{Binding Path=StoreDateOfConfirm}"/>
+                        <DataGridCheckBoxColumn Header="Выполнено"
+                                                IsReadOnly="False"
+                                                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"
+                                                Binding="{Binding Path=IsDone}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </materialDesign:Card>
     </Grid>
