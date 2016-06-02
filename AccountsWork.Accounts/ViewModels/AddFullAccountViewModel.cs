@@ -16,6 +16,7 @@ using System.Windows;
 namespace AccountsWork.Accounts.ViewModels
 {
     [Export]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class AddFullAccountViewModel : ValidatableBindableBase
     {
         #region Private Fields
@@ -354,6 +355,8 @@ namespace AccountsWork.Accounts.ViewModels
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+            Companies = _companiesService.GetCompanies();
+            Types = _typesService.GetTypes();
             Account = GetAccount(navigationContext);
             if (Account != null)
             {
@@ -374,14 +377,16 @@ namespace AccountsWork.Accounts.ViewModels
             }
             _worker.RunWorkerAsync();
         }
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return false;
+        }
 
         #endregion infrastructure
 
         #region account
         private void LoadAccount(object sender, DoWorkEventArgs e)
-        {
-            Companies = _companiesService.GetCompanies();
-            Types = _typesService.GetTypes();
+        {            
             ExpensesList = new ObservableCollection<AccountsExpenseSet>(_expenseService.GetExpensesList());
             if (Account.Id != 0)
             {

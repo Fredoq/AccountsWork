@@ -39,12 +39,14 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition />
             <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <materialDesign:Card Margin="5"
                              Grid.RowSpan="2"
                              Grid.Row="0">
+            <AdornerDecorator>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -133,8 +135,10 @@
                         Content="Сохранить"
                         Command="{Binding SaveAccountCommand}"/>
             </Grid>
+            </AdornerDecorator>
         </materialDesign:Card>
         <materialDesign:Card Margin="5"
+                             Grid.RowSpan="2"
                              Grid.Row="2"
                              MinWidth="280"
                              VerticalAlignment="Stretch"
@@ -292,8 +296,7 @@
                              Grid.Row="0"
                              Grid.Column="1"
                              MinHeight="300"
-                             MaxHeight="400"
-                             IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}">
+                             IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}" VerticalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -352,23 +355,23 @@
                                   SelectionUnit="FullRow"
                                   SelectedItem="{Binding SelectedAccountStatus, Mode=TwoWay}"
                                   ItemsSource="{Binding StatusHistoryList}">
-                        <DataGrid.Columns>
-                            <materialDesign:MaterialDataGridTextColumn Header="Дата статуса"
+                            <DataGrid.Columns>
+                                <materialDesign:MaterialDataGridTextColumn Header="Дата статуса"
                                                                        Binding="{Binding Path=AccountStatusDate, StringFormat=d}"/>
-                            <materialDesign:MaterialDataGridTextColumn Header="Статус"
+                                <materialDesign:MaterialDataGridTextColumn Header="Статус"
                                                                        Binding="{Binding Path=AccountStatus}"
                                                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"/>
-                            <materialDesign:MaterialDataGridTextColumn Header="Комментарий"
+                                <materialDesign:MaterialDataGridTextColumn Header="Комментарий"
                                                                        Binding="{Binding Path=Commentary}"/>
-                            <materialDesign:MaterialDataGridTextColumn Header="Номер платежки"
+                                <materialDesign:MaterialDataGridTextColumn Header="Номер платежки"
                                                                        Binding="{Binding Path=AccountPayNumber}"/>
-                        </DataGrid.Columns>
+                            </DataGrid.Columns>
                         </DataGrid>
                         <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
                                 Command="{Binding ChangeStatusCommand}"
                                 VerticalAlignment="Bottom" 
                                 HorizontalAlignment="Right" 
-                                Margin="0 0 55 5">
+                                Margin="0 0 75 5">
                             <Viewbox Width="22" Height="22">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
@@ -379,7 +382,7 @@
                                 Command="{Binding DeleteSelectedStatusCommand}"
                                 VerticalAlignment="Bottom" 
                                 HorizontalAlignment="Right" 
-                                Margin="0 0 5 5">
+                                Margin="0 0 25 5">
                             <Viewbox Width="22" Height="22">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M19,13H5V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
@@ -388,13 +391,14 @@
                         </Button>
                     </Grid>
                 </materialDesign:DialogHost>
-                
+
             </Grid>
         </materialDesign:Card>
-        <materialDesign:Card Margin="5"
-                             Grid.RowSpan="2"
+        <materialDesign:Card Margin="5,5,5,5"
+                             Grid.RowSpan="3"
                              Grid.Row="1"
-                             Grid.Column="1">
+                             Grid.Column="1"
+                             VerticalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -466,7 +470,7 @@
                                 Command="{Binding EditAccountStoresListCommand}"
                                 VerticalAlignment="Bottom" 
                                 HorizontalAlignment="Right" 
-                                Margin="0 0 55 5">
+                                Margin="0 0 75 5">
                             <Viewbox Width="22" Height="22">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
@@ -477,7 +481,7 @@
                                 Command="{Binding DeleteAccountStoreCommand}"
                                 VerticalAlignment="Bottom" 
                                 HorizontalAlignment="Right" 
-                                Margin="0 0 5 5">
+                                Margin="0 0 25 5">
                             <Viewbox Width="22" Height="22">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M19,13H5V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
@@ -489,6 +493,7 @@
                 <DataGrid AutoGenerateColumns="False"
                           Grid.Column="1"
                           Grid.Row="1"
+                          Margin="30,0,0,0"
                           IsReadOnly="True"
                           ScrollViewer.CanContentScroll="True"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
