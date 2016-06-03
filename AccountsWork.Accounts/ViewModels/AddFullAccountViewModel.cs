@@ -62,6 +62,12 @@ namespace AccountsWork.Accounts.ViewModels
         private StoreProvenWorkSet _selectedWork;
         private string _serchStoreName;
         private string _serchResultStore;
+        private bool _addFAOpen;
+        private AccountsBudgetDetailsSet _newFa;
+        private ObservableCollection<FASet> _FAlist;
+        private ObservableCollection<AccountsBudgetDetailsSet> _accountFAList;
+        private IAccountFAService _accountFAService;
+        private IFAService _faService;
         #endregion Private Fields
 
         #region Public Properties
@@ -259,6 +265,29 @@ namespace AccountsWork.Accounts.ViewModels
         }
         #endregion work
 
+        #region FA
+        public bool AddFAOpen
+        {
+            get { return _addFAOpen; }
+            set { SetProperty(ref _addFAOpen, value); }
+        }
+        public AccountsBudgetDetailsSet NewFA
+        {
+            get { return _newFa; }
+            set { SetProperty(ref _newFa, value); }
+        }
+        public ObservableCollection<FASet> FAList
+        {
+            get { return _FAlist; }
+            set { SetProperty(ref _FAlist, value); }
+        }
+        public ObservableCollection<AccountsBudgetDetailsSet> AccountFAList
+        {
+            get { return _accountFAList; }
+            set { SetProperty(ref _accountFAList, value); }
+        }
+        #endregion FA
+
         #endregion Public Properties
 
         #region Commands
@@ -287,11 +316,28 @@ namespace AccountsWork.Accounts.ViewModels
         public DelegateCommand AddStoresToAccountCommand { get; set; }
         #endregion stores
 
+        #region FA
+        public DelegateCommand AddFACommand { get; set; }
+        public DelegateCommand AddFAToAccountCommand { get; set; }
+        public DelegateCommand CloseFACommand { get; set; }
+        #endregion FA
+
         #endregion Commands
 
         #region Constructor
         [ImportingConstructor]
-        public AddFullAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService, IAccountStatusService accountStatusService, IAccountStoresService accountStoresService, IStoresService storesService, IAccountCapexesService accountCapexService, IExpensesService expenseService, ICapexesService capexService, IStoresWorkService storesWorkService)
+        public AddFullAccountViewModel(ICompaniesService companiesService, 
+                                       ITypesService typesService, 
+                                       IAccountsMainService accountsService, 
+                                       IAccountStatusService accountStatusService, 
+                                       IAccountStoresService accountStoresService, 
+                                       IStoresService storesService, 
+                                       IAccountCapexesService accountCapexService, 
+                                       IExpensesService expenseService, 
+                                       ICapexesService capexService, 
+                                       IStoresWorkService storesWorkService,
+                                       IAccountFAService accountFAService,
+                                       IFAService faService)
         {
 
 
@@ -327,7 +373,8 @@ namespace AccountsWork.Accounts.ViewModels
             _expenseService = expenseService;
             _capexService = capexService;
             _storesWorkService = storesWorkService;
-
+            _accountFAService = accountFAService;
+            _faService = faService;
             #endregion services
 
             #region statuses
@@ -346,7 +393,14 @@ namespace AccountsWork.Accounts.ViewModels
             IsEditAccountStoresOpen = false;
             #endregion stores
 
-        }
+            #region FA
+            AddFAOpen = false;
+            AddFACommand = new DelegateCommand(AddFA);
+            AddFAToAccountCommand = new DelegateCommand(AddFAToAccount);
+            CloseFACommand = new DelegateCommand(CloseFA);
+            #endregion FA
+
+        }        
         #endregion Constructor
 
         #region Methods
@@ -394,12 +448,14 @@ namespace AccountsWork.Accounts.ViewModels
                 LoadHistoryStatus(Account.Id);
                 AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(Account.Id));
                 StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
+                AccountFAList = new ObservableCollection<AccountsBudgetDetailsSet>(_accountFAService.GetFAList(Account.Id));
             }
             else
             {
                 AccountCapexList = new ObservableCollection<AccountsCapexInfoSet>();
                 AccountStoresList = new ObservableCollection<StoresSet>();
                 StoresWorkList = new ObservableCollection<StoreProvenWorkSet>();
+                AccountFAList = new ObservableCollection<AccountsBudgetDetailsSet>();
             }
         }
         private AccountsMainSet GetAccount(NavigationContext navigationContext)
@@ -611,6 +667,26 @@ namespace AccountsWork.Accounts.ViewModels
             }
         }
         #endregion work
+
+        #region FA
+        private void AddFA()
+        {
+            NewFA = new AccountsBudgetDetailsSet { AccountsMainId = Account.Id };
+            FAList = new ObservableCollection<FASet>(_faService.GetFAList());
+            AddFAOpen = true;
+        }
+        private void AddFAToAccount()
+        {
+            _accountFAService.AddFAToAccount(NewFA);
+            AccountFAList = new ObservableCollection<AccountsBudgetDetailsSet>(_accountFAService.GetFAList(Account.Id));
+            AddFAOpen = false;
+        }
+        private void CloseFA()
+        {
+            NewFA = new AccountsBudgetDetailsSet();
+            AddFAOpen = false;
+        }
+        #endregion FA
 
         #endregion Methods
 

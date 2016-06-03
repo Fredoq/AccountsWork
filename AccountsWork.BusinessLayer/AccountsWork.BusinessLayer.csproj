@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountCapexesService.cs" />
+    <Compile Include="FAService.cs" />
     <Compile Include="AccountsMainService.cs" />
     <Compile Include="AccountStatusService.cs" />
     <Compile Include="AccountStoresService.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="StoresWorkService.cs" />
     <Compile Include="ExpensesService.cs" />
     <Compile Include="StoresService.cs" />
+    <Compile Include="AccountFAService.cs" />
     <Compile Include="TypesService.cs" />
     <Compile Include="CompaniesService.cs" />
     <Compile Include="IAccountsMainService.cs" />

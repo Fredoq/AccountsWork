@@ -40,5 +40,6 @@ namespace AccountsWork.DataAccessLayer
         public virtual DbSet<TypeSet> TypeSets { get; set; }
         public virtual DbSet<ZipSet> ZipSets { get; set; }
         public virtual DbSet<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
+        public virtual DbSet<FASet> FASets { get; set; }
     }
 }

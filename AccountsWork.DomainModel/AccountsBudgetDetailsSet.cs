@@ -25,5 +25,6 @@ namespace AccountsWork.DomainModel
     
         public virtual AccountsMainSet AccountsMainSet { get; set; }
         public virtual CapexSet CapexSet { get; set; }
+        public virtual FASet FASet { get; set; }
     }
 }

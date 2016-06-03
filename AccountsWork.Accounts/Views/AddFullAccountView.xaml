@@ -296,7 +296,8 @@
                              Grid.Row="0"
                              Grid.Column="1"
                              MinHeight="300"
-                             IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}" VerticalAlignment="Stretch">
+                             IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}" 
+                             VerticalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -394,10 +395,11 @@
 
             </Grid>
         </materialDesign:Card>
-        <materialDesign:Card Margin="5,5,5,5"
+        <materialDesign:Card Margin="5"
                              Grid.RowSpan="3"
                              Grid.Row="1"
                              Grid.Column="1"
+                             IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}"
                              VerticalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
@@ -518,6 +520,7 @@
         <materialDesign:Card Margin="5"
                              Grid.Column="2"
                              Grid.RowSpan="4"
+                             IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}"
                              VerticalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
@@ -558,6 +561,43 @@
                                       SelectedValuePath="FAName"  
                                       SelectedValue="{Binding NewFA.AccountEquipmentName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       ItemsSource="{Binding FAList}"/>
+                            <TextBox Grid.Row="1"
+                                     Margin="5"                        
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     Text="{Binding NewFA.AccountEquipmentPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, StringFormat=C, ConverterCulture=ru-RU}"
+                                     materialDesign:TextFieldAssist.Hint="Введите цену ОС..."/>
+                            <TextBox Grid.Row="2"
+                                     Margin="5"                        
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     Text="{Binding NewFA.AccountEquipmentQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+                                     materialDesign:TextFieldAssist.Hint="Введите количество ОС..."/>
+                            <ComboBox Grid.Row="3"
+                                      Margin="5,10,5,5"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      materialDesign:TextFieldAssist.Hint="Введите номер ресторана..."
+                                      DisplayMemberPath="StoreNumber"
+                                      SelectedValuePath="StoreNumber"  
+                                      IsEditable="True"
+                                      SelectedValue="{Binding NewFA.AccountStoreNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding AccountStoresList}"/>
+                            <ComboBox Grid.Row="4"
+                                      Margin="5,10,5,5"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      materialDesign:TextFieldAssist.Hint="Выберите Capex..."
+                                      DisplayMemberPath="AccountCapexName"
+                                      SelectedValuePath="CapexId"  
+                                      IsEditable="True"
+                                      SelectedValue="{Binding NewFA.EquipmentCapexId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding AccountCapexList}"/>
+                            <StackPanel Orientation="Horizontal"
+                                        Grid.Row="5">
+                                <Button Content="Добавить"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Command="{Binding AddFAToAccountCommand}"/>
+                                <Button Content="Отменить"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Command="{Binding CloseFACommand}"/>
+                            </StackPanel>
                         </Grid>
                     </materialDesign:DialogHost.DialogContent>
                     <Grid>
