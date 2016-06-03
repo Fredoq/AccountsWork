@@ -18,6 +18,7 @@ namespace AccountsWork.DomainModel
         public CapexSet()
         {
             this.AccountsCapexInfoSets = new HashSet<AccountsCapexInfoSet>();
+            this.AccountsBudgetDetailsSets = new HashSet<AccountsBudgetDetailsSet>();
         }
     
         public int Id { get; set; }
@@ -27,5 +28,7 @@ namespace AccountsWork.DomainModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsCapexInfoSet> AccountsCapexInfoSets { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
     }
 }

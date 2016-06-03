@@ -5,7 +5,6 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="fffcac561ce94773b296910b6ad4883c" Name="Diagram1">
-        <EntityTypeShape EntityType="AccountsModel.AccountsBudgetDetailsSet" Width="1.5" PointX="10" PointY="10.25" IsExpanded="true" />
         <EntityTypeShape EntityType="AccountsModel.AccountsCapexInfoSet" Width="1.5" PointX="6" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="AccountsModel.AccountsCompaniesSet" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AccountsModel.AccountsExpenseSet" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
@@ -19,9 +18,6 @@
         <EntityTypeShape EntityType="AccountsModel.StoresSet" Width="1.5" PointX="13.5" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="AccountsModel.TypeSet" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AccountsModel.ZipSet" Width="1.5" PointX="3.75" PointY="1.5" IsExpanded="true" />
-        <AssociationConnector Association="AccountsModel.FK_AccountsBudgetDetailsSet_StoresSet" ManuallyRouted="false" />
-        <AssociationConnector Association="AccountsModel.FK_AccountsMainAccountsEquipmentDetails" ManuallyRouted="false" />
-        <AssociationConnector Association="AccountsModel.FK_BudgetAccountsBudgetDetails" ManuallyRouted="false" />
         <AssociationConnector Association="AccountsModel.FK_AccountsMainAccountsCapexInfo" ManuallyRouted="false" />
         <AssociationConnector Association="AccountsModel.FK_CapexAccountsCapexInfo" ManuallyRouted="false" />
         <AssociationConnector Association="AccountsModel.FK_AccountsMainAccountsStatusDetails" ManuallyRouted="false" />
@@ -31,7 +27,10 @@
         <AssociationConnector Association="AccountsModel.FK_ServiceZipDetailsSet_StoresSet" ManuallyRouted="false" />
         <AssociationConnector Association="AccountsModel.FK_ServiceZipDetailsSet_ZipSet" ManuallyRouted="false" />
         <AssociationConnector Association="AccountsModel.FK_StoresStoreProvenWork" ManuallyRouted="false" />
-      </Diagram>
+        <EntityTypeShape EntityType="AccountsModel.AccountsBudgetDetailsSet" Width="1.5" PointX="6" PointY="11.75" />
+        <AssociationConnector Association="AccountsModel.FK_AccountsBudgetDetailsSet_AccountsMainSet" />
+        <AssociationConnector Association="AccountsModel.FK_AccountsBudgetDetailsSet_CapexSet" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

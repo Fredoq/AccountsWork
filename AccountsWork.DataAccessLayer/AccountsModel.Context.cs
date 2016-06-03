@@ -26,7 +26,6 @@ namespace AccountsWork.DataAccessLayer
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
         public virtual DbSet<AccountsCapexInfoSet> AccountsCapexInfoSets { get; set; }
         public virtual DbSet<AccountsCompaniesSet> AccountsCompaniesSets { get; set; }
         public virtual DbSet<AccountsExpenseSet> AccountsExpenseSets { get; set; }
@@ -40,5 +39,6 @@ namespace AccountsWork.DataAccessLayer
         public virtual DbSet<StoresSet> StoresSets { get; set; }
         public virtual DbSet<TypeSet> TypeSets { get; set; }
         public virtual DbSet<ZipSet> ZipSets { get; set; }
+        public virtual DbSet<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
     }
 }

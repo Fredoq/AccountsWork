@@ -19,11 +19,11 @@ namespace AccountsWork.DomainModel
         public string AccountEquipmentName { get; set; }
         public int AccountEquipmentQuantity { get; set; }
         public decimal AccountEquipmentPrice { get; set; }
-        public int BudgetId { get; set; }
         public int AccountStoreNumber { get; set; }
+        public int EquipmentCapexId { get; set; }
+        public string EquipmentCapexName { get; set; }
     
-        public virtual StoresSet StoresSet { get; set; }
         public virtual AccountsMainSet AccountsMainSet { get; set; }
-        public virtual BudgetSet BudgetSet { get; set; }
+        public virtual CapexSet CapexSet { get; set; }
     }
 }
