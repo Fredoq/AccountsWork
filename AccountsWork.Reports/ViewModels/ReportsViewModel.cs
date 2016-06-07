@@ -11,9 +11,15 @@ namespace AccountsWork.Reports.ViewModels
     {
         #region Private Fields
         private IRegionManager _regionManager;
+        private bool _isLeftOpen;
         #endregion PrivateFields
 
         #region Public Properties
+        public bool IsLeftOpen
+        {
+            get { return _isLeftOpen; }
+            set { SetProperty(ref _isLeftOpen, value); }
+        }
         #endregion Public Properties
 
         #region Commands
@@ -31,6 +37,7 @@ namespace AccountsWork.Reports.ViewModels
             #region infrastructure
             _regionManager = regionManager;           
             NavigateCommand = new DelegateCommand<string>(Navigate);
+            IsLeftOpen = false;
             #endregion infrastructure
         }
 
@@ -40,6 +47,7 @@ namespace AccountsWork.Reports.ViewModels
         private void Navigate(string navigationProperty)
         {
             _regionManager.RequestNavigate(RegionNames.ReportsTabRegion, navigationProperty);
+            IsLeftOpen = false;
         }
         #endregion infrastructure
 

@@ -107,7 +107,7 @@ namespace AccountsWork.Reports.ViewModels
         public StackedStoreInfo SelectedStackedStore
         {
             get { return _selectedStackedStore; }
-            set { SetProperty(ref _selectedStackedStore, value); LoadAllSelectedStorezip(); }
+            set { SetProperty(ref _selectedStackedStore, value); LoadSelectedStorezip(); }
         }
         public bool IsSelectAll
         {

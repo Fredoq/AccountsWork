@@ -30,6 +30,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+        
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -278,7 +279,7 @@
                             </Viewbox>
                         </Button>
                         <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
-                                    Command="{Binding OpenAddCapexToAccountCommand}"
+                                    Command="{Binding DeleteCapexAccountCommand}"
                                     VerticalAlignment="Bottom" 
                                     HorizontalAlignment="Right" 
                                     Margin="0 0 5 5">
@@ -444,11 +445,20 @@
                                        ScrollViewer.CanContentScroll="True"
                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                                        TextWrapping="Wrap"/>
-                            <Button Content="Добавить"
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="3">
+                                <Button Content="Добавить"
                                     Margin="3"
                                     HorizontalAlignment="Center"
                                     Style="{StaticResource MaterialDesignFlatButton}"
                                     Command="{Binding AddStoresToAccountCommand}"/>
+                                <Button Content="Отменить"
+                                    Margin="3"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Command="{Binding CloseAddStoresToAccountCommand}"/>
+                            </StackPanel>
+                            
                         </StackPanel>
                     </materialDesign:DialogHost.DialogContent>
                     <Grid>
@@ -562,7 +572,7 @@
                                       SelectedValue="{Binding NewFA.AccountEquipmentName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       ItemsSource="{Binding FAList}"/>
                             <TextBox Grid.Row="1"
-                                     Margin="5"                        
+                                     Margin="5,10,5,5"                        
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                      Text="{Binding NewFA.AccountEquipmentPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, StringFormat=C, ConverterCulture=ru-RU}"
                                      materialDesign:TextFieldAssist.Hint="Введите цену ОС..."/>
@@ -614,11 +624,9 @@
                                                                        Binding="{Binding Path=AccountEquipmentPrice, StringFormat=C, ConverterCulture=ru-RU}"/>
                             <materialDesign:MaterialDataGridTextColumn Header="Количество"
                                                                        Binding="{Binding Path=AccountEquipmentQuantity}"/>
-                            <materialDesign:MaterialDataGridTextColumn Header="Номер ресторана"
+                                <materialDesign:MaterialDataGridTextColumn Header="Номер ресторана"
                                                                        Binding="{Binding Path=AccountStoreNumber}"/>
-                            <materialDesign:MaterialDataGridTextColumn Header="Capex"
-                                                                       Binding="{Binding Path=EquipmentCapexName}"/>
-                        </DataGrid.Columns>
+                            </DataGrid.Columns>
                     </DataGrid>
                         <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
                                 Command="{Binding AddFACommand}"

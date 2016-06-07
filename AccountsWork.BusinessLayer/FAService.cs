@@ -9,6 +9,7 @@ namespace AccountsWork.BusinessLayer
     public interface IFAService
     {
         IList<FASet> GetFAList();
+        IList<FASet> GetFAListFull();
     }
 
     [Export(typeof(IFAService))]
@@ -25,6 +26,11 @@ namespace AccountsWork.BusinessLayer
         public IList<FASet> GetFAList()
         {
             return _faRepository.GetAll();
+        }
+
+        public IList<FASet> GetFAListFull()
+        {
+            return _faRepository.GetAll(f => f.AccountsBudgetDetailsSets);
         }
     }
 }

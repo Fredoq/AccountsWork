@@ -16,7 +16,6 @@
           <Property Name="AccountEquipmentPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="AccountStoreNumber" Type="int" Nullable="false" />
           <Property Name="EquipmentCapexId" Type="int" Nullable="false" />
-          <Property Name="EquipmentCapexName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="AccountsCapexInfoSet">
           <Key>
@@ -711,7 +710,6 @@
           <Property Name="AccountEquipmentPrice" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="AccountStoreNumber" Type="Int32" Nullable="false" />
           <Property Name="EquipmentCapexId" Type="Int32" Nullable="false" />
-          <Property Name="EquipmentCapexName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AccountsMainSet" Relationship="AccountsModel.FK_AccountsBudgetDetailsSet_AccountsMainSet" FromRole="AccountsBudgetDetailsSet" ToRole="AccountsMainSet" />
           <NavigationProperty Name="CapexSet" Relationship="AccountsModel.FK_AccountsBudgetDetailsSet_CapexSet" FromRole="AccountsBudgetDetailsSet" ToRole="CapexSet" />
           <NavigationProperty Name="FASet" Relationship="AccountsModel.FK_AccountsBudgetDetailsSet_FASet" FromRole="AccountsBudgetDetailsSet" ToRole="FASet" />
@@ -912,7 +910,6 @@
           <EntitySetMapping Name="AccountsBudgetDetailsSets">
             <EntityTypeMapping TypeName="AccountsModel.AccountsBudgetDetailsSet">
               <MappingFragment StoreEntitySet="AccountsBudgetDetailsSet">
-                <ScalarProperty Name="EquipmentCapexName" ColumnName="EquipmentCapexName" />
                 <ScalarProperty Name="EquipmentCapexId" ColumnName="EquipmentCapexId" />
                 <ScalarProperty Name="AccountStoreNumber" ColumnName="AccountStoreNumber" />
                 <ScalarProperty Name="AccountEquipmentPrice" ColumnName="AccountEquipmentPrice" />

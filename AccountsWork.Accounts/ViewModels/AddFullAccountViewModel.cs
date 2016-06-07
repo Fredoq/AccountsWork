@@ -274,8 +274,16 @@ namespace AccountsWork.Accounts.ViewModels
         public AccountsBudgetDetailsSet NewFA
         {
             get { return _newFa; }
-            set { SetProperty(ref _newFa, value); }
+            set
+            {
+                if (_newFa != null)
+                    NewFA.PropertyChanged -= NewFAPropertyChanged;
+                SetProperty(ref _newFa, value);
+                if (_newFa != null)
+                    NewFA.PropertyChanged += NewFAPropertyChanged;
+            }
         }
+
         public ObservableCollection<FASet> FAList
         {
             get { return _FAlist; }
@@ -314,6 +322,7 @@ namespace AccountsWork.Accounts.ViewModels
         public DelegateCommand EditAccountStoresListCommand { get; set; }
         public DelegateCommand DeleteAccountStoreCommand { get; set; }
         public DelegateCommand AddStoresToAccountCommand { get; set; }
+        public DelegateCommand CloseAddStoresToAccountCommand { get; set; }
         #endregion stores
 
         #region FA
@@ -360,6 +369,7 @@ namespace AccountsWork.Accounts.ViewModels
             CloseAddCapexToAccountCommand = new DelegateCommand(CloseAddCapexToAccount);
             CopyAvailableSumCommand = new DelegateCommand(CopyAvailableSum);
             AddCapexToAccountCommand = new DelegateCommand(AddCapexToAccount, CanAddCapex).ObservesProperty(() => NewCapexForAccount);
+            DeleteCapexAccountCommand = new DelegateCommand(DeleteCapex);
             #endregion capexes
 
             #region services
@@ -390,13 +400,14 @@ namespace AccountsWork.Accounts.ViewModels
             EditAccountStoresListCommand = new DelegateCommand(EditAccountStoresList, CanEdit);
             DeleteAccountStoreCommand = new DelegateCommand(DeleteAccountStore);
             AddStoresToAccountCommand = new DelegateCommand(() => _addStoresWorker.RunWorkerAsync(), CheckStoreErrors).ObservesProperty(() => StoresForLoad);
+            CloseAddStoresToAccountCommand = new DelegateCommand(CloseAddStores);
             IsEditAccountStoresOpen = false;
             #endregion stores
 
             #region FA
             AddFAOpen = false;
             AddFACommand = new DelegateCommand(AddFA);
-            AddFAToAccountCommand = new DelegateCommand(AddFAToAccount);
+            AddFAToAccountCommand = new DelegateCommand(AddFAToAccount, CanAddFA).ObservesProperty(() => NewFA);
             CloseFACommand = new DelegateCommand(CloseFA);
             #endregion FA
 
@@ -449,6 +460,7 @@ namespace AccountsWork.Accounts.ViewModels
                 AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(Account.Id));
                 StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
                 AccountFAList = new ObservableCollection<AccountsBudgetDetailsSet>(_accountFAService.GetFAList(Account.Id));
+                CapexesList = new ObservableCollection<CapexSet>(_capexService.GetCapexesForYearList(Account.AccountYear));
             }
             else
             {
@@ -475,6 +487,7 @@ namespace AccountsWork.Accounts.ViewModels
             CapexesList = new ObservableCollection<CapexSet>(_capexService.GetCapexesForYearList(Account.AccountYear));
             IsInEditMode = false;
             LoadCapexInfo();
+            LoadHistoryStatus(Account.Id);
         }
         private bool CanSave()
         {
@@ -529,6 +542,14 @@ namespace AccountsWork.Accounts.ViewModels
         private void NewCapexPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             AddCapexToAccountCommand.RaiseCanExecuteChanged();
+        }
+        private void DeleteCapex()
+        {
+            if (CurrentCapex != null)
+            {
+                _accountCapexService.DeleteCapexFromAccount(CurrentCapex);
+                LoadCapexInfo();
+            }
         }
         #endregion capexes
 
@@ -654,6 +675,11 @@ namespace AccountsWork.Accounts.ViewModels
             StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
             Application.Current.Dispatcher.BeginInvoke(new Action(() => StoresForLoad = string.Empty));
         }
+        private void CloseAddStores()
+        {
+            IsEditAccountStoresOpen = false;
+            StoresForLoad = string.Empty;
+        }
         #endregion stores
 
         #region work
@@ -673,6 +699,10 @@ namespace AccountsWork.Accounts.ViewModels
         {
             NewFA = new AccountsBudgetDetailsSet { AccountsMainId = Account.Id };
             FAList = new ObservableCollection<FASet>(_faService.GetFAList());
+            if (AccountStoresList.Count == 1)
+                NewFA.AccountStoreNumber = AccountStoresList.FirstOrDefault().StoreNumber;
+            if (AccountCapexList.Count == 1)
+                NewFA.EquipmentCapexId = AccountCapexList.FirstOrDefault().CapexId;
             AddFAOpen = true;
         }
         private void AddFAToAccount()
@@ -685,6 +715,16 @@ namespace AccountsWork.Accounts.ViewModels
         {
             NewFA = new AccountsBudgetDetailsSet();
             AddFAOpen = false;
+        }
+        private bool CanAddFA()
+        {
+            if (NewFA == null) return false;
+            NewFA.ValidateProperties();
+            return !NewFA.HasErrors;
+        }
+        private void NewFAPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            AddFAToAccountCommand.RaiseCanExecuteChanged();
         }
         #endregion FA
 

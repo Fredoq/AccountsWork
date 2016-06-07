@@ -11,6 +11,7 @@ namespace AccountsWork.BusinessLayer
         IList<CapexSet> GetCapexesForYearList(int year);
         int GetCapexIdByName(string accountCapexName, int accountYear);
         IList<CapexSet> GetCapexes();
+        string GetCapexNameById(int value);
     }
 
     [Export(typeof(ICapexesService))]
@@ -37,6 +38,11 @@ namespace AccountsWork.BusinessLayer
         public IList<CapexSet> GetCapexes()
         {
             return _capexRepository.GetAll(c => c.AccountsCapexInfoSets);
+        }
+
+        public string GetCapexNameById(int value)
+        {
+            return _capexRepository.GetSingle(c => c.Id == value).CapexName;
         }
     }
 }

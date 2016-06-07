@@ -10,6 +10,7 @@ namespace AccountsWork.BusinessLayer
     {
         IList<AccountsBudgetDetailsSet> GetFAList(int id);
         void AddFAToAccount(AccountsBudgetDetailsSet newFA);
+        IList<AccountsBudgetDetailsSet> GetFAFullList();
     }
 
     [Export(typeof(IAccountFAService))]
@@ -26,6 +27,11 @@ namespace AccountsWork.BusinessLayer
         public void AddFAToAccount(AccountsBudgetDetailsSet newFA)
         {
             _accountFARepository.Add(newFA);
+        }
+
+        public IList<AccountsBudgetDetailsSet> GetFAFullList()
+        {
+            return _accountFARepository.GetAll(a => a.AccountsMainSet, a => a.CapexSet, a => a.FASet);
         }
 
         public IList<AccountsBudgetDetailsSet> GetFAList(int id)
