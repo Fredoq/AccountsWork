@@ -32,5 +32,6 @@ namespace AccountsWork.Reports.Views
                     viewModel.SelectedAccountFA = stackedStore;
             }
         }
+        
     }
 }

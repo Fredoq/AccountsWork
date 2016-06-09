@@ -31,6 +31,9 @@ namespace AccountsWork.Reports.ViewModels
         private int _sumFAQuantity;
         private AccountFA _selectedAccountFA;
         private ObservableCollection<AccountsMainSet> _selectedAccountFAList;
+        private ObservableCollection<FAInfo> _selectedFAInfo;
+        private IStoresService _storeService;
+        private IList<StoresSet> _storeList;
         #endregion Private Fields
 
         #region Public Properties
@@ -88,7 +91,17 @@ namespace AccountsWork.Reports.ViewModels
         {
             get { return _selectedAccountFAList; }
             set { SetProperty(ref _selectedAccountFAList, value); }
-        }      
+        }   
+        public ObservableCollection<FAInfo> SelectedFAInfoList
+        {
+            get { return _selectedFAInfo; }
+            set { SetProperty(ref _selectedFAInfo, value); }
+        }
+        public IList<StoresSet> StoreList
+        {
+            get { return _storeList; }
+            set { SetProperty(ref _storeList, value); }
+        }
         #endregion report
 
         #endregion Public Properties
@@ -103,7 +116,7 @@ namespace AccountsWork.Reports.ViewModels
 
         #region Constructor
         [ImportingConstructor]
-        public FAReportViewModel(IFAService faService, IAccountFAService accountFAService)
+        public FAReportViewModel(IFAService faService, IAccountFAService accountFAService, IStoresService storeService)
         {
             #region infrastructure
             ReportsTabItemHeader = "Отчет по основным средствам";            
@@ -127,6 +140,7 @@ namespace AccountsWork.Reports.ViewModels
             #region services
             _faService = faService;
             _accountFAService = accountFAService;
+            _storeService = storeService;
             #endregion services
 
             #region workers
@@ -149,6 +163,7 @@ namespace AccountsWork.Reports.ViewModels
         {
             FAList = new ObservableCollection<FASet>(_faService.GetFAListFull());
             FullFAList = _accountFAService.GetFAFullList();
+            StoreList = _storeService.GetStores();
 
         }
         private void LoadReportData_Completed(object sender, RunWorkerCompletedEventArgs e)
@@ -163,7 +178,8 @@ namespace AccountsWork.Reports.ViewModels
             if (SelectedFA != null)
             {
                 SelectedAccountFA = null;
-                AccountFAList.Clear();
+                SelectedFAInfoList = new ObservableCollection<FAInfo>();
+                AccountFAList = new ObservableCollection<AccountFA>();
                 SumFAQuantity = FullFAList.Where(f => f.AccountEquipmentName == SelectedFA.FAName).Sum(f => f.AccountEquipmentQuantity);
                 var query = from fa in FullFAList
                             where fa.AccountEquipmentName == SelectedFA.FAName
@@ -178,12 +194,13 @@ namespace AccountsWork.Reports.ViewModels
         private void LoadSelectedAccountFA()
         {
             if (SelectedAccountFA == null) return;
-            SelectedAccountFAList = new ObservableCollection<AccountsMainSet>();
+            SelectedFAInfoList = new ObservableCollection<FAInfo>();
             foreach(var item in FullFAList)
             {
                 if (item.AccountEquipmentName == SelectedFA.FAName && item.CapexSet.CapexName == SelectedAccountFA.Capex)
                 {
-                    SelectedAccountFAList.Add(item.AccountsMainSet);
+                    //SelectedAccountFAList.Add(item.AccountsMainSet);
+                    SelectedFAInfoList.Add(new FAInfo { Company = item.AccountsMainSet.AccountCompany, DateAccount = item.AccountsMainSet.AccountDate, FAPrice = item.AccountEquipmentPrice, Store = item.AccountStoreNumber.ToString() + " " + StoreList.FirstOrDefault(s => s.StoreNumber == item.AccountStoreNumber).StoreName, Accounts = new ObservableCollection<AccountsMainSet> { item.AccountsMainSet }, Quantity = item.AccountEquipmentQuantity, FAName = item.AccountEquipmentName });
                 }
             }
         }

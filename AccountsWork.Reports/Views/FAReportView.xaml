@@ -129,6 +129,7 @@
                 <syncfusion:SfChart Grid.Column="1"
                                     SelectionChanged="SfChart_SelectionChanged"
                                     AreaBorderThickness="0"
+                                    x:Name="FAChart"
                                     HorizontalAlignment="Center">
                     <syncfusion:SfChart.Behaviors>
                         <syncfusion:ChartSelectionBehavior EnableSegmentSelection="True"
@@ -167,25 +168,56 @@
             </Grid>
             <syncfusion:SfDataGrid HorizontalAlignment="Left"
                                    ColumnSizer="AutoLastColumnFill"  
+                                   AllowFiltering="True"
+                                   AllowSorting="True"
                                    syncfusion:DockingManager.Header="Счета"
                                    syncfusion:DockingManager.SideInDockedMode="Top"
                                    syncfusion:DockingManager.DesiredHeightInDockedMode="600"
                                    AutoGenerateColumns="False"
-                                   ItemsSource="{Binding SelectedAccountFAList}">
+                                   AutoGenerateRelations="False"
+                                   ItemsSource="{Binding SelectedFAInfoList}">
                 <syncfusion:SfDataGrid.Columns>
-                    <syncfusion:GridTextColumn HeaderText="Номер счета"
-                                               MappingName="AccountNumber"/>
-                    <syncfusion:GridTextColumn HeaderText="Компания"
-                                               MappingName="AccountCompany"/>
-                    <syncfusion:GridCurrencyColumn HeaderText="Компания"
-                                                   MappingName="AccountAmount"
+                    <syncfusion:GridTextColumn HeaderText="Ресторан"
+                                               MappingName="Store"/>
+                    <syncfusion:GridTextColumn HeaderText="Основное средство"
+                                               MappingName="FAName"/>
+                    <syncfusion:GridCurrencyColumn HeaderText="Цена ОС"
+                                                   MappingName="FAPrice"
                                                    CurrencyDecimalSeparator=","
                                                    CurrencyGroupSeparator=" "
                                                    CurrencyGroupSizes="3"
                                                    CurrencySymbol="₽"/>
-                    <syncfusion:GridTextColumn HeaderText="Описание"
-                                               MappingName="AccountDescription"/>
+                    <syncfusion:GridCurrencyColumn HeaderText="Количество"
+                                                   CurrencySymbol="шт."
+                                                   CurrencyDecimalDigits="0"
+                                                   TextAlignment="Left"
+                                                   MappingName="Quantity"/>
                 </syncfusion:SfDataGrid.Columns>
+                <syncfusion:SfDataGrid.DetailsViewDefinition>
+                    <syncfusion:GridViewDefinition RelationalColumn="Accounts">
+                        <syncfusion:GridViewDefinition.DataGrid>
+                            <syncfusion:SfDataGrid x:Name="FirstLevelNestedGrid"   AutoGenerateColumns="False">
+                                <syncfusion:SfDataGrid.Columns>
+                                    <syncfusion:GridTextColumn MappingName="AccountNumber"
+                                                               HeaderText="Номер Счета"/>
+                                    <syncfusion:GridTextColumn MappingName="AccountCompany"
+                                                               HeaderText="Компания"/>
+                                    <syncfusion:GridDateTimeColumn MappingName="AccountDate"
+                                                                   HeaderText="Дата счета"
+                                                                   Pattern="ShortDate"/>
+                                    <syncfusion:GridCurrencyColumn HeaderText="Сумма счета"
+                                                                   MappingName="AccountAmount"
+                                                                   CurrencyDecimalSeparator=","
+                                                                   CurrencyGroupSeparator=" "
+                                                                   CurrencyGroupSizes="3"
+                                                                   CurrencySymbol="₽"/>
+                                    <syncfusion:GridTextColumn MappingName="AccountDescription"
+                                                               HeaderText="Описание"/>
+                                </syncfusion:SfDataGrid.Columns>
+                            </syncfusion:SfDataGrid>
+                        </syncfusion:GridViewDefinition.DataGrid>
+                    </syncfusion:GridViewDefinition>
+                </syncfusion:SfDataGrid.DetailsViewDefinition>
             </syncfusion:SfDataGrid>
 
         </syncfusion:DockingManager>
