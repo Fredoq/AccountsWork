@@ -26,20 +26,15 @@ namespace AccountsWork.Reports.Views
             InitializeComponent();
         }
 
-        private void CheckBox_Checked(object sender, System.Windows.RoutedEventArgs e)
+        private void dgStores_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
         {
-            var records = dgStores.View.Records;
-            var viewModel = dgStores.DataContext as StoresServiceReportViewModel;
-            var che = sender as CheckBox;
-            foreach(var record in dgStores.SelectedItems)
+            var dataContext = dgStores.DataContext as StoresServiceReportViewModel;
+            dataContext.SelectedStores = new System.Collections.ObjectModel.ObservableCollection<StoresWithCheck>();
+            foreach(var item in dgStores.SelectedItems)
             {
-                foreach(var store in viewModel.StoresWithCheckList)
-                {
-                    if (store.Store.StoreNumber == ((StoresWithCheck)record).Store.StoreNumber)
-                        store.Check = che.IsChecked.Value;
-                }
+                dataContext.SelectedStores.Add((StoresWithCheck)item);
             }
-            dgStores.View.Refresh();
+            
         }
     }
 }

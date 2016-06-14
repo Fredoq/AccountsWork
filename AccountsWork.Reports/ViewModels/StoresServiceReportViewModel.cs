@@ -42,6 +42,12 @@ namespace AccountsWork.Reports.ViewModels
         private decimal _equipmentKKS;
         private decimal _trKKS;
         private decimal _avKKS;
+        private ObservableCollection<MonthExp> _kksExpList;
+        private decimal _minimumAmount;
+        private decimal _maximumAmount;
+        private ObservableCollection<MonthExp> _iclExpList;
+        private ObservableCollection<StoresWithCheck> _selectedStores;
+        private int _reportStoresCount;
         #endregion Private Fields
 
 
@@ -109,6 +115,16 @@ namespace AccountsWork.Reports.ViewModels
             get { return _selectedStore; }
             set { SetProperty(ref _selectedStore, value); }
         }
+        public ObservableCollection<StoresWithCheck> SelectedStores
+        {
+            get { return _selectedStores; }
+            set { SetProperty(ref _selectedStores, value); }
+        }
+        public int ReportStoresCount
+        {
+            get { return _reportStoresCount; }
+            set { SetProperty(ref _reportStoresCount, value); }
+        }
         #endregion stores
 
         #region report
@@ -162,13 +178,38 @@ namespace AccountsWork.Reports.ViewModels
             get { return _avKKS; }
             set { SetProperty(ref _avKKS, value); }
         }
+        public ObservableCollection<MonthExp> KKSExpList
+        {
+            get { return _kksExpList; }
+            set { SetProperty(ref _kksExpList, value); }
+        }
+        public ObservableCollection<MonthExp> ICLExpList
+        {
+            get { return _iclExpList; }
+            set { SetProperty(ref _iclExpList, value); }
+        }
+        public decimal MinimumAmount
+        {
+            get { return _minimumAmount; }
+            set { SetProperty(ref _minimumAmount, value); }
+        }
+        public decimal MaximumAmount
+        {
+            get { return _maximumAmount; }
+            set { SetProperty(ref _maximumAmount, value); }
+        }
         #endregion report
+
         #endregion Public Properties
 
         #region Commands
         #region report
         public DelegateCommand LoadReportCommand { get; set; }
         #endregion report
+        #region stores
+        public DelegateCommand SetSelectionCommand { get; set; }
+        public DelegateCommand ClearSelectionCommand { get; set; }
+        #endregion stores
         #endregion Commands
 
         #region Constructor
@@ -186,6 +227,8 @@ namespace AccountsWork.Reports.ViewModels
 
             #region stores
             StoresWithCheckList = new ObservableCollection<StoresWithCheck>();
+            SetSelectionCommand = new DelegateCommand(SetSelection);
+            ClearSelectionCommand = new DelegateCommand(ClearSelection);
             #endregion stores
 
             #region report
@@ -202,10 +245,11 @@ namespace AccountsWork.Reports.ViewModels
             _storeService = storeService;
             _serviceZipService = serviceZipService;
             #endregion services
-        }       
+        }        
         #endregion Constructor
 
         #region Methods
+
         #region infrastructure
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -227,6 +271,29 @@ namespace AccountsWork.Reports.ViewModels
             IsLoading = false;
         }
         #endregion infrastructure
+
+        #region stores
+        private void SetSelection()
+        {
+            foreach (var store in StoresWithCheckList)
+            {
+                if (SelectedStores.Any(s => s.Store.StoreNumber == store.Store.StoreNumber))
+                {
+                    store.Check = true;
+                }
+                else
+                {
+                    store.Check = false;
+                }
+            }
+        }
+        private void ClearSelection()
+        {
+            foreach (var store in StoresWithCheckList)
+                store.Check = false;
+        }
+        #endregion stores
+
         #region report
         private void LoadReport()
         {
@@ -237,6 +304,7 @@ namespace AccountsWork.Reports.ViewModels
                               s.ServiceYear >= StartYear &&
                               s.ServiceYear <= EndYear
                         select s;
+            ReportStoresCount = StoresWithCheckList.Where(st => st.Check).Count();
             WorkICL = query.Where(q => q.Company == "АйСиЭл").Where(q => q.ZipName == "Ремонт").Sum(q => q.ZipQuantity.Value == 0 ? q.ZipPrice : q.ZipQuantity.Value * q.ZipPrice);
             EquipmentICL = query.Where(q => q.Company == "АйСиЭл").Where(q => q.ZipName != "Транспортные услуги" && q.ZipName != "Ремонт").Sum(q => q.ZipQuantity.Value == 0 ? q.ZipPrice : q.ZipQuantity.Value * q.ZipPrice);
             TrICL = query.Where(q => q.Company == "АйСиЭл").Where(q => q.ZipName == "Транспортные услуги").Sum(q => q.ZipQuantity.Value == 0 ? q.ZipPrice : q.ZipQuantity.Value * q.ZipPrice);
@@ -247,6 +315,25 @@ namespace AccountsWork.Reports.ViewModels
             TrKKS = query.Where(q => q.Company == "ККС").Where(q => q.ZipName == "Транспортные услуги").Sum(q => q.ZipQuantity.Value == 0 ? q.ZipPrice : q.ZipQuantity.Value * q.ZipPrice);
             TotalKKS = WorkKKS + EquipmentKKS + TrKKS;
             AvKKS = TotalKKS / StoresWithCheckList.Where(st => st.Check).Count();
+            var list = (from s in query
+                        where s.Company == "ККС"
+                        group s by new { s.ServiceMonth, s.ServiceYear }
+                        into ym
+                        select new MonthExp { MonthYear = new DateTime(ym.Key.ServiceYear.Value, ReturnNumberMonth(ym.Key.ServiceMonth), 1), Expense = (ym.Where(s => s.ZipQuantity.Value == 0).Sum(s => s.ZipPrice) + ym.Where(s => s.ZipQuantity.Value != 0).Sum(s => s.ZipPrice * s.ZipQuantity.Value)) }).ToList();
+            KKSExpList = new ObservableCollection<MonthExp>(list);
+            list = (from s in query
+                    where s.Company == "АйСиЭл"
+                    group s by new { s.ServiceMonth, s.ServiceYear }
+                    into ym
+                    select new MonthExp { MonthYear = new DateTime(ym.Key.ServiceYear.Value, ReturnNumberMonth(ym.Key.ServiceMonth), 1), Expense = (ym.Where(s => s.ZipQuantity.Value == 0).Sum(s => s.ZipPrice) + ym.Where(s => s.ZipQuantity.Value != 0).Sum(s => s.ZipPrice * s.ZipQuantity.Value)) }).ToList();
+            ICLExpList = new ObservableCollection<MonthExp>(list);
+            var minKKS = KKSExpList.Count > 0 ? KKSExpList.Min(k => k.Expense) - 3000 : 0;
+            var maxKKS = KKSExpList.Count > 0 ? KKSExpList.Max(k => k.Expense) + 10000 : 100000;
+            var minICL = ICLExpList.Count > 0 ? ICLExpList.Min(i => i.Expense) - 3000 : 0;
+            var maxICL = ICLExpList.Count > 0 ? ICLExpList.Max(i => i.Expense) + 10000 : 100000;
+            MinimumAmount = minKKS > minICL ? minICL : minKKS;
+            MaximumAmount = maxKKS > maxICL ? maxKKS : maxICL;
+
         }
         private int ReturnNumberMonth(string month)
         {

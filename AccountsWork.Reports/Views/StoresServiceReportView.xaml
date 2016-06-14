@@ -7,6 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -14,10 +15,29 @@
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{StaticResource MaterialDesignFont}"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              >
     <UserControl.Resources>
         <ResourceDictionary>
+            <DataTemplate x:Key="labelTemplate">
+                <TextBlock Text="{Binding LabelContent}" 
+                       Foreground="Black"  
+                       FontSize="16"/>
+            </DataTemplate>
+            <Style TargetType="Line" 
+               x:Key="AxisStyle">
+                <Setter Property="Stroke" 
+                    Value="DarkGray"  />
+                <Setter Property="StrokeThickness" 
+                    Value="1"/>
+            </Style>
+            <Style TargetType="Line" 
+               x:Key="AxisStyle1">
+                <Setter Property="Stroke" 
+                    Value="DarkGray"  />
+                <Setter Property="StrokeThickness" 
+                    Value="0.5"/>
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DatePicker.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
@@ -36,7 +56,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -46,7 +66,8 @@
         <syncfusion:SfBusyIndicator IsBusy="{Binding IsLoading}"
                                     AnimationType="SingleCircle"
                                     Header="Идет загрузка"
-                                    Grid.Row="2"/>
+                                    Grid.Row="2"
+                                    Grid.RowSpan="2"/>
         <materialDesign:ColorZone Grid.Row="0"
                                   Mode="PrimaryMid">
             <TextBlock Text="Рестораны"
@@ -118,6 +139,7 @@
         </Grid>
         <syncfusion:SfDataGrid Grid.Row="2"
                                x:Name="dgStores"
+                               SelectionChanged="dgStores_SelectionChanged"
                                FontSize="9"
                                Grid.RowSpan="2"
                                AllowFiltering="True"
@@ -125,11 +147,18 @@
                                AllowEditing="False"
                                VerticalAlignment="Stretch"
                                SelectionMode="Extended"
+                               HeaderRowHeight="40"
                                SelectionUnit="Row"
                                SelectedItem="{Binding SelectedStore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                ItemsSource="{Binding StoresWithCheckList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                AutoGenerateColumns="False"
                                >
+            <!--<i:Interaction.Triggers>
+                <i:EventTrigger EventName="CurrentCellValueChanged">
+                    <i:InvokeCommandAction Command="{Binding SetSelectionCommand}"
+                                           CommandParameter="{Binding CurrentItem, RelativeSource={RelativeSource FindAncestor, AncestorType=syncfusion:SfDataGrid}}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>-->
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Store.StoreNumber"
                                            HeaderText="Номер"                                           
@@ -146,19 +175,25 @@
                                            HeaderText="Компания"
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
-                <syncfusion:GridCheckBoxColumn MappingName="Check"
+                <syncfusion:GridCheckBoxColumn MappingName="Check"                                               
                                                HeaderText="Выбор"                                                
                                                ColumnSizer="SizeToHeader"
                                                AllowEditing="True">
                     <syncfusion:GridCheckBoxColumn.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Выбор"/>
-                                <CheckBox Margin="5,0,0,0"
-                                          x:Name="checkSelected"
-                                          Click="CheckBox_Checked"
-                                          
-                                          />
+                                <TextBlock Text="Выбор"
+                                           VerticalAlignment="Center"/>
+                                <Button Command="{Binding DataContext.SetSelectionCommand, RelativeSource={RelativeSource AncestorType={x:Type syncfusion:SfDataGrid}}}"                                     
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        >
+                                    <materialDesign:PackIcon Kind="SelectInverse"/>
+                                </Button>
+                                <Button Command="{Binding DataContext.ClearSelectionCommand, RelativeSource={RelativeSource AncestorType={x:Type syncfusion:SfDataGrid}}}"                                     
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        >
+                                    <materialDesign:PackIcon Kind="SelectOff" />
+                                </Button>
                             </StackPanel>
                         </DataTemplate>
                     </syncfusion:GridCheckBoxColumn.HeaderTemplate>
@@ -228,7 +263,7 @@
                                FontSize="18"
                                Margin="5"
                                Style="{StaticResource MaterialDesignCaptionTextBlock}">
-                    <Run Text="В среднем: "/>
+                    <Run Text="В среднем на ресторан: "/>
                     <Run Text="{Binding AvICL, StringFormat=C, ConverterCulture=ru-RU}"/>
                     </TextBlock>
                 </Grid>
@@ -282,11 +317,143 @@
                                Margin="5"
                                FontSize="18"
                                Style="{StaticResource MaterialDesignCaptionTextBlock}">
-                        <Run Text="В среднем: "/>
+                        <Run Text="В среднем на ресторан: "/>
                         <Run Text="{Binding AvKKS, StringFormat=C, ConverterCulture=ru-RU}"/>
                     </TextBlock>
                 </Grid>
             </materialDesign:Card>
         </StackPanel>
+        <syncfusion:SfChart FontSize="22" 
+                            Foreground="Black"
+                            Grid.Column="1"
+                            Grid.Row="3"
+                            Margin="20"
+                            AreaBorderThickness="0,1,1,1">
+            <syncfusion:SfChart.Header>
+                <StackPanel Orientation="Vertical">
+                <TextBlock Foreground="Black" 
+                           Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                           FontSize="20" 
+                           Margin="0,0,-90,20">
+                    <Run Text="Распределение затрат по месяцам"/>
+                    </TextBlock>
+                    <TextBlock Foreground="Black" 
+                           Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                           FontSize="20" 
+                           Margin="0,0,0,20">
+                        <Run Text="Кол-во ресторанов: "/>
+                        <Run Text="{Binding ReportStoresCount}"/>
+                    </TextBlock>
+                </StackPanel>
+            </syncfusion:SfChart.Header>
+            <syncfusion:SfChart.Legend>
+                <syncfusion:ChartLegend Foreground="Black" FontSize="18"/>
+            </syncfusion:SfChart.Legend>
+            <syncfusion:SfChart.PrimaryAxis>
+                <syncfusion:CategoryAxis PlotOffset="30" 
+                                         ShowTrackBallInfo="True"                                             
+                                         LabelFormat="MM.yyyy" 
+                                         Header="Месяц/Год" 
+                                         Foreground="Black"
+                                         LabelTemplate="{StaticResource labelTemplate}"  
+                                         AxisLineStyle="{StaticResource AxisStyle1}" 
+                                         MajorTickLineStyle="{StaticResource AxisStyle}"/>
+            </syncfusion:SfChart.PrimaryAxis>
+            <syncfusion:SfChart.SecondaryAxis>
+                <syncfusion:NumericalAxis  Header="Сумма" 
+                                           Foreground="Black"
+                                           Minimum="{Binding MinimumAmount}"
+                                           Interval="10000" 
+                                           LabelFormat="## ### ₽"                                               
+                                           Maximum="{Binding MaximumAmount}"
+                                           LabelTemplate="{StaticResource labelTemplate}"  
+                                           AxisLineStyle="{StaticResource AxisStyle}" 
+                                           MajorTickLineStyle="{StaticResource AxisStyle}"/>
+            </syncfusion:SfChart.SecondaryAxis>
+            <syncfusion:SplineSeries EnableAnimation="True" 
+                                     XBindingPath="MonthYear"
+                                     Label="KKS"
+                                     ItemsSource="{Binding KKSExpList}"  
+                                     YBindingPath="Expense" 
+                                     ShowTooltip="True">
+                <syncfusion:SplineSeries.TooltipTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock FontSize="11"
+                                           Margin="3">
+                                    <Run Text="Сумма: "/>
+                                    <Run Text="{Binding Item.Expense, StringFormat=C, ConverterCulture=Ru-ru}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </syncfusion:SplineSeries.TooltipTemplate>
+                <syncfusion:SplineSeries.AdornmentsInfo>
+                    <syncfusion:ChartAdornmentInfo ShowLabel="True"
+                                                   SegmentLabelContent="LabelContentPath"
+                                                   HorizontalAlignment="Left"
+                                                   ShowConnectorLine="False">
+                        <!--<syncfusion:ChartAdornmentInfo.LabelTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource amountConv}}"
+                                               FontSize="9"/>
+                            </DataTemplate>
+                        </syncfusion:ChartAdornmentInfo.LabelTemplate>-->
+                        <syncfusion:ChartAdornmentInfo.SymbolTemplate>
+                            <DataTemplate>
+                                <Grid IsHitTestVisible="True" >
+                                    <Ellipse Fill="#FFECCD0D" 
+                                             Height="18" 
+                                             Width="18" 
+                                             StrokeThickness="3" 
+                                             Stroke="White"/>
+                                </Grid>
+                            </DataTemplate>
+                        </syncfusion:ChartAdornmentInfo.SymbolTemplate>
+                    </syncfusion:ChartAdornmentInfo>
+                </syncfusion:SplineSeries.AdornmentsInfo>
+            </syncfusion:SplineSeries>
+            <syncfusion:SplineSeries EnableAnimation="True" 
+                                     XBindingPath="MonthYear"
+                                     Label="ICL"
+                                     ItemsSource="{Binding ICLExpList}"  
+                                     YBindingPath="Expense" 
+                                     ShowTooltip="True">
+                <syncfusion:SplineSeries.TooltipTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock FontSize="11"
+                                           Margin="3">
+                                    <Run Text="Сумма: "/>
+                                    <Run Text="{Binding Item.Expense, StringFormat=C, ConverterCulture=Ru-ru}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </syncfusion:SplineSeries.TooltipTemplate>
+                <syncfusion:SplineSeries.AdornmentsInfo>
+                    <syncfusion:ChartAdornmentInfo ShowLabel="True"
+                                                   SegmentLabelContent="LabelContentPath"
+                                                   HorizontalAlignment="Left"
+                                                   ShowConnectorLine="False">
+                        <!--<syncfusion:ChartAdornmentInfo.LabelTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource amountConv}}"
+                                               FontSize="9"/>
+                            </DataTemplate>
+                        </syncfusion:ChartAdornmentInfo.LabelTemplate>-->
+                        <syncfusion:ChartAdornmentInfo.SymbolTemplate>
+                            <DataTemplate>
+                                <Grid IsHitTestVisible="True" >
+                                    <Ellipse Fill="#FFECCD0D" 
+                                             Height="18" 
+                                             Width="18" 
+                                             StrokeThickness="3" 
+                                             Stroke="White"/>
+                                </Grid>
+                            </DataTemplate>
+                        </syncfusion:ChartAdornmentInfo.SymbolTemplate>
+                    </syncfusion:ChartAdornmentInfo>
+                </syncfusion:SplineSeries.AdornmentsInfo>
+            </syncfusion:SplineSeries>
+        </syncfusion:SfChart>
     </Grid>
 </UserControl>

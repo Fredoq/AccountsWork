@@ -70,7 +70,7 @@
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
                         <syncfusion:GridCheckBoxColumn MappingName="Check"
-                                               HeaderText="Выбор"
+                                               HeaderText="Выбор"                                                      
                                                ColumnSizer="SizeToHeader"
                                                AllowEditing="True"/>
                     </syncfusion:SfDataGrid.Columns>

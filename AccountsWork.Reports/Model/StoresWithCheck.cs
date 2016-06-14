@@ -1,4 +1,5 @@
 ﻿using AccountsWork.DomainModel;
+using AccountsWork.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,25 @@ using System.Threading.Tasks;
 
 namespace AccountsWork.Reports.Model
 {
-    public class StoresWithCheck
+    public class StoresWithCheck : ValidatableBindableBase
     {
-        public StoresSet Store { get; set; }
-        public bool Check { get; set; } = false;
+        private StoresSet _store;
+        private bool _check;
+
+        public StoresSet Store
+        {
+            get { return _store; }
+            set { SetProperty(ref _store, value); }
+        }
+
+        public bool Check
+        {
+            get { return _check; }
+            set { SetProperty(ref _check, value); }
+        }
+        public StoresWithCheck()
+        {
+            Check = false;
+        }
     }
 }
