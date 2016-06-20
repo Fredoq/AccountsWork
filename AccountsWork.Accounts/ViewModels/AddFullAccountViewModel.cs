@@ -9,13 +9,16 @@ using Prism.Commands;
 using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Linq;
+using AccountsVork.Infrastructure;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace AccountsWork.Accounts.ViewModels
 {
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class AddFullAccountViewModel : ValidatableBindableBase
-    {       
+    {
         #region Private Fields
         private string _accountsTabItemHeader;
         private AccountsMainSet _account;
@@ -42,6 +45,29 @@ namespace AccountsWork.Accounts.ViewModels
         private readonly IExpensesService _expenseService;
         private readonly ICapexesService _capexService;
         private readonly IStoresWorkService _storesWorkService;
+        private ObservableCollection<AccountsStatusDetailsSet> _statusHistoryList;
+        private List<string> _statusesList;
+        private bool _isChangeStatusOpen;
+        private AccountsStatusDetailsSet _newAccountStatus;
+        private StoresSet _currentAccountStore;
+        private ObservableCollection<StoresSet> _accountStoresList;
+        private bool _isEditAccountStoresOpen;
+        private string _storesForLoad;
+        private ObservableCollection<StoresSet> _storesList;
+        private string _storesError;
+        private List<int> storesNum;
+        private BackgroundWorker _addStoresWorker;
+        private bool _isAddStoreBusy;
+        private ObservableCollection<StoreProvenWorkSet> _storesWorkList;
+        private StoreProvenWorkSet _selectedWork;
+        private string _serchStoreName;
+        private string _serchResultStore;
+        private bool _addFAOpen;
+        private AccountsBudgetDetailsSet _newFa;
+        private ObservableCollection<FASet> _FAlist;
+        private ObservableCollection<AccountsBudgetDetailsSet> _accountFAList;
+        private IAccountFAService _accountFAService;
+        private IFAService _faService;
         #endregion Private Fields
 
         #region Public Properties
@@ -138,9 +164,142 @@ namespace AccountsWork.Accounts.ViewModels
         }
         #endregion capexes
 
+        #region statuses
+        public bool IsChangeStatusOpen
+        {
+            get { return _isChangeStatusOpen; }
+            set { SetProperty(ref _isChangeStatusOpen, value); }
+        }
+        public AccountsStatusDetailsSet NewAccountStatus
+        {
+            get { return _newAccountStatus; }
+            set
+            {
+                if (_newAccountStatus != null)
+                    NewAccountStatus.PropertyChanged -= NewAccountPropertyChanged;
+                SetProperty(ref _newAccountStatus, value);
+                if (_newAccountStatus != null)
+                    NewAccountStatus.PropertyChanged += NewAccountPropertyChanged;
+            }
+        }
+        public ObservableCollection<AccountsStatusDetailsSet> StatusHistoryList
+        {
+            get { return _statusHistoryList; }
+            set { SetProperty(ref _statusHistoryList, value); }
+        }
+        public List<string> StatusesList
+        {
+            get { return _statusesList; }
+            set { SetProperty(ref _statusesList, value); }
+        }
+        #endregion statuses
+
+        #region stores
+        public bool IsEditAccountStoresOpen
+        {
+            get { return _isEditAccountStoresOpen; }
+            set { SetProperty(ref _isEditAccountStoresOpen, value); }
+        }
+        public StoresSet CurrentAccountStore
+        {
+            get { return _currentAccountStore; }
+            set { SetProperty(ref _currentAccountStore, value); }
+        }
+        public ObservableCollection<StoresSet> AccountStoresList
+        {
+            get { return _accountStoresList; }
+            set
+            {
+                SetProperty(ref _accountStoresList, value);
+            }
+        }
+        public string StoresForLoad
+        {
+            get { return _storesForLoad; }
+            set { SetProperty(ref _storesForLoad, value); }
+        }
+        public string SearchStoreName
+        {
+            get { return _serchStoreName; }
+            set { SetProperty(ref _serchStoreName, value); }
+        }
+        public string SerchResultStores
+        {
+            get { return _serchResultStore; }
+            set { SetProperty(ref _serchResultStore, value); }
+        }
+        public ObservableCollection<StoresSet> StoresList
+        {
+            get { return _storesList; }
+            set { SetProperty(ref _storesList, value); }
+        }
+        public string StoresError
+        {
+            get { return _storesError; }
+            set { SetProperty(ref _storesError, value); }
+        }
+        public bool IsAddStoreBusy
+        {
+            get { return _isAddStoreBusy; }
+            set { SetProperty(ref _isAddStoreBusy, value); }
+        }
+        #endregion stores
+
+        #region work
+        public ObservableCollection<StoreProvenWorkSet> StoresWorkList
+        {
+            get { return _storesWorkList; }
+            set { SetProperty(ref _storesWorkList, value); }
+        }
+        public StoreProvenWorkSet SelectedWork
+        {
+            get { return _selectedWork; }
+            set
+            {
+                if (_selectedWork != null)
+                    SelectedWork.PropertyChanged -= SelectedWorkChanged;
+                SetProperty(ref _selectedWork, value);
+                if (_selectedWork != null)
+                    SelectedWork.PropertyChanged += SelectedWorkChanged;
+            }
+        }
+        #endregion work
+
+        #region FA
+        public bool AddFAOpen
+        {
+            get { return _addFAOpen; }
+            set { SetProperty(ref _addFAOpen, value); }
+        }
+        public AccountsBudgetDetailsSet NewFA
+        {
+            get { return _newFa; }
+            set
+            {
+                if (_newFa != null)
+                    NewFA.PropertyChanged -= NewFAPropertyChanged;
+                SetProperty(ref _newFa, value);
+                if (_newFa != null)
+                    NewFA.PropertyChanged += NewFAPropertyChanged;
+            }
+        }
+
+        public ObservableCollection<FASet> FAList
+        {
+            get { return _FAlist; }
+            set { SetProperty(ref _FAlist, value); }
+        }
+        public ObservableCollection<AccountsBudgetDetailsSet> AccountFAList
+        {
+            get { return _accountFAList; }
+            set { SetProperty(ref _accountFAList, value); }
+        }
+        #endregion FA
+
         #endregion Public Properties
 
         #region Commands
+
         #region account
         public DelegateCommand SaveAccountCommand { get; set; }
         #endregion account
@@ -152,11 +311,42 @@ namespace AccountsWork.Accounts.ViewModels
         public DelegateCommand DeleteCapexAccountCommand { get; set; }
         public DelegateCommand CopyAvailableSumCommand { get; set; }
         #endregion capexes
+
+        #region statuses
+        public DelegateCommand SaveNewStatusCommand { get; set; }
+        public DelegateCommand ChangeStatusCommand { get; set; }
+        public DelegateCommand CancelNewStatusCommand { get; set; }
+        #endregion statuses
+
+        #region stores
+        public DelegateCommand EditAccountStoresListCommand { get; set; }
+        public DelegateCommand DeleteAccountStoreCommand { get; set; }
+        public DelegateCommand AddStoresToAccountCommand { get; set; }
+        public DelegateCommand CloseAddStoresToAccountCommand { get; set; }
+        #endregion stores
+
+        #region FA
+        public DelegateCommand AddFACommand { get; set; }
+        public DelegateCommand AddFAToAccountCommand { get; set; }
+        public DelegateCommand CloseFACommand { get; set; }
+        #endregion FA
+
         #endregion Commands
 
         #region Constructor
         [ImportingConstructor]
-        public AddFullAccountViewModel(ICompaniesService companiesService, ITypesService typesService, IAccountsMainService accountsService, IAccountStatusService accountStatusService, IAccountStoresService accountStoresService, IStoresService storesService, IAccountCapexesService accountCapexService, IExpensesService expenseService, ICapexesService capexService, IStoresWorkService storesWorkService)
+        public AddFullAccountViewModel(ICompaniesService companiesService, 
+                                       ITypesService typesService, 
+                                       IAccountsMainService accountsService, 
+                                       IAccountStatusService accountStatusService, 
+                                       IAccountStoresService accountStoresService, 
+                                       IStoresService storesService, 
+                                       IAccountCapexesService accountCapexService, 
+                                       IExpensesService expenseService, 
+                                       ICapexesService capexService, 
+                                       IStoresWorkService storesWorkService,
+                                       IAccountFAService accountFAService,
+                                       IFAService faService)
         {
 
 
@@ -168,6 +358,10 @@ namespace AccountsWork.Accounts.ViewModels
 
             _worker = new BackgroundWorker();
             _worker.DoWork += LoadAccount;
+
+            _addStoresWorker = new BackgroundWorker();
+            _addStoresWorker.DoWork += LoadAddStoresToAccount;
+            _addStoresWorker.RunWorkerCompleted += LoadAddStoresToAccount_Completed;
             #endregion workers 
 
             #region  capexes
@@ -175,7 +369,7 @@ namespace AccountsWork.Accounts.ViewModels
             CloseAddCapexToAccountCommand = new DelegateCommand(CloseAddCapexToAccount);
             CopyAvailableSumCommand = new DelegateCommand(CopyAvailableSum);
             AddCapexToAccountCommand = new DelegateCommand(AddCapexToAccount, CanAddCapex).ObservesProperty(() => NewCapexForAccount);
-            DeleteCapexAccountCommand = new DelegateCommand(DeleteCapexAccount);
+            DeleteCapexAccountCommand = new DelegateCommand(DeleteCapex);
             #endregion capexes
 
             #region services
@@ -189,20 +383,40 @@ namespace AccountsWork.Accounts.ViewModels
             _expenseService = expenseService;
             _capexService = capexService;
             _storesWorkService = storesWorkService;
-
+            _accountFAService = accountFAService;
+            _faService = faService;
             #endregion services
 
-        }      
+            #region statuses
+            IsChangeStatusOpen = false;
+            StatusesList = Statuses.GetStatusesList();
+
+            CancelNewStatusCommand = new DelegateCommand(CancelNew);
+            ChangeStatusCommand = new DelegateCommand(ChangeStatus);
+            SaveNewStatusCommand = new DelegateCommand(SaveNew, CanSaveNew);
+            #endregion statuses
+
+            #region stores
+            EditAccountStoresListCommand = new DelegateCommand(EditAccountStoresList, CanEdit);
+            DeleteAccountStoreCommand = new DelegateCommand(DeleteAccountStore);
+            AddStoresToAccountCommand = new DelegateCommand(() => _addStoresWorker.RunWorkerAsync(), CheckStoreErrors).ObservesProperty(() => StoresForLoad);
+            CloseAddStoresToAccountCommand = new DelegateCommand(CloseAddStores);
+            IsEditAccountStoresOpen = false;
+            #endregion stores
+
+            #region FA
+            AddFAOpen = false;
+            AddFACommand = new DelegateCommand(AddFA);
+            AddFAToAccountCommand = new DelegateCommand(AddFAToAccount, CanAddFA).ObservesProperty(() => NewFA);
+            CloseFACommand = new DelegateCommand(CloseFA);
+            #endregion FA
+
+        }        
         #endregion Constructor
 
         #region Methods
 
         #region infrastructure
-
-        public override bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return false;
-        }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -228,21 +442,32 @@ namespace AccountsWork.Accounts.ViewModels
             }
             _worker.RunWorkerAsync();
         }
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return false;
+        }
 
         #endregion infrastructure
 
         #region account
         private void LoadAccount(object sender, DoWorkEventArgs e)
-        {
-            
+        {            
             ExpensesList = new ObservableCollection<AccountsExpenseSet>(_expenseService.GetExpensesList());
             if (Account.Id != 0)
             {
                 LoadCapexInfo();
+                LoadHistoryStatus(Account.Id);
+                AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(Account.Id));
+                StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
+                AccountFAList = new ObservableCollection<AccountsBudgetDetailsSet>(_accountFAService.GetFAList(Account.Id));
+                CapexesList = new ObservableCollection<CapexSet>(_capexService.GetCapexesForYearList(Account.AccountYear));
             }
             else
             {
                 AccountCapexList = new ObservableCollection<AccountsCapexInfoSet>();
+                AccountStoresList = new ObservableCollection<StoresSet>();
+                StoresWorkList = new ObservableCollection<StoreProvenWorkSet>();
+                AccountFAList = new ObservableCollection<AccountsBudgetDetailsSet>();
             }
         }
         private AccountsMainSet GetAccount(NavigationContext navigationContext)
@@ -262,6 +487,7 @@ namespace AccountsWork.Accounts.ViewModels
             CapexesList = new ObservableCollection<CapexSet>(_capexService.GetCapexesForYearList(Account.AccountYear));
             IsInEditMode = false;
             LoadCapexInfo();
+            LoadHistoryStatus(Account.Id);
         }
         private bool CanSave()
         {
@@ -311,15 +537,13 @@ namespace AccountsWork.Accounts.ViewModels
         private void LoadCapexInfo()
         {
             AccountCapexList = new ObservableCollection<AccountsCapexInfoSet>(_accountCapexService.GetCapexesById(Account.Id));
-            if (Account.AccountAmount != null)
-                AvailableSum = Account.AccountAmount.Value - AccountCapexList.Sum(c => c.AccountCapexAmount);
+            AvailableSum = Account.AccountAmount.Value - AccountCapexList.Sum(c => c.AccountCapexAmount);
         }
-
         private void NewCapexPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             AddCapexToAccountCommand.RaiseCanExecuteChanged();
         }
-        private void DeleteCapexAccount()
+        private void DeleteCapex()
         {
             if (CurrentCapex != null)
             {
@@ -328,6 +552,181 @@ namespace AccountsWork.Accounts.ViewModels
             }
         }
         #endregion capexes
+
+        #region statuses
+        private void LoadHistoryStatus(int id)
+        {
+            StatusHistoryList = new ObservableCollection<AccountsStatusDetailsSet>(_accountStatusService.GetStatusesById(id));
+        }
+        private void NewAccountPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            SaveNewStatusCommand.RaiseCanExecuteChanged();
+        }
+        private void SaveNew()
+        {
+            if (NewAccountStatus == null) return;
+            NewAccountStatus.AccountMainId = Account.Id;
+            _accountStatusService.AddNewStatus(NewAccountStatus);
+            IsChangeStatusOpen = false;
+        }
+        private bool CanSaveNew()
+        {
+            if (NewAccountStatus == null) return false;
+            NewAccountStatus.ValidateProperties();
+            return !NewAccountStatus.HasErrors;
+        }
+        private void ChangeStatus()
+        {
+            NewAccountStatus = new AccountsStatusDetailsSet();
+            IsChangeStatusOpen = true;
+        }
+        private void CancelNew()
+        {
+            IsChangeStatusOpen = false;
+        }
+        #endregion statuses
+
+        #region stores
+        private void EditAccountStoresList()
+        {
+                IsEditAccountStoresOpen = true;
+                StoresForLoad = string.Empty;
+                StoresList = new ObservableCollection<StoresSet>(_storesService.GetStores());
+                Task.Run(() => AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(Account.Id)));
+        }
+        private void DeleteAccountStore()
+        {
+            if (CurrentAccountStore == null) return;
+            _accountStoresService.DeleteStoreFromAccount(CurrentAccountStore.StoreNumber, Account.Id);
+            AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(Account.Id));
+        }
+        private bool CanEdit()
+        {
+            return !IsAddStoreBusy;
+        }
+        private bool CheckStoreErrors()
+        {
+            if (!string.IsNullOrWhiteSpace(StoresForLoad))
+            {
+                var strStores = StoresForLoad.Split('\n');
+                storesNum = new List<int>();
+                StoresError = string.Empty;
+                foreach (var item in strStores)
+                {
+                    int storeNumber;
+                    if (string.IsNullOrWhiteSpace(item))
+                        continue;
+                    if (!int.TryParse(item, out storeNumber))
+                    {
+                        StoresError += item.Trim() + " ошибка\n";
+                    }
+                    else
+                    {
+                        if (StoresList.Any(s => s.StoreNumber == storeNumber))
+                        {
+                            storesNum.Add(storeNumber);
+                        }
+                        else
+                        {
+                            StoresError += storeNumber + " не заведен в базе\n";
+                        }
+                    }
+                }
+                return string.IsNullOrWhiteSpace(StoresError);
+            }
+            StoresError = string.Empty;
+            return false;
+        }
+        private void SearchStoreNumberByName()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchStoreName))
+            {
+                SerchResultStores = string.Empty;
+                foreach (var item in StoresList.Where(s => s.StoreName.ToLower().Contains(SearchStoreName.ToLower())))
+                {
+                    SerchResultStores += $"{item.StoreNumber} {item.StoreName}\n";
+                }
+            }
+            else
+                SerchResultStores = string.Empty;
+        }
+        private void LoadAddStoresToAccount(object sender, DoWorkEventArgs e)
+        {
+            IsAddStoreBusy = true;
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => EditAccountStoresListCommand.RaiseCanExecuteChanged()));
+            AddStoresToAccount(storesNum);
+        }
+        private void LoadAddStoresToAccount_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsAddStoreBusy = false;
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => EditAccountStoresListCommand.RaiseCanExecuteChanged()));
+        }
+        private void AddStoresToAccount(List<int> storesNumbers)
+        {
+            if (storesNumbers.Count <= 0) return;
+            var storesForAddList = new ObservableCollection<AccountsStoreDetailsSet>();
+            foreach (var storeNumber in storesNumbers.Where(storeNumber => AccountStoresList.All(s => s.StoreNumber != storeNumber) && storesForAddList.All(s => s.AccountStore != storeNumber)))
+            {
+                storesForAddList.Add(new AccountsStoreDetailsSet { AccountsMainId = Account.Id, AccountStore = storeNumber });
+            }
+            if (storesForAddList.Count == 0) return;
+            _accountStoresService.AddStoresToAccount(storesForAddList);
+            AccountStoresList = new ObservableCollection<StoresSet>(_accountStoresService.GetAccountStoresById(Account.Id));
+            StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => StoresForLoad = string.Empty));
+        }
+        private void CloseAddStores()
+        {
+            IsEditAccountStoresOpen = false;
+            StoresForLoad = string.Empty;
+        }
+        #endregion stores
+
+        #region work
+        private void SelectedWorkChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var work = sender as StoreProvenWorkSet;
+            if (work != null)
+            {
+                _storesWorkService.UpdateWork(work, Account.Id);
+                StoresWorkList = new ObservableCollection<StoreProvenWorkSet>(_storesWorkService.GetWorksList(AccountStoresList, false));
+            }
+        }
+        #endregion work
+
+        #region FA
+        private void AddFA()
+        {
+            NewFA = new AccountsBudgetDetailsSet { AccountsMainId = Account.Id };
+            FAList = new ObservableCollection<FASet>(_faService.GetFAList());
+            if (AccountStoresList.Count == 1)
+                NewFA.AccountStoreNumber = AccountStoresList.FirstOrDefault().StoreNumber;
+            if (AccountCapexList.Count == 1)
+                NewFA.EquipmentCapexId = AccountCapexList.FirstOrDefault().CapexId;
+            AddFAOpen = true;
+        }
+        private void AddFAToAccount()
+        {
+            _accountFAService.AddFAToAccount(NewFA);
+            AccountFAList = new ObservableCollection<AccountsBudgetDetailsSet>(_accountFAService.GetFAList(Account.Id));
+            AddFAOpen = false;
+        }
+        private void CloseFA()
+        {
+            NewFA = new AccountsBudgetDetailsSet();
+            AddFAOpen = false;
+        }
+        private bool CanAddFA()
+        {
+            if (NewFA == null) return false;
+            NewFA.ValidateProperties();
+            return !NewFA.HasErrors;
+        }
+        private void NewFAPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            AddFAToAccountCommand.RaiseCanExecuteChanged();
+        }
+        #endregion FA
 
         #endregion Methods
 

@@ -28,7 +28,6 @@
                                    UseDocumentContainer="True"
                                    ContainerMode="TDI">
             <Grid syncfusion:DockingManager.Header="Рестораны"
-                  syncfusion:DockingManager.State="AutoHidden"
                   syncfusion:DockingManager.DesiredWidthInDockedMode="500"                                  
                   syncfusion:DockingManager.SideTabItemBackground="BlanchedAlmond"
                   syncfusion:DockingManager.SideInDockedMode="Right">
@@ -45,19 +44,19 @@
                     </i:Interaction.Triggers>
                 </CheckBox>
                 <syncfusion:SfDataGrid Grid.Row="1"
-                               FontSize="9"
-                               AllowFiltering="True"
-                               ShowGroupDropArea="True"
-                               SelectionMode="Single"
-                               SelectionUnit="Row"
-                               SelectedItem="{Binding SelectedStore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               ItemsSource="{Binding StoresWithCheckList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               AutoGenerateColumns="False"
+                                       FontSize="9"
+                                       AllowFiltering="True"
+                                       ShowGroupDropArea="True"
+                                       SelectionMode="Single"
+                                       SelectionUnit="Row"
+                                       SelectedItem="{Binding SelectedStore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       ItemsSource="{Binding StoresWithCheckList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       AutoGenerateColumns="False"
                                >
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTextColumn MappingName="Store.StoreNumber"
-                                           HeaderText="Номер"                                           
-                                           ColumnSizer="SizeToHeader"/>
+                                                   HeaderText="Номер"                                           
+                                                   ColumnSizer="SizeToHeader"/>
                         <syncfusion:GridTextColumn MappingName="Store.StoreName"
                                            MaximumWidth="70"
                                            HeaderText="Название ресторана"
@@ -71,7 +70,7 @@
                                            MaximumWidth="70"
                                            ColumnSizer="SizeToCells"/>
                         <syncfusion:GridCheckBoxColumn MappingName="Check"
-                                               HeaderText="Выбор"
+                                               HeaderText="Выбор"                                                      
                                                ColumnSizer="SizeToHeader"
                                                AllowEditing="True"/>
                     </syncfusion:SfDataGrid.Columns>

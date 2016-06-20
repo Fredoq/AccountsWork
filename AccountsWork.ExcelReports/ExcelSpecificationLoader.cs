@@ -17,7 +17,7 @@ namespace AccountsWork.ExcelReports
         public async Task<IList<ServiceZipDetailsSet>> GetServiceZips(string company, string filename, string month, int year)
         {
             var serviceZips = new List<ServiceZipDetailsSet>();
-            var conn = new OleDbConnection(string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"", filename));
+            var conn = new OleDbConnection(string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES;IMEX=1\"", filename));
             await conn.OpenAsync();
             var cmd = new OleDbCommand();
             cmd.Connection = conn;
@@ -28,6 +28,10 @@ namespace AccountsWork.ExcelReports
                 int q = 0;
                 if (reader["Quantity"] != DBNull.Value)
                     int.TryParse(reader["Quantity"].ToString(), out q);
+                if (reader["BlankNumber"].ToString().Trim() == "tr")
+                {
+                    //here
+                }
                 serviceZips.Add(new ServiceZipDetailsSet
                 {
                     WorkDate = Convert.ToDateTime(reader["Date"]),

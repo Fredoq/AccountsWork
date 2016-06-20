@@ -14,19 +14,10 @@ namespace AccountsWork.DomainModel
     
     public partial class BudgetSet
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public BudgetSet()
-        {
-            this.AccountsBudgetDetailsSets = new HashSet<AccountsBudgetDetailsSet>();
-        }
-    
         public int Id { get; set; }
         public string BudgetEquipmentName { get; set; }
         public int BudgetQuantity { get; set; }
         public decimal BudgetPrice { get; set; }
         public int BudgetYear { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
     }
 }

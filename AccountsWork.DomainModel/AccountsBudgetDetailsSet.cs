@@ -9,21 +9,64 @@
 
 namespace AccountsWork.DomainModel
 {
-    using System;
-    using System.Collections.Generic;
-    
-    public partial class AccountsBudgetDetailsSet
+    using Infrastructure;
+    using System.ComponentModel.DataAnnotations;
+
+    public partial class AccountsBudgetDetailsSet : ValidatableBindableBase
     {
-        public int Id { get; set; }
-        public int AccountsMainId { get; set; }
-        public string AccountEquipmentName { get; set; }
-        public int AccountEquipmentQuantity { get; set; }
-        public decimal AccountEquipmentPrice { get; set; }
-        public int BudgetId { get; set; }
-        public int AccountStoreNumber { get; set; }
+        private int _id;
+        private int _accountsMainId;
+        private string _accountEquipmentName;
+        private int _accountEquipmentQuantity;
+        private decimal _accountEquipmentPrice;
+        private int _accountStoreNumber;
+        private int _equipmentCapexId;
+
+        [Required]
+        public int Id
+        {
+            get { return _id; }
+            set { SetProperty(ref _id, value); }
+        }
+        [Required]
+        public int AccountsMainId
+        {
+            get { return _accountsMainId; }
+            set { SetProperty(ref _accountsMainId, value); }
+        }
+        [Required]
+        public string AccountEquipmentName
+        {
+            get { return _accountEquipmentName; }
+            set { SetProperty(ref _accountEquipmentName, value); }
+        }
+        [Required]
+        public int AccountEquipmentQuantity
+        {
+            get { return _accountEquipmentQuantity; }
+            set { SetProperty(ref _accountEquipmentQuantity, value); }
+        }
+        [Required]
+        public decimal AccountEquipmentPrice
+        {
+            get { return _accountEquipmentPrice; }
+            set { SetProperty(ref _accountEquipmentPrice, value); }
+        }
+        [Required]
+        public int AccountStoreNumber
+        {
+            get { return _accountStoreNumber; }
+            set { SetProperty(ref _accountStoreNumber, value); }
+        }
+        [Required]
+        public int EquipmentCapexId
+        {
+            get { return _equipmentCapexId; }
+            set { SetProperty(ref _equipmentCapexId, value); }
+        }
     
-        public virtual StoresSet StoresSet { get; set; }
         public virtual AccountsMainSet AccountsMainSet { get; set; }
-        public virtual BudgetSet BudgetSet { get; set; }
+        public virtual CapexSet CapexSet { get; set; }
+        public virtual FASet FASet { get; set; }
     }
 }

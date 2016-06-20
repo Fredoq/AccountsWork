@@ -99,6 +99,9 @@
       <DependentUpon>AccountsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ExportAttribute.cs" />
+    <Compile Include="FASet.cs">
+      <DependentUpon>AccountsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceZipDetailsSet.cs">
       <DependentUpon>AccountsModel.tt</DependentUpon>

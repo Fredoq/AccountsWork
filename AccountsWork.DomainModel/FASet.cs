@@ -12,22 +12,16 @@ namespace AccountsWork.DomainModel
     using System;
     using System.Collections.Generic;
     
-    public partial class CapexSet
+    public partial class FASet
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CapexSet()
+        public FASet()
         {
-            this.AccountsCapexInfoSets = new HashSet<AccountsCapexInfoSet>();
             this.AccountsBudgetDetailsSets = new HashSet<AccountsBudgetDetailsSet>();
         }
     
-        public int Id { get; set; }
-        public string CapexName { get; set; }
-        public int CapexYear { get; set; }
-        public decimal CapexAmount { get; set; }
+        public string FAName { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AccountsCapexInfoSet> AccountsCapexInfoSets { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
     }

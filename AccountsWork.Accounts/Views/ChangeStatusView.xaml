@@ -81,7 +81,7 @@
                          MaxHeight="300"
                          MaxWidth="500"
                          Margin="5"
-                         SelectedItem="{Binding AccountForAcc}">
+                         SelectedItem="{Binding AccountForAcc, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="BlanchedAlmond"
@@ -101,6 +101,10 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <Button Content="Удалить"
+                        HorizontalAlignment="Left"
+                        Margin="3"
+                        Command="{Binding DeleteSelectedAccCommand}"/>
                 <StackPanel Orientation="Horizontal">
                     <DatePicker SelectedDate="{Binding AccountForChangeDate}"
                                 Margin="5"                            

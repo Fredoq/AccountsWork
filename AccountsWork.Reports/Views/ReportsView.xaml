@@ -5,11 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:infrastructure="clr-namespace:AccountsWork.Infrastructure;assembly=AccountsVork.Infrastructure"
              xmlns:local="clr-namespace:AccountsWork.Reports.Views"
              mc:Ignorable="d" 
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{StaticResource MaterialDesignFont}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        <ResourceDictionary>
         <Style TargetType="TabItem">
             <Setter Property="Header" 
                     Value="{Binding DataContext.ReportsTabItemHeader}">
@@ -40,50 +49,80 @@
                 </Setter.Value>
             </Setter>
         </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Rectangle Grid.Column="0"
-                       Grid.Row="0"
-                       Stroke="BlanchedAlmond"
-                       StrokeThickness="2"/>
-        <StackPanel Grid.Column="0" 
-                    MinWidth="230"
-                    Orientation="Vertical">
-            <Button Content="Отчет по Capex"
-                    Margin="6,10,6,4"
-                    HorizontalAlignment="Center"
-                    Padding="2"
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="CapexReportView"/>
-            <Button Content="Детальный отчет по ресторанам"
-                    Margin="4"
-                    HorizontalAlignment="Center"
-                    Padding="2"
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="ServiceReportForStoreView"/>
-            <Button Content="Отчет по сервису на ресторан"
-                    Margin="4"
-                    HorizontalAlignment="Center"
-                    Padding="2"
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="ServiceReportForStoreByMonthView"/>
-            <Button Content="Загрузить инфо по сервису"
-                    Margin="6,10,6,4"
-                    HorizontalAlignment="Center"
-                    Padding="2"
-                    Command="{Binding NavigateCommand}"
-                    CommandParameter="LoadServiceInvoView"/>
-        </StackPanel>
-        <Rectangle Grid.Column="1"
-                   Grid.Row="0"
-                   Stroke="BlanchedAlmond"
-                   StrokeThickness="2"/>
-        <TabControl Grid.Row="0"
-                    Grid.Column="1"
-                    prism:RegionManager.RegionName="{x:Static infrastructure:RegionNames.ReportsTabRegion}"/>
-    </Grid>
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <StackPanel MinWidth="230"
+                            Orientation="Vertical">
+                    <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                  HorizontalAlignment="Right" 
+                                  Margin="10"
+                                  IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+                    <Button Content="Отчет по Capex"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,30,0,0"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="CapexReportView"/>
+                    <Button Content="Детальный отчет по ресторанам"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="ServiceReportForStoreView"/>
+                    <Button Content="Отчет по сервису на ресторан"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="ServiceReportForStoreByMonthView"/>
+                    <Button Content="Отчет по основным средствам"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="FAReportView"/>
+                    <Button Content="Отчет по ресторанскому сервису"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="StoresServiceReportView"/>
+                    <Button Content="Загрузить инфо по сервису"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="LoadServiceInvoView"/>
+                </StackPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                              IsChecked="{Binding IsLeftOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Grid.Column="0"
+                              VerticalAlignment="Top"
+                              Margin="10"
+                              x:Name="MenuToggleButton"/>
+                <TabControl Grid.Row="0"
+                            Grid.Column="1"
+                            prism:RegionManager.RegionName="{x:Static infrastructure:RegionNames.ReportsTabRegion}"/>
+            </Grid>
+        </materialDesign:DrawerHost>
+    </materialDesign:DialogHost>
 </UserControl>

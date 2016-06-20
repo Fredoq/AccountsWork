@@ -92,6 +92,8 @@
     <Compile Include="AccountStoresRepository.cs" />
     <Compile Include="CapexRepository.cs" />
     <Compile Include="ServiceZipsRepository.cs" />
+    <Compile Include="AccountFARepository.cs" />
+    <Compile Include="FARepository.cs" />
     <Compile Include="WorksRepository.cs" />
     <Compile Include="ExpenseRepository.cs" />
     <Compile Include="StoresRepository.cs" />

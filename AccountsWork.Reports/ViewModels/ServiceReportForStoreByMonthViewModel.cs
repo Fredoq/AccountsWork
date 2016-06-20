@@ -120,6 +120,7 @@ namespace AccountsWork.Reports.ViewModels
             ServiceZipList.Clear();
             StoresList.Clear();
             MonthExpList.Clear();
+            MonthServExpList.Clear();
             ServiceAccountsList.Clear();
             IsServiceBusy = true;
             _worker.RunWorkerAsync();       

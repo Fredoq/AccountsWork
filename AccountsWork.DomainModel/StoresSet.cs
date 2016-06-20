@@ -9,11 +9,20 @@
 
 namespace AccountsWork.DomainModel
 {
+    using Infrastructure;
     using System;
     using System.Collections.Generic;
-    
-    public partial class StoresSet
+    using System.ComponentModel.DataAnnotations;
+    public partial class StoresSet : ValidatableBindableBase
     {
+        private int _id;
+        private string _storeName;
+        private string _storeType;
+        private string _storeRegion;
+        private string _storeCompany;
+        private DateTime? _storeOpenDate;
+        private DateTime? _storeCloseDate;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public StoresSet()
         {
@@ -22,14 +31,47 @@ namespace AccountsWork.DomainModel
             this.ServiceZipDetailsSets = new HashSet<ServiceZipDetailsSet>();
             this.StoreProvenWorkSets = new HashSet<StoreProvenWorkSet>();
         }
-    
-        public int StoreNumber { get; set; }
-        public string StoreName { get; set; }
-        public string StoreType { get; set; }
-        public string StoreRegion { get; set; }
-        public string StoreCompany { get; set; }
-        public Nullable<System.DateTime> StoreOpenDate { get; set; }
-        public Nullable<System.DateTime> StoreCloseDate { get; set; }
+        [Required]
+        public int StoreNumber
+        {
+            get { return _id; }
+            set { SetProperty(ref _id, value); }
+        }
+        [Required]
+        public string StoreName
+        {
+            get { return _storeName; }
+            set { SetProperty(ref _storeName, value); }
+        }
+        [Required]
+        public string StoreType
+        {
+            get { return _storeType; }
+            set { SetProperty(ref _storeType, value); }
+        }
+        [Required]
+        public string StoreRegion
+        {
+            get { return _storeRegion; }
+            set { SetProperty(ref _storeRegion, value); }
+        }
+        [Required]
+        public string StoreCompany
+        {
+            get { return _storeCompany; }
+            set { SetProperty(ref _storeCompany, value); }
+        }
+
+        public Nullable<System.DateTime> StoreOpenDate
+        {
+            get { return _storeOpenDate; }
+            set { SetProperty(ref _storeOpenDate, value); }
+        }
+        public Nullable<System.DateTime> StoreCloseDate
+        {
+            get { return _storeCloseDate; }
+            set { SetProperty(ref _storeCloseDate, value); }
+        }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountsBudgetDetailsSet> AccountsBudgetDetailsSets { get; set; }
