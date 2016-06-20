@@ -13,19 +13,9 @@ using System.Linq;
 namespace AccountsWork.Accounts.ViewModels
 {
     [Export]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class AddFullAccountViewModel : ValidatableBindableBase
-    {
-        private readonly ICompaniesService _companiesService;
-        private readonly ITypesService _typesService;
-        private readonly IAccountsMainService _accountsService;
-        private readonly IAccountStatusService _accountStatusService;
-        private readonly IAccountStoresService _accountStoresService;
-        private readonly IStoresService _storesService;
-        private readonly IAccountCapexesService _accountCapexService;
-        private readonly IExpensesService _expenseService;
-        private readonly ICapexesService _capexService;
-        private readonly IStoresWorkService _storesWorkService;
-
+    {       
         #region Private Fields
         private string _accountsTabItemHeader;
         private AccountsMainSet _account;
@@ -42,7 +32,16 @@ namespace AccountsWork.Accounts.ViewModels
         private ObservableCollection<AccountsCapexInfoSet> _accountCapexList;
         private ObservableCollection<AccountsExpenseSet> _expensesList;
         private ObservableCollection<CapexSet> _capexesList;
-
+        private readonly ICompaniesService _companiesService;
+        private readonly ITypesService _typesService;
+        private readonly IAccountsMainService _accountsService;
+        private readonly IAccountStatusService _accountStatusService;
+        private readonly IAccountStoresService _accountStoresService;
+        private readonly IStoresService _storesService;
+        private readonly IAccountCapexesService _accountCapexService;
+        private readonly IExpensesService _expenseService;
+        private readonly ICapexesService _capexService;
+        private readonly IStoresWorkService _storesWorkService;
         #endregion Private Fields
 
         #region Public Properties
@@ -176,6 +175,7 @@ namespace AccountsWork.Accounts.ViewModels
             CloseAddCapexToAccountCommand = new DelegateCommand(CloseAddCapexToAccount);
             CopyAvailableSumCommand = new DelegateCommand(CopyAvailableSum);
             AddCapexToAccountCommand = new DelegateCommand(AddCapexToAccount, CanAddCapex).ObservesProperty(() => NewCapexForAccount);
+            DeleteCapexAccountCommand = new DelegateCommand(DeleteCapexAccount);
             #endregion capexes
 
             #region services
@@ -199,8 +199,15 @@ namespace AccountsWork.Accounts.ViewModels
 
         #region infrastructure
 
+        public override bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return false;
+        }
+
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+            Companies = _companiesService.GetCompanies();
+            Types = _typesService.GetTypes();
             Account = GetAccount(navigationContext);
             if (Account != null)
             {
@@ -227,8 +234,7 @@ namespace AccountsWork.Accounts.ViewModels
         #region account
         private void LoadAccount(object sender, DoWorkEventArgs e)
         {
-            Companies = _companiesService.GetCompanies();
-            Types = _typesService.GetTypes();
+            
             ExpensesList = new ObservableCollection<AccountsExpenseSet>(_expenseService.GetExpensesList());
             if (Account.Id != 0)
             {
@@ -305,11 +311,21 @@ namespace AccountsWork.Accounts.ViewModels
         private void LoadCapexInfo()
         {
             AccountCapexList = new ObservableCollection<AccountsCapexInfoSet>(_accountCapexService.GetCapexesById(Account.Id));
-            AvailableSum = Account.AccountAmount.Value - AccountCapexList.Sum(c => c.AccountCapexAmount);
+            if (Account.AccountAmount != null)
+                AvailableSum = Account.AccountAmount.Value - AccountCapexList.Sum(c => c.AccountCapexAmount);
         }
+
         private void NewCapexPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             AddCapexToAccountCommand.RaiseCanExecuteChanged();
+        }
+        private void DeleteCapexAccount()
+        {
+            if (CurrentCapex != null)
+            {
+                _accountCapexService.DeleteCapexFromAccount(CurrentCapex);
+                LoadCapexInfo();
+            }
         }
         #endregion capexes
 

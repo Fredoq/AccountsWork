@@ -15,11 +15,6 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{StaticResource MaterialDesignFont}"
              mc:Ignorable="d" >
-    <!--<i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadAllCommand}"></i:InvokeCommandAction>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -36,66 +31,68 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <materialDesign:Card Margin="5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <materialDesign:ColorZone Grid.Row="0"
+    <AdornerDecorator>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <materialDesign:Card Margin="5">
+                <AdornerDecorator>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Grid.Row="0"
                                           Mode="PrimaryMid">
-                    <TextBlock Text="Шапка счета"
+                            <TextBlock Text="Шапка счета"
                                Padding="3"
                                Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
                                TextAlignment="Center">
-                    </TextBlock>
-                </materialDesign:ColorZone>
-                <TextBox Grid.Row="1"
+                            </TextBlock>
+                        </materialDesign:ColorZone>
+                        <TextBox Grid.Row="1"
                          Margin="5"                        
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Padding="2"
                          Text="{Binding Account.AccountNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
                          materialDesign:TextFieldAssist.Hint="Введите номер счета..."/>
-                <ComboBox Grid.Row="2"
+                        <ComboBox Grid.Row="2"
                           Margin="5,10,5,5"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          materialDesign:TextFieldAssist.Hint="Выберите компанию..."
-                          DisplayMemberPath="Company"
-                          SelectedValuePath="Company"  
+                          materialDesign:TextFieldAssist.Hint="Выберите компанию..."                          
                           SelectedValue="{Binding Account.AccountCompany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          ItemsSource="{Binding Companies}"/>
-                <DatePicker Grid.Row="3" 
+                          ItemsSource="{Binding Companies}"
+                          SelectedValuePath="Company"
+                          DisplayMemberPath="Company"/>
+                        <DatePicker Grid.Row="3" 
                             FirstDayOfWeek="Monday"
                             Margin="5,10,5,5"
                             SelectedDate="{Binding Account.AccountDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                             Style="{StaticResource MaterialDesignDatePicker}"
                             materialDesign:TextFieldAssist.Hint="Выберите дату счета..."         
                             helpers:HintAssist.IsFloating="True"/>
-                <TextBox Grid.Row="4" 
+                        <TextBox Grid.Row="4" 
                          Margin="5,10,5,5"
                          HorizontalAlignment="Stretch" 
                          SpellCheck.IsEnabled="True"                  
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:TextFieldAssist.Hint="Введите сумму счета..."
                          Text="{Binding Account.AccountAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue='', StringFormat=\{0:c2\}, ConverterCulture=ru-ru}"/>
-                <ComboBox Grid.Row="5" 
+                        <ComboBox Grid.Row="5" 
                           Margin="5,10,5,5"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           materialDesign:TextFieldAssist.Hint="Выберите тип счета..."
@@ -103,7 +100,7 @@
                           SelectedValuePath="Type"                       
                           SelectedValue="{Binding Account.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           ItemsSource="{Binding Types}"/>
-                <TextBox Grid.Row="6" 
+                        <TextBox Grid.Row="6" 
                          TextWrapping="Wrap"
                          AcceptsReturn="True"
                          Margin="5,10,5,5"
@@ -113,144 +110,149 @@
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:TextFieldAssist.Hint="Введите описание счета..."
                          Text="{Binding Account.AccountDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <ComboBox Margin="5,10,5,5"
+                        <ComboBox Margin="5,10,5,5"
                           x:Name="CmbType" 
                           Grid.Row="7" 
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           materialDesign:TextFieldAssist.Hint="Выберите тип MCD..."  
                           SelectedValuePath="Content"
                           SelectedValue="{Binding Account.AccountMcdType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <ComboBoxItem>ООО</ComboBoxItem>
-                    <ComboBoxItem>ЗАО</ComboBoxItem>
-                </ComboBox>
-                <TextBox Margin="5,13,5,5"
+                            <ComboBoxItem>ООО</ComboBoxItem>
+                            <ComboBoxItem>ЗАО</ComboBoxItem>
+                        </ComboBox>
+                        <TextBox Margin="5,13,5,5"
                          Grid.Row="8" 
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:TextFieldAssist.Hint="Введите год бюджета..."                        
                          Text="{Binding Account.AccountYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Grid.Row="9"
+                        <Button Grid.Row="9"
                         Style="{StaticResource MaterialDesignFlatButton}"
                         IsEnabled="{Binding IsInEditMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Content="Сохранить"
                         Command="{Binding SaveAccountCommand}"/>
-            </Grid>
-        </materialDesign:Card>
-        <materialDesign:Card Margin="5"
+                    </Grid>
+                </AdornerDecorator>
+            </materialDesign:Card>
+
+            <materialDesign:Card Margin="5"
                              Grid.Row="1"
                              MinWidth="280"
                              VerticalAlignment="Stretch"
                              IsEnabled="{Binding IsAdditinalInfoEnabled, Mode=TwoWay}"
                              Grid.Column="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <materialDesign:ColorZone Grid.Row="0"
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <materialDesign:ColorZone Grid.Row="0"
                                           Mode="PrimaryMid">
-                    <TextBlock Text="Статьи/Capex"
+                        <TextBlock Text="Статьи/Capex"
                                Padding="3"
                                Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
                                TextAlignment="Center"/>
-                </materialDesign:ColorZone>
-                <StackPanel Grid.Row="1"
+                    </materialDesign:ColorZone>
+                    <StackPanel Grid.Row="1"
                             Orientation="Horizontal">
-                    <TextBlock Text="Доступная сумма: "
+                        <TextBlock Text="Доступная сумма: "
                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                Margin="5"/>
-                    <TextBlock Text="{Binding AvailableSum, StringFormat=C, ConverterCulture=ru-RU}"
+                        <TextBlock Text="{Binding AvailableSum, StringFormat=C, ConverterCulture=ru-RU}"
                                Style="{StaticResource MaterialDesignBody2TextBlock}"
                                Margin="5"/>
-                </StackPanel>
-                <materialDesign:DialogHost Grid.Row="2"
+                    </StackPanel>
+                    <materialDesign:DialogHost Grid.Row="2"
                                            IsOpen="{Binding IsAddCapexOpen, Mode=TwoWay}">
-                    <materialDesign:DialogHost.DialogContent>
-                        <StackPanel Orientation="Vertical">
-                            <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                        <materialDesign:DialogHost.DialogContent>
+                            <StackPanel Orientation="Vertical">
+                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                                       materialDesign:TextFieldAssist.Hint="Выберите статью..." 
                                       ItemsSource="{Binding ExpensesList}"
                                       SelectedValue="{Binding NewCapexForAccount.AccountExpense, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       SelectedValuePath="Expense"
                                       DisplayMemberPath="Expense"
                                       Margin="3"/>
-                            <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                                       materialDesign:TextFieldAssist.Hint="Выберите Capex..." 
                                       ItemsSource="{Binding CapexesList}"
                                       SelectedValue="{Binding NewCapexForAccount.AccountCapexName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       SelectedValuePath="CapexName"
                                       DisplayMemberPath="CapexName"
                                       Margin="3,10,3,3"/>
-                            <DockPanel>
-                                <TextBox Text="{Binding NewCapexForAccount.AccountCapexAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=C, ConverterCulture=ru-RU}"
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Text="{Binding NewCapexForAccount.AccountCapexAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=C, ConverterCulture=ru-RU}"
                                          Margin="3,10,3,3"
-                                         MinWidth="60"
                                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                          materialDesign:TextFieldAssist.Hint="Введите сумму..."/>
-                                <Button Margin="3,10,3,3"
-                                        HorizontalAlignment="Left"
+                                    <Button Margin="3,10,3,3"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
                                         Style="{StaticResource MaterialDesignFlatButton}"
-                                        Command="{Binding CopyAvailableSumCommand}"
-                                        DockPanel.Dock="Right">
-                                    <materialDesign:PackIcon Kind="ArrowDown" />
-                                </Button>
-                            </DockPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Content="Добавить"
+                                        Command="{Binding CopyAvailableSumCommand}">
+                                        <materialDesign:PackIcon Kind="ArrowDown" />
+                                    </Button>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Добавить"
                                         Margin="3"
                                         IsDefault="True"
                                         Style="{StaticResource MaterialDesignFlatButton}"
                                         Command="{Binding AddCapexToAccountCommand}"/>
-                                <Button Content="Отменить"
+                                    <Button Content="Отменить"
                                         Margin="3"
                                         IsCancel="True"
                                         Style="{StaticResource MaterialDesignFlatButton}"
                                         Command="{Binding CloseAddCapexToAccountCommand}"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </materialDesign:DialogHost.DialogContent>
-                    <Grid MinHeight="200">
-                        <ListBox ItemsSource="{Binding AccountCapexList}"
+                        </materialDesign:DialogHost.DialogContent>
+                        <Grid MinHeight="200">
+                            <ListBox ItemsSource="{Binding AccountCapexList}"
                                  Style="{StaticResource MaterialDesignListBox}"
                                  SelectedItem="{Binding CurrentCapex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem"
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem"
                                        BasedOn="{StaticResource MaterialDesignListBoxItem}">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <StackPanel Grid.Column="0"
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <StackPanel Grid.Column="0"
                                                     Grid.Row="0"
                                                     Orientation="Horizontal">
-                                            <Label Content="Статья: "
+                                                <Label Content="Статья: "
                                                    HorizontalAlignment="Left"
                                                    Style="{StaticResource MaterialDesignLabel}"/>
-                                            <Label Content="{Binding AccountExpense}"
+                                                <Label Content="{Binding AccountExpense}"
                                                        HorizontalAlignment="Right"
                                                        Style="{StaticResource MaterialDesignLabel}"/>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="0"
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="0"
                                                         Grid.Row="1"
                                                         Orientation="Horizontal">
-                                            <Label Content=" Capex: "
+                                                <Label Content=" Capex: "
                                                        HorizontalAlignment="Left"
                                                        Style="{StaticResource MaterialDesignLabel}"/>
-                                            <Label Content="{Binding AccountCapexName}"
+                                                <Label Content="{Binding AccountCapexName}"
                                                        HorizontalAlignment="Right"
                                                        Style="{StaticResource MaterialDesignLabel}"/>
-                                        </StackPanel>
-                                        <TextBlock Text="{Binding AccountCapexAmount, StringFormat=C, ConverterCulture=ru-RU}"
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding AccountCapexAmount, StringFormat=C, ConverterCulture=ru-RU}"
                                                        VerticalAlignment="Center"
                                                        HorizontalAlignment="Right"
                                                        Margin="5,5,5,5"
@@ -259,35 +261,107 @@
                                                        Grid.RowSpan="2"
                                                        FontWeight="Bold"
                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
                                     Command="{Binding OpenAddCapexToAccountCommand}"
                                     VerticalAlignment="Bottom" 
                                     HorizontalAlignment="Right" 
                                     Margin="0 0 55 5">
-                            <Viewbox Width="22" Height="22">
-                                <Canvas Width="24" Height="24">
-                                    <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
-                                </Canvas>
-                            </Viewbox>
-                        </Button>
-                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
-                                    Command="{Binding OpenAddCapexToAccountCommand}"
-                                    VerticalAlignment="Bottom" 
-                                    HorizontalAlignment="Right" 
-                                    Margin="0 0 5 5">
-                            <Viewbox Width="22" Height="22">
-                                <Canvas Width="24" Height="24">
-                                    <Path Data="M19,13H5V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
-                                </Canvas>
-                            </Viewbox>
-                        </Button>
+                                <Viewbox Width="22" Height="22">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                    </Canvas>
+                                </Viewbox>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                Command="{Binding DeleteCapexAccountCommand}"
+                                VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Right" 
+                                Margin="0 0 5 5">
+                                <Viewbox Width="22" Height="22">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Data="M19,13H5V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                    </Canvas>
+                                </Viewbox>
+                            </Button>
+                        </Grid>
+                    </materialDesign:DialogHost>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Margin="5"
+                             Grid.Row="0" 
+                             MinWidth="150"
+                             HorizontalAlignment="Left"
+                             Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:ColorZone Grid.Row="0"
+                                          Mode="PrimaryMid">
+                        <TextBlock Text="Статус"
+                                   Padding="3"
+                                   Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
+                                   TextAlignment="Center">
+                        </TextBlock>
+                    </materialDesign:ColorZone>
+                    <Grid Grid.Row="1"
+                          Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBox Grid.Row="0"
+                                 Margin="5"                        
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 Padding="2"
+                                 IsReadOnly="True"
+                                 Text="{Binding CurrentAccountStatus.AccountStatus}"
+                                 materialDesign:TextFieldAssist.Hint="Текущий статус"/>
+                        <TextBox Grid.Row="1"
+                                 Margin="5"
+                                 IsReadOnly="True"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 Text="{Binding CurrentAccountStatus.AccountStatusDate, StringFormat=d, ConverterCulture=ru-RU}"
+                                 materialDesign:TextFieldAssist.Hint="Дата статуса"/>
+                        <TextBox Grid.Row="2" 
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Margin="5"
+                                 MinHeight="100"
+                                 HorizontalAlignment="Stretch" 
+                                 IsReadOnly="True"
+                                 SpellCheck.IsEnabled="True"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 materialDesign:TextFieldAssist.Hint="Комментарии"
+                                 Text="{Binding CurrentAccountStatus.Commentary}"/>
+                        <TextBox Grid.Row="3"
+                                 Margin="5"
+                                 IsReadOnly="True"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 Text="{Binding CurrentAccountStatus.AccountPayNumber}"
+                                 materialDesign:TextFieldAssist.Hint="Номер платежки"/>
+                        <Button Content="Изменить статус"
+                                x:Name="changeStatusBtn"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Grid.Row="4"
+                                Command="{Binding ChangeStatusCommand}"/>
                     </Grid>
-                </materialDesign:DialogHost>
-            </Grid>
-        </materialDesign:Card>
-    </Grid>
+                    
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
+    </AdornerDecorator>
 </UserControl>
