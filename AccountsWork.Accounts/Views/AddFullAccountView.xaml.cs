@@ -21,6 +21,7 @@ namespace AccountsWork.Accounts.Views
     /// Interaction logic for AddFullAccountView.xaml
     /// </summary>
     [Export("AddFullAccountView")]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class AddFullAccountView : UserControl
     {
         public AddFullAccountView()
